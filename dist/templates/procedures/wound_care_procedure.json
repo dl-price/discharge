@@ -1,0 +1,52 @@
+{
+  "id": "wound_care_procedure",
+  "title": "Wound care / closure",
+  "category": "Procedures",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "laceration",
+    "suturing",
+    "closure",
+    "wound"
+  ],
+  "fields": [
+    {
+      "name": "location",
+      "label": "Location",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "wound_details",
+      "label": "Wound size/details",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "anaesthetic",
+      "label": "Anaesthetic",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "irrigation",
+      "label": "Irrigation / cleaning",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "closure",
+      "label": "Closure method",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "dressing",
+      "label": "Dressing",
+      "type": "textarea",
+      "required": false
+    }
+  ],
+  "body": "Wound care performed.\n\nLocation: {{location}}.\n{{#if wound_details}}Wound details: {{wound_details}}.{{/if}}\n{{#if anaesthetic}}Anaesthetic: {{anaesthetic}}.{{/if}}\n{{#if irrigation}}Irrigation/cleaning: {{irrigation}}.{{/if}}\nClosure method: {{closure}}.\n{{#if dressing}}Dressing: {{dressing}}.{{/if}}"
+}

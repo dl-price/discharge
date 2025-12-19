@@ -1,0 +1,51 @@
+{
+  "id": "abdominal_pain_note",
+  "title": "ED clinician note: Abdominal pain",
+  "category": "ED notes",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "abdominal pain",
+    "abdomen",
+    "ED note"
+  ],
+  "fields": [
+    {
+      "name": "presentation",
+      "label": "Presentation summary",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "exam",
+      "label": "Exam",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "investigations",
+      "label": "Investigations",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "treatment",
+      "label": "Treatment in ED",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "assessment",
+      "label": "Assessment",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "plan",
+      "label": "Plan",
+      "type": "textarea",
+      "required": true
+    }
+  ],
+  "body": "ED Clinician Note - Abdominal Pain\n\nPresentation:\n{{presentation}}\n\n{{#if exam}}Exam:\n{{exam}}\n\n{{/if}}Investigations:\n{{investigations}}\n\n{{#if treatment}}Treatment in ED:\n{{treatment}}\n\n{{/if}}Assessment:\n{{assessment}}\n\nPlan:\n{{plan}}"
+}

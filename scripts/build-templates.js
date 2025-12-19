@@ -56,14 +56,33 @@ const buildProcedures = async (srcRoot, destRoot) => {
   }
 };
 
+const buildNotes = async (srcRoot, destRoot) => {
+  const entries = await fs.readdir(srcRoot, { withFileTypes: true });
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const dir = path.join(srcRoot, entry.name);
+    const templatePath = path.join(dir, "template.json");
+    const bodyPath = path.join(dir, "body.md");
+    const [template, body] = await Promise.all([readJson(templatePath), readText(bodyPath)]);
+    template.body = body.trimEnd();
+    const destPath = path.join(destRoot, `${entry.name}.json`);
+    await writeJson(destPath, template);
+  }
+};
+
 const main = async () => {
   const srcLetters = path.join("templates-src", "letters");
   const srcProcedures = path.join("templates-src", "procedures");
+  const srcNotes = path.join("templates-src", "notes");
   const destLetters = path.join("public", "templates", "letters");
   const destProcedures = path.join("public", "templates", "procedures");
+  const destNotes = path.join("public", "templates", "notes");
 
   await buildLetters(srcLetters, destLetters);
   await buildProcedures(srcProcedures, destProcedures);
+  await buildNotes(srcNotes, destNotes);
 };
 
 main().catch((error) => {

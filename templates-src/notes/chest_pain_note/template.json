@@ -1,0 +1,364 @@
+{
+  "id": "chest_pain_note",
+  "title": "ED clinician note: Chest pain",
+  "category": "ED notes",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": ["chest pain", "ACS", "cardiac", "ED note"],
+  "fields": [
+    {
+      "name": "presentation",
+      "label": "Presentation summary",
+      "type": "textarea",
+      "section": "Presentation",
+      "required": true
+    },
+    {
+      "name": "triage_complaint",
+      "label": "Triage complaint",
+      "type": "text",
+      "section": "Presentation",
+      "required": false
+    },
+    {
+      "name": "chief_complaint",
+      "label": "Chief complaint (patient words)",
+      "type": "textarea",
+      "section": "Presentation",
+      "required": false
+    },
+    {
+      "name": "onset",
+      "label": "Onset",
+      "type": "text",
+      "section": "History",
+      "required": false
+    },
+    {
+      "name": "timing",
+      "label": "Timing",
+      "type": "text",
+      "section": "History",
+      "required": false
+    },
+    {
+      "name": "provocation",
+      "label": "Provocation / palliation",
+      "type": "text",
+      "section": "History",
+      "required": false
+    },
+    {
+      "name": "quality",
+      "label": "Quality",
+      "type": "text",
+      "section": "History",
+      "required": false
+    },
+    {
+      "name": "location",
+      "label": "Location",
+      "type": "text",
+      "section": "History",
+      "required": false
+    },
+    {
+      "name": "radiation",
+      "label": "Radiation",
+      "type": "text",
+      "section": "History",
+      "required": false
+    },
+    {
+      "name": "severity",
+      "label": "Severity",
+      "type": "text",
+      "section": "History",
+      "required": false
+    },
+    {
+      "name": "symptom_sob",
+      "label": "Associated symptoms: Shortness of breath",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_diaphoresis",
+      "label": "Associated symptoms: Diaphoresis",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_nv",
+      "label": "Associated symptoms: Nausea/vomiting",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_palpitations",
+      "label": "Associated symptoms: Palpitations",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_syncope",
+      "label": "Associated symptoms: Syncope/near-syncope",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_pleuritic",
+      "label": "Associated symptoms: Pleuritic",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_positional",
+      "label": "Associated symptoms: Positional",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_repro",
+      "label": "Associated symptoms: Reproducible tenderness",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_fever",
+      "label": "Associated symptoms: Fever/chills",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_cough",
+      "label": "Associated symptoms: Cough",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_hemoptysis",
+      "label": "Associated symptoms: Haemoptysis",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "symptom_neuro",
+      "label": "Associated symptoms: Neuro symptoms",
+      "type": "checkbox",
+      "section": "Associated symptoms",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "red_flags",
+      "label": "Red flags",
+      "type": "textarea",
+      "section": "History",
+      "presetLabel": "Red flag picker",
+      "presetTitle": "Chest pain red flags",
+      "presetDescription": "Select a red flag to insert, then edit or add more as needed.",
+      "presets": [
+        {
+          "label": "Tearing chest/back pain (dissection)",
+          "value": "Tearing chest/back pain"
+        },
+        {
+          "label": "Syncope or pre-syncope",
+          "value": "Syncope/near-syncope"
+        },
+        {
+          "label": "Persistent severe pain",
+          "value": "Persistent severe pain"
+        },
+        {
+          "label": "Haemodynamic instability",
+          "value": "Haemodynamic instability"
+        },
+        {
+          "label": "New neurological deficit",
+          "value": "New neurological deficit"
+        },
+        {
+          "label": "Unequal pulses or BP",
+          "value": "Unequal pulses or blood pressure"
+        },
+        {
+          "label": "Hypoxia / severe SOB",
+          "value": "Hypoxia or severe shortness of breath"
+        },
+        {
+          "label": "Features of PE",
+          "value": "Features concerning for pulmonary embolism"
+        },
+        {
+          "label": "Fever with chest pain",
+          "value": "Fever with chest pain"
+        },
+        {
+          "label": "Ongoing vomiting",
+          "value": "Ongoing vomiting"
+        }
+      ],
+      "required": false
+    },
+    {
+      "name": "risk_factors",
+      "label": "Relevant risk factors",
+      "type": "textarea",
+      "section": "History",
+      "required": false
+    },
+    {
+      "name": "hr",
+      "label": "HR",
+      "type": "number",
+      "section": "Vitals",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "sbp",
+      "label": "SBP",
+      "type": "number",
+      "section": "Vitals",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "dbp",
+      "label": "DBP",
+      "type": "number",
+      "section": "Vitals",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "rr",
+      "label": "RR",
+      "type": "number",
+      "section": "Vitals",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "spo2",
+      "label": "SpO2 %",
+      "type": "number",
+      "section": "Vitals",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "temp",
+      "label": "Temp C",
+      "type": "number",
+      "section": "Vitals",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "pain_score",
+      "label": "Pain score (0-10)",
+      "type": "number",
+      "section": "Vitals",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "gcs",
+      "label": "GCS",
+      "type": "number",
+      "section": "Vitals",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "bsl",
+      "label": "BSL (mmol/L)",
+      "type": "number",
+      "section": "Vitals",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "oxygen",
+      "label": "Oxygen",
+      "type": "text",
+      "section": "Vitals",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "appearance",
+      "label": "General appearance / distress",
+      "type": "text",
+      "section": "Vitals",
+      "required": false
+    },
+    {
+      "name": "exam",
+      "label": "Exam",
+      "type": "textarea",
+      "section": "Exam",
+      "required": false
+    },
+    {
+      "name": "investigations",
+      "label": "Investigations",
+      "type": "textarea",
+      "section": "Investigations",
+      "required": true
+    },
+    {
+      "name": "treatment",
+      "label": "Treatment in ED",
+      "type": "textarea",
+      "section": "Treatment",
+      "required": false
+    },
+    {
+      "name": "assessment",
+      "label": "Assessment",
+      "type": "textarea",
+      "section": "Assessment",
+      "required": true
+    },
+    {
+      "name": "differentials",
+      "label": "Differentials considered",
+      "type": "textarea",
+      "section": "Assessment",
+      "required": false
+    },
+    {
+      "name": "plan",
+      "label": "Plan",
+      "type": "textarea",
+      "section": "Plan",
+      "required": true
+    }
+  ]
+}

@@ -39,6 +39,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 
 const LAST_TEMPLATE_KEY = "lastSelectedTemplate";
 const DRAWER_WIDTH = 320;
@@ -147,13 +148,18 @@ const fallbackCopy = (text) => {
   return success;
 };
 
-const App = () => {
+const VALID_MODES = new Set(["letters", "procedures", "notes"]);
+
+const AppContent = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery("(min-width:1025px)");
   const searchRef = useRef(null);
+  const navigate = useNavigate();
+  const { mode: routeMode, id: routeId } = useParams();
 
   const [templatesIndex, setTemplatesIndex] = useState([]);
   const [procedureIndex, setProcedureIndex] = useState([]);
+  const [noteIndex, setNoteIndex] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [fieldValues, setFieldValues] = useState({});
   const [fieldErrors, setFieldErrors] = useState({});
@@ -174,8 +180,14 @@ const App = () => {
   const baseUrl = import.meta.env.BASE_URL || "/";
 
   const activeTemplates = useMemo(() => {
-    return templateMode === "procedures" ? procedureIndex : templatesIndex;
-  }, [procedureIndex, templateMode, templatesIndex]);
+    if (templateMode === "procedures") {
+      return procedureIndex;
+    }
+    if (templateMode === "notes") {
+      return noteIndex;
+    }
+    return templatesIndex;
+  }, [noteIndex, procedureIndex, templateMode, templatesIndex]);
 
   const filteredTemplates = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -240,14 +252,17 @@ const App = () => {
       }
 
       try {
-        const [lettersData, proceduresData] = await Promise.all([
+        const [lettersData, proceduresData, notesData] = await Promise.all([
           fetchJson(`${baseUrl}templates/letters/index.json`),
           fetchJson(`${baseUrl}templates/procedures/index.json`),
+          fetchJson(`${baseUrl}templates/notes/index.json`),
         ]);
         const letterList = Array.isArray(lettersData) ? lettersData : [];
         const procedureList = Array.isArray(proceduresData) ? proceduresData : [];
+        const noteList = Array.isArray(notesData) ? notesData : [];
         setTemplatesIndex(letterList);
         setProcedureIndex(procedureList);
+        setNoteIndex(noteList);
         const last = localStorage.getItem(LAST_TEMPLATE_KEY);
         if (last && letterList.some((template) => template.id === last)) {
           loadTemplate(last, groups, undefined, "letters");
@@ -305,13 +320,16 @@ const App = () => {
     templateId,
     groups = presetGroups,
     importValues,
-    modeOverride
+    modeOverride,
+    skipRouteUpdate = false
   ) => {
     try {
       const mode = modeOverride || templateMode;
       const templatePath =
         mode === "procedures"
           ? `${baseUrl}templates/procedures/${templateId}.json`
+          : mode === "notes"
+          ? `${baseUrl}templates/notes/${templateId}.json`
           : `${baseUrl}templates/letters/${templateId}.json`;
       const template = await fetchJson(templatePath);
       const hydrated = applyPresetGroups(template, groups);
@@ -323,6 +341,9 @@ const App = () => {
       setPreviewTab("patient");
       if (modeOverride) {
         setTemplateMode(modeOverride);
+      }
+      if (!skipRouteUpdate) {
+        navigate(`/${mode}/${templateId}`);
       }
       localStorage.setItem(LAST_TEMPLATE_KEY, templateId);
       if (!isDesktop) {
@@ -423,11 +444,12 @@ const App = () => {
       }
       const existsInLetters = templatesIndex.some((template) => template.id === templateId);
       const existsInProcedures = procedureIndex.some((template) => template.id === templateId);
-      if (!existsInLetters && !existsInProcedures) {
+      const existsInNotes = noteIndex.some((template) => template.id === templateId);
+      if (!existsInLetters && !existsInProcedures && !existsInNotes) {
         setCopyStatus("Import failed — template not found.");
         return;
       }
-      const mode = existsInProcedures ? "procedures" : "letters";
+      const mode = existsInProcedures ? "procedures" : existsInNotes ? "notes" : "letters";
       await loadTemplate(templateId, presetGroups, payload.fieldValues || {}, mode);
       setCopyStatus("Draft imported.");
     } catch (error) {
@@ -447,6 +469,28 @@ const App = () => {
     setValidationAttempted(false);
     setCopyStatus("");
   };
+
+  useEffect(() => {
+    if (!routeMode || !routeId) {
+      if (routeMode && VALID_MODES.has(routeMode) && !routeId && templateMode !== routeMode) {
+        setTemplateMode(routeMode);
+        setSelectedTemplate(null);
+        setFieldValues({});
+        setFieldErrors({});
+        setCopyStatus("");
+        return;
+      }
+      return;
+    }
+    if (!VALID_MODES.has(routeMode)) {
+      navigate("/", { replace: true });
+      return;
+    }
+    if (selectedTemplate?.id === routeId && templateMode === routeMode) {
+      return;
+    }
+    loadTemplate(routeId, presetGroups, undefined, routeMode, true);
+  }, [routeMode, routeId, navigate, presetGroups, selectedTemplate, templateMode]);
 
   const handleDrawerToggle = () => {
     if (isDesktop) {
@@ -480,23 +524,25 @@ const App = () => {
       <Divider />
       {!sidebarCollapsed && (
         <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-          <ToggleButtonGroup
-            value={templateMode}
-            exclusive
-            onChange={(event, value) => {
-              if (value) {
-                setTemplateMode(value);
-                setSelectedTemplate(null);
-                setFieldValues({});
-                setFieldErrors({});
-                setCopyStatus("");
-              }
-            }}
-            size="small"
-            color="primary"
-          >
+            <ToggleButtonGroup
+              value={templateMode}
+              exclusive
+              onChange={(event, value) => {
+                if (value) {
+                  setTemplateMode(value);
+                  setSelectedTemplate(null);
+                  setFieldValues({});
+                  setFieldErrors({});
+                  setCopyStatus("");
+                  navigate(`/${value}`, { replace: true });
+                }
+              }}
+              size="small"
+              color="primary"
+            >
             <ToggleButton value="letters">Letters</ToggleButton>
             <ToggleButton value="procedures">Procedures</ToggleButton>
+            <ToggleButton value="notes">ED Notes</ToggleButton>
           </ToggleButtonGroup>
           <TextField
             inputRef={searchRef}
@@ -511,7 +557,11 @@ const App = () => {
               variant="subtitle2"
               sx={{ mb: 1, textTransform: "uppercase", letterSpacing: 0.5 }}
             >
-              {templateMode === "procedures" ? "All procedures" : "All templates"}
+              {templateMode === "procedures"
+                ? "All procedures"
+                : templateMode === "notes"
+                ? "All ED notes"
+                : "All templates"}
             </Typography>
             {filteredTemplates.length === 0 ? (
               <Typography variant="body2" color="text.secondary">
@@ -636,78 +686,200 @@ const App = () => {
               <Typography color="text.secondary">Select a template to begin.</Typography>
             ) : (
               <Stack gap={2}>
-                {selectedTemplate.fields.map((field) => {
-                  const value = fieldValues[field.name];
-                  const errorMessage = fieldErrors[field.name] || "";
-                  const showError = Boolean(errorMessage) && (validationAttempted || value !== "");
-
-                  if (field.type === "checkbox") {
-                    return (
-                      <FormControlLabel
-                        key={field.name}
-                        control={
-                          <Checkbox
-                            checked={Boolean(value)}
-                            onChange={(event) => handleFieldChange(field, event.target.checked)}
-                          />
-                        }
-                        label={field.label}
-                      />
-                    );
-                  }
-
-                  if (field.type === "select") {
-                    return (
-                      <TextField
-                        key={field.name}
-                        select
-                        label={field.label}
-                        value={value}
-                        onChange={(event) => handleFieldChange(field, event.target.value)}
-                        required={field.required}
-                        error={showError}
-                        helperText={showError ? errorMessage : field.helpText}
+                {selectedTemplate.fields.some((field) => field.section) ? (
+                  Object.entries(
+                    selectedTemplate.fields.reduce((groups, field) => {
+                      const section = field.section || "Other";
+                      if (!groups[section]) {
+                        groups[section] = [];
+                      }
+                      groups[section].push(field);
+                      return groups;
+                    }, {})
+                  ).map(([section, fields]) => (
+                    <Paper
+                      key={section}
+                      variant="outlined"
+                      sx={{ p: 2, borderRadius: 2, borderColor: "divider" }}
+                    >
+                      <Typography variant="subtitle1" sx={{ mb: 1.5, fontWeight: 600 }}>
+                        {section}
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "grid",
+                          gap: 2,
+                          gridTemplateColumns: {
+                            xs: "1fr",
+                            md: "repeat(12, minmax(0, 1fr))",
+                          },
+                        }}
                       >
-                        <MenuItem value="">Select an option</MenuItem>
-                        {field.options.map((option) => (
-                          <MenuItem key={option} value={option}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    );
-                  }
+                        {fields.map((field) => {
+                          const value = fieldValues[field.name];
+                          const errorMessage = fieldErrors[field.name] || "";
+                          const showError = Boolean(errorMessage) && (validationAttempted || value !== "");
+                          const span =
+                            field.width === "xs"
+                              ? { xs: "1 / -1", md: "span 3" }
+                              : field.width === "sm"
+                              ? { xs: "1 / -1", md: "span 4" }
+                              : field.width === "md"
+                              ? { xs: "1 / -1", md: "span 6" }
+                              : { xs: "1 / -1", md: "span 12" };
 
-                  const isMultiline = field.type === "textarea";
-                  const presetLabel = field.presetLabel || "Presets";
-                  return (
-                    <Stack key={field.name} spacing={1}>
-                      <TextField
-                        label={field.label}
-                        value={value}
-                        onChange={(event) => handleFieldChange(field, event.target.value)}
-                        required={field.required}
-                        error={showError}
-                        helperText={showError ? errorMessage : field.helpText}
-                        type={field.type === "textarea" ? "text" : field.type}
-                        multiline={isMultiline}
-                        minRows={isMultiline ? 4 : undefined}
-                      />
-                      {field.presets?.length > 0 && (
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          size="small"
-                          onClick={() => setPresetDialogField(field)}
-                          sx={{ alignSelf: "flex-start" }}
-                          startIcon={<LibraryAddIcon />}
+                          if (field.type === "checkbox") {
+                            return (
+                              <Box key={field.name} sx={{ gridColumn: span }}>
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox
+                                      checked={Boolean(value)}
+                                      onChange={(event) =>
+                                        handleFieldChange(field, event.target.checked)
+                                      }
+                                    />
+                                  }
+                                  label={field.label}
+                                />
+                              </Box>
+                            );
+                          }
+
+                          if (field.type === "select") {
+                            return (
+                              <Box key={field.name} sx={{ gridColumn: span }}>
+                                <TextField
+                                  select
+                                  label={field.label}
+                                  value={value}
+                                  onChange={(event) => handleFieldChange(field, event.target.value)}
+                                  required={field.required}
+                                  error={showError}
+                                  helperText={showError ? errorMessage : field.helpText}
+                                  fullWidth
+                                >
+                                  <MenuItem value="">Select an option</MenuItem>
+                                  {field.options.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                      {option}
+                                    </MenuItem>
+                                  ))}
+                                </TextField>
+                              </Box>
+                            );
+                          }
+
+                          const isMultiline = field.type === "textarea";
+                          const presetLabel = field.presetLabel || "Presets";
+                          return (
+                            <Box key={field.name} sx={{ gridColumn: span }}>
+                              <Stack spacing={1}>
+                                <TextField
+                                  label={field.label}
+                                  value={value}
+                                  onChange={(event) => handleFieldChange(field, event.target.value)}
+                                  required={field.required}
+                                  error={showError}
+                                  helperText={showError ? errorMessage : field.helpText}
+                                  type={field.type === "textarea" ? "text" : field.type}
+                                  multiline={isMultiline}
+                                  minRows={isMultiline ? 4 : undefined}
+                                  fullWidth
+                                />
+                                {field.presets?.length > 0 && (
+                                  <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    size="small"
+                                    onClick={() => setPresetDialogField(field)}
+                                    sx={{ alignSelf: "flex-start" }}
+                                    startIcon={<LibraryAddIcon />}
+                                  >
+                                    {`Insert ${presetLabel.toLowerCase()}`}
+                                  </Button>
+                                )}
+                              </Stack>
+                            </Box>
+                          );
+                        })}
+                      </Box>
+                    </Paper>
+                  ))
+                ) : (
+                  selectedTemplate.fields.map((field) => {
+                    const value = fieldValues[field.name];
+                    const errorMessage = fieldErrors[field.name] || "";
+                    const showError = Boolean(errorMessage) && (validationAttempted || value !== "");
+
+                    if (field.type === "checkbox") {
+                      return (
+                        <FormControlLabel
+                          key={field.name}
+                          control={
+                            <Checkbox
+                              checked={Boolean(value)}
+                              onChange={(event) => handleFieldChange(field, event.target.checked)}
+                            />
+                          }
+                          label={field.label}
+                        />
+                      );
+                    }
+
+                    if (field.type === "select") {
+                      return (
+                        <TextField
+                          key={field.name}
+                          select
+                          label={field.label}
+                          value={value}
+                          onChange={(event) => handleFieldChange(field, event.target.value)}
+                          required={field.required}
+                          error={showError}
+                          helperText={showError ? errorMessage : field.helpText}
                         >
-                          {`Insert ${presetLabel.toLowerCase()}`}
-                        </Button>
-                      )}
-                    </Stack>
-                  );
-                })}
+                          <MenuItem value="">Select an option</MenuItem>
+                          {field.options.map((option) => (
+                            <MenuItem key={option} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      );
+                    }
+
+                    const isMultiline = field.type === "textarea";
+                    const presetLabel = field.presetLabel || "Presets";
+                    return (
+                      <Stack key={field.name} spacing={1}>
+                        <TextField
+                          label={field.label}
+                          value={value}
+                          onChange={(event) => handleFieldChange(field, event.target.value)}
+                          required={field.required}
+                          error={showError}
+                          helperText={showError ? errorMessage : field.helpText}
+                          type={field.type === "textarea" ? "text" : field.type}
+                          multiline={isMultiline}
+                          minRows={isMultiline ? 4 : undefined}
+                        />
+                        {field.presets?.length > 0 && (
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            size="small"
+                            onClick={() => setPresetDialogField(field)}
+                            sx={{ alignSelf: "flex-start" }}
+                            startIcon={<LibraryAddIcon />}
+                          >
+                            {`Insert ${presetLabel.toLowerCase()}`}
+                          </Button>
+                        )}
+                      </Stack>
+                    );
+                  })
+                )}
               </Stack>
             )}
           </Paper>
@@ -839,5 +1011,13 @@ const App = () => {
     </Box>
   );
 };
+
+const App = () => (
+  <Routes>
+    <Route path="/" element={<AppContent />} />
+    <Route path="/:mode" element={<AppContent />} />
+    <Route path="/:mode/:id" element={<AppContent />} />
+  </Routes>
+);
 
 export default App;

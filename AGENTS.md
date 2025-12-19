@@ -5,8 +5,10 @@
 - `src/`: React app source (`App.jsx`, `main.jsx`) using MUI components.
 - `templates-src/letters/`: template source folders containing `template.json`, `patient.md`, and `gp.md`.
 - `templates-src/procedures/`: template source folders containing `template.json` and `body.md`.
+- `templates-src/notes/`: template source folders containing `template.json` and `body.md`.
 - `public/templates/letters/`: compiled JSON templates for each condition plus `index.json` registry.
 - `public/templates/procedures/`: compiled JSON templates for procedure notes plus `index.json` registry.
+- `public/templates/notes/`: compiled JSON templates for ED notes plus `index.json` registry.
 - `public/templates/blocks/`: reusable preset blocks (one JSON per block) with `index.json` registry.
 
 ## Build, Test, and Development Commands
@@ -17,7 +19,7 @@
 ## Coding Style & Naming Conventions
 - JavaScript: use `const`/`let`, arrow functions, and 2-space indentation; prefer early returns for clarity.
 - Naming: camelCase for variables/functions; keep template field names consistent with their placeholders in the template text.
-- Templates: include `id`, `title`, `category`, `keywords`, and a `fields` array. Use concise labels and defaults where appropriate. Provide `patient.md`/`gp.md` for letters and `body.md` for procedures, then run `npm run build:templates` to compile into JSON.
+- Templates: include `id`, `title`, `category`, `keywords`, and a `fields` array. Use concise labels and defaults where appropriate. Provide `patient.md`/`gp.md` for letters and `body.md` for procedures/notes, then run `npm run build:templates` to compile into JSON.
 - Keep additions small and self-contained; avoid introducing dependencies unless essential.
 
 ## Testing Guidelines

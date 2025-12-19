@@ -37,5 +37,6 @@ npm run build
 - Letter templates are authored in `templates-src/letters/` and compiled into `public/templates/letters/`.
 - Each letter template includes `patientBody` and `gpBody` for the two letter variants.
 - Procedure templates are authored in `templates-src/procedures/` and compiled into `public/templates/procedures/` with a single `body` for EMR notes.
+- ED notes templates are authored in `templates-src/notes/` and compiled into `public/templates/notes/` with a single `body`.
 - Only `{{field}}` placeholders and `{{#if field}}...{{/if}}` conditional blocks are supported.
 - No patient identifiers are stored by default.

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "chest_pain_note",
+    "title": "ED clinician note: Chest pain",
+    "category": "ED notes",
+    "keywords": ["chest pain", "ACS", "cardiac", "ED note"]
+  },
+  {
+    "id": "abdominal_pain_note",
+    "title": "ED clinician note: Abdominal pain",
+    "category": "ED notes",
+    "keywords": ["abdominal pain", "abdomen", "ED note"]
+  },
+  {
+    "id": "eye_injury_note",
+    "title": "ED clinician note: Eye injury",
+    "category": "ED notes",
+    "keywords": ["eye injury", "ocular", "ED note"]
+  }
+]
