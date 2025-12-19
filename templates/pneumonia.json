@@ -1,0 +1,32 @@
+{
+  "id": "pneumonia",
+  "title": "Pneumonia",
+  "category": "Respiratory",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": ["pneumonia", "cough", "fever", "antibiotics"],
+  "fields": [
+    {
+      "name": "antibiotics",
+      "label": "Antibiotics prescribed",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "hydration_advice",
+      "label": "Hydration advice",
+      "type": "textarea",
+      "required": false,
+      "default": "Drink enough fluids to keep urine pale."
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": ["GP within 48–72 hours", "GP within 1 week", "Return if not improving"]
+    }
+  ],
+  "body": "You were treated today for pneumonia.\n\nAntibiotics:\n{{antibiotics}}\n\n{{#if hydration_advice}}Hydration: {{hydration_advice}}\n\n{{/if}}Return to ED urgently if you develop:\n- Worsening shortness of breath or chest pain\n- Persistent fever or shaking chills\n- Confusion or severe weakness\n\nFollow-up: {{followup_timeframe}}.",
+  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+}

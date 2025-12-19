@@ -1,0 +1,32 @@
+{
+  "id": "gastroenteritis",
+  "title": "Gastroenteritis",
+  "category": "Gastroenterology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": ["vomiting", "diarrhoea", "gastro", "hydration"],
+  "fields": [
+    {
+      "name": "hydration_plan",
+      "label": "Hydration plan",
+      "type": "textarea",
+      "required": true,
+      "default": "Small, frequent sips of oral rehydration solution; advance diet as tolerated."
+    },
+    {
+      "name": "antiemetic",
+      "label": "Antiemetic prescribed",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": ["GP in 2–3 days", "Return if not improving", "No routine follow-up"]
+    }
+  ],
+  "body": "You were treated today for gastroenteritis.\n\nHydration plan:\n{{hydration_plan}}\n\n{{#if antiemetic}}Antiemetic:\n{{antiemetic}}\n\n{{/if}}Red flags – return to ED urgently if you develop:\n- Unable to keep fluids down for more than 12 hours\n- Blood in vomit or stool\n- Severe abdominal pain or persistent fever\n- Signs of dehydration (very dry mouth, dizziness, minimal urine)\n\nFollow-up: {{followup_timeframe}}.",
+  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+}
