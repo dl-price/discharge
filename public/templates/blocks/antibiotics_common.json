@@ -5,101 +5,41 @@
   "presetTitle": "Common antibiotic regimens",
   "presetDescription": "Insert a common regimen and tailor for local guidance, allergies, and renal function.",
   "presets": [
+      {
+        "label": "Dicloxacillin 500 mg PO qid",
+        "value": "Dicloxacillin 500 mg orally every 6 hours"
+      },
+      {
+        "label": "Flucloxacillin 500 mg PO qid",
+        "value": "Flucloxacillin 500 mg orally every 6 hours"
+      },
+      {
+        "label": "Cefalexin 500 mg PO qid",
+        "value": "Cefalexin 500 mg orally every 6 hours"
+      },
+      {
+        "label": "Cefalexin 750 mg PO tds",
+        "value": "Cefalexin 750 mg orally every 8 hours (alternative dosing when adherence to 6-hourly dosing is unlikely)"
+      },
+      {
+        "label": "TMP–SMX 160/800 mg PO bd",
+        "value": "Trimethoprim–sulfamethoxazole 160 mg/800 mg orally every 12 hours"
+      },
+      {
+        "label": "Clindamycin 450 mg PO tds",
+        "value": "Clindamycin 450 mg orally every 8 hours"
+      },
+      {
+        "label": "TMP–SMX 320/1600 mg PO bd",
+        "value": "Trimethoprim–sulfamethoxazole 320 mg/1600 mg orally every 12 hours (for water-immersed traumatic wounds)"
+      },
+      {
+        "label": "Dicloxacillin 500 mg PO qid + Ciprofloxacin 500 mg PO bd",
+        "value": "Dicloxacillin 500 mg orally every 6 hours PLUS ciprofloxacin 500 mg orally every 12 hours (for water-immersed traumatic wounds when trimethoprim–sulfamethoxazole is not suitable)"
+      },
     {
-      "label": "Amoxicillin-clavulanate (general)",
-      "value": "Amoxicillin-clavulanate as prescribed for 5 days."
-    },
-    {
-      "label": "Doxycycline (respiratory)",
-      "value": "Doxycycline as prescribed for 5 days (if appropriate)."
-    },
-    {
-      "label": "Nitrofurantoin (UTI)",
-      "value": "Nitrofurantoin 100 mg twice daily for 5 days (if suitable)."
-    },
-    {
-      "label": "Trimethoprim (UTI)",
-      "value": "Trimethoprim 300 mg nightly for 3 days (if suitable)."
-    },
-    {
-      "label": "Cephalexin (skin/ENT)",
-      "value": "Cephalexin 500 mg four times daily for 5 days (if appropriate)."
-    },
-    {
-      "label": "Amoxicillin (ENT)",
-      "value": "Amoxicillin as prescribed for 5–7 days (if appropriate)."
-    },
-    {
-      "label": "Penicillin V (pharyngitis)",
-      "value": "Phenoxymethylpenicillin (penicillin V) as prescribed for 10 days (if appropriate)."
-    },
-    {
-      "label": "Azithromycin (respiratory)",
-      "value": "Azithromycin as prescribed for 3–5 days (if appropriate)."
-    },
-    {
-      "label": "Clarithromycin (respiratory)",
-      "value": "Clarithromycin as prescribed for 5 days (if appropriate)."
-    },
-    {
-      "label": "Erythromycin (macrolide)",
-      "value": "Erythromycin as prescribed for 5–7 days (if appropriate)."
-    },
-    {
-      "label": "Flucloxacillin (skin)",
-      "value": "Flucloxacillin as prescribed for 5 days (if appropriate)."
-    },
-    {
-      "label": "Clindamycin (skin/dental)",
-      "value": "Clindamycin as prescribed for 5 days (if appropriate)."
-    },
-    {
-      "label": "Metronidazole (anaerobes)",
-      "value": "Metronidazole as prescribed for 5–7 days (if appropriate)."
-    },
-    {
-      "label": "Trimethoprim-sulfamethoxazole (skin/UTI)",
-      "value": "Trimethoprim-sulfamethoxazole as prescribed for 5 days (if appropriate)."
-    },
-    {
-      "label": "Fosfomycin (UTI)",
-      "value": "Fosfomycin 3 g single dose (if suitable)."
-    },
-    {
-      "label": "Pivmecillinam (UTI)",
-      "value": "Pivmecillinam as prescribed for 3–5 days (if suitable)."
-    },
-    {
-      "label": "Cefuroxime (respiratory/ENT)",
-      "value": "Cefuroxime as prescribed for 5 days (if appropriate)."
-    },
-    {
-      "label": "Cefpodoxime (respiratory/UTI)",
-      "value": "Cefpodoxime as prescribed for 5–7 days (if appropriate)."
-    },
-    {
-      "label": "Cefixime (UTI)",
-      "value": "Cefixime as prescribed for 5–7 days (if appropriate)."
-    },
-    {
-      "label": "Doxycycline (skin)",
-      "value": "Doxycycline as prescribed for 5–7 days (if appropriate)."
-    },
-    {
-      "label": "Ciprofloxacin (UTI)",
-      "value": "Ciprofloxacin as prescribed for 3–5 days (if appropriate)."
-    },
-    {
-      "label": "Levofloxacin (respiratory)",
-      "value": "Levofloxacin as prescribed for 5 days (if appropriate)."
-    },
-    {
-      "label": "Amoxicillin (sinusitis)",
-      "value": "Amoxicillin as prescribed for 5–7 days (if appropriate)."
-    },
-    {
-      "label": "Roxithromycin (respiratory)",
-      "value": "Roxithromycin as prescribed for 5 days (if appropriate)."
+      "label": "Flucloxacillin 500 mg PO qid + Ciprofloxacin 500 mg PO bd",
+      "value": "Flucloxacillin 500 mg orally every 6 hours PLUS ciprofloxacin 500 mg orally every 12 hours (for water-immersed traumatic wounds when trimethoprim–sulfamethoxazole is not suitable)"
     }
   ]
 }
