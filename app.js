@@ -171,6 +171,7 @@ const renderForm = () => {
       '<p class="placeholder-text">Select a template to begin.</p>';
     elements.resetButton.disabled = true;
     elements.copyButton.disabled = true;
+    closePresetModal();
     return;
   }
 
@@ -456,6 +457,7 @@ const handleKeydown = (event) => {
 };
 
 const init = () => {
+  closePresetModal();
   restoreRecentTemplates();
   loadTemplatesIndex();
 

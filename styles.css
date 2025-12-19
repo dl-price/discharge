@@ -241,6 +241,10 @@ textarea {
   z-index: 10;
 }
 
+.modal-overlay[hidden] {
+  display: none;
+}
+
 .modal {
   background: #ffffff;
   border-radius: 16px;
