@@ -1,0 +1,49 @@
+{
+  "id": "ankle_sprain",
+  "title": "Ankle sprain",
+  "category": "MSK",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": ["ankle", "sprain", "soft tissue injury", "RICE", "brace"],
+  "fields": [
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": [
+        "No routine follow-up",
+        "GP in 2–3 days",
+        "Physio within 1 week",
+        "ED review in 48 hours"
+      ]
+    },
+    {
+      "name": "weight_bearing",
+      "label": "Weight-bearing advice",
+      "type": "select",
+      "required": true,
+      "options": [
+        "As tolerated",
+        "Partial weight bearing with crutches",
+        "Non-weight bearing"
+      ]
+    },
+    {
+      "name": "analgesia",
+      "label": "Analgesia plan",
+      "type": "textarea",
+      "required": false,
+      "default": "Paracetamol and/or ibuprofen as directed (if safe for you)."
+    },
+    {
+      "name": "work_note",
+      "label": "Work/activities note provided",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    }
+  ],
+  "body": "You were treated today for an ankle sprain.\n\nHome care advice:\n- Rest the ankle and avoid painful activities.\n- Ice for 15–20 minutes at a time, several times per day for the first 48 hours.\n- Compression with a brace or bandage can reduce swelling.\n- Elevate the ankle above heart level when resting.\n\nWeight bearing: {{weight_bearing}}. Use support as needed.\n\nPain relief: {{analgesia}}\n\nRed flags – return to ED urgently if you develop:\n- Increasing pain, swelling, or numbness\n- Inability to bear any weight after 48 hours\n- Fever, redness, or spreading warmth\n\nFollow-up: {{followup_timeframe}}.\n\n{{#if work_note}}A work/activities note was provided.{{/if}}",
+  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+}

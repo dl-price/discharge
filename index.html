@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ED Discharge Letter Generator</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>ED Discharge Letter Generator</h1>
+      <p class="privacy-banner">
+        Do not enter patient identifiers unless approved by your organisation. This tool is designed to
+        avoid storing patient data.
+      </p>
+    </header>
+
+    <main class="app-grid">
+      <section class="panel" aria-label="Template search">
+        <div class="panel-header">
+          <h2>Templates</h2>
+        </div>
+        <label class="search-label" for="searchInput">Search templates</label>
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search by diagnosis, keyword, or category"
+          autocomplete="off"
+        />
+        <div class="panel-subsection">
+          <h3>Recent templates</h3>
+          <ul id="recentList" class="template-list" aria-live="polite"></ul>
+        </div>
+        <div class="panel-subsection">
+          <h3>All templates</h3>
+          <ul id="templateList" class="template-list" aria-live="polite"></ul>
+        </div>
+        <p id="templateError" class="error-message" role="alert" hidden></p>
+      </section>
+
+      <section class="panel" aria-label="Template form">
+        <div class="panel-header">
+          <h2>Clinician inputs</h2>
+          <button id="resetButton" class="secondary-button" type="button" disabled>
+            Reset fields
+          </button>
+        </div>
+        <div id="formContainer" class="form-container">
+          <p class="placeholder-text">Select a template to begin.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Letter preview">
+        <div class="panel-header">
+          <h2>Letter preview</h2>
+          <button id="copyButton" class="primary-button" type="button" disabled>
+            Copy to Clipboard
+          </button>
+        </div>
+        <pre id="letterPreview" class="letter-preview" aria-live="polite"></pre>
+        <p id="copyStatus" class="copy-status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <div id="presetModal" class="modal-overlay" role="dialog" aria-modal="true" hidden>
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="presetModalTitle">Preset options</h3>
+          <button id="presetModalClose" class="secondary-button" type="button">Close</button>
+        </div>
+        <p id="presetModalDescription" class="modal-description">
+          Select an option to insert into the field.
+        </p>
+        <div id="presetModalOptions" class="modal-options"></div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden>Copied ✓</div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
