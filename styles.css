@@ -1,0 +1,233 @@
+:root {
+  color-scheme: light;
+  --bg: #f7f8fb;
+  --panel: #ffffff;
+  --text: #1c1f2a;
+  --muted: #5d6473;
+  --accent: #0b5fff;
+  --accent-dark: #0846bd;
+  --border: #d9dee9;
+  --danger: #b3261e;
+  --success: #117a37;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app-header {
+  padding: 24px clamp(16px, 4vw, 40px) 8px;
+}
+
+.app-header h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.6rem, 2vw, 2.2rem);
+}
+
+.privacy-banner {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  max-width: 980px;
+}
+
+.app-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 16px clamp(16px, 4vw, 40px) 40px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.search-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+input[type="search"],
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+  background: #ffffff;
+  color: var(--text);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.template-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  display: grid;
+  gap: 6px;
+  background: #ffffff;
+}
+
+.template-card strong {
+  font-size: 1rem;
+}
+
+.template-card span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.template-card.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(11, 95, 255, 0.15);
+}
+
+.panel-subsection h3 {
+  margin: 8px 0 4px;
+  font-size: 1rem;
+}
+
+.placeholder-text {
+  color: var(--muted);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.form-field label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-field .help-text {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.form-field .error-message {
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.letter-preview {
+  flex: 1;
+  background: #f1f5ff;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 16px;
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+}
+
+.primary-button,
+.secondary-button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.primary-button {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.primary-button:disabled {
+  background: #b7c7f6;
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  background: #e6ecf8;
+  color: var(--text);
+}
+
+.error-message {
+  color: var(--danger);
+}
+
+.copy-status {
+  min-height: 20px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  background: var(--success);
+  color: #ffffff;
+  padding: 12px 16px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 1024px) {
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .panel {
+    padding: 12px;
+  }
+
+  .privacy-banner {
+    font-size: 0.9rem;
+  }
+}
