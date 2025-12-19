@@ -38,7 +38,6 @@ import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const RECENT_STORAGE_KEY = "recentTemplates";
 const LAST_TEMPLATE_KEY = "lastSelectedTemplate";
 const DRAWER_WIDTH = 320;
 const DRAWER_COLLAPSED = 76;
@@ -155,7 +154,6 @@ const App = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [fieldValues, setFieldValues] = useState({});
   const [fieldErrors, setFieldErrors] = useState({});
-  const [recentTemplates, setRecentTemplates] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [validationAttempted, setValidationAttempted] = useState(false);
   const [presetGroups, setPresetGroups] = useState({});
@@ -166,6 +164,7 @@ const App = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [previewTab, setPreviewTab] = useState("patient");
+  const fileInputRef = useRef(null);
 
   const drawerWidth = isDesktop ? (sidebarCollapsed ? DRAWER_COLLAPSED : DRAWER_WIDTH) : DRAWER_WIDTH;
   const baseUrl = import.meta.env.BASE_URL || "/";
@@ -181,15 +180,23 @@ const App = () => {
     });
   }, [templatesIndex, searchQuery]);
 
-  const recentTemplateObjects = useMemo(() => {
-    return recentTemplates
-      .map((id) => templatesIndex.find((template) => template.id === id))
-      .filter(Boolean);
-  }, [recentTemplates, templatesIndex]);
-
   const renderBody = (template, values, bodyKey) => {
     const body = template?.[bodyKey] || template?.body || template?.patientBody || "";
     return renderTemplateBody({ ...template, body }, values);
+  };
+
+  const applyImportedValues = (template, importValues) => {
+    const nextValues = initializeFieldValues(template);
+    if (!importValues || typeof importValues !== "object") {
+      return nextValues;
+    }
+    const allowed = new Set(template.fields.map((field) => field.name));
+    Object.entries(importValues).forEach(([key, value]) => {
+      if (allowed.has(key)) {
+        nextValues[key] = value;
+      }
+    });
+    return nextValues;
   };
 
   const previewText = useMemo(() => {
@@ -225,17 +232,6 @@ const App = () => {
         const indexData = await fetchJson(`${baseUrl}templates/index.json`);
         const list = Array.isArray(indexData) ? indexData : [];
         setTemplatesIndex(list);
-        const storedRecent = localStorage.getItem(RECENT_STORAGE_KEY);
-        if (storedRecent) {
-          try {
-            const parsed = JSON.parse(storedRecent);
-            if (Array.isArray(parsed)) {
-              setRecentTemplates(parsed);
-            }
-          } catch (error) {
-            setRecentTemplates([]);
-          }
-        }
         const last = localStorage.getItem(LAST_TEMPLATE_KEY);
         if (last && list.some((template) => template.id === last)) {
           loadTemplate(last, groups);
@@ -289,17 +285,16 @@ const App = () => {
     return () => document.removeEventListener("keydown", handleKeydown);
   }, [filteredTemplates, presetDialogField, isDesktop, selectedTemplate]);
 
-  const loadTemplate = async (templateId, groups = presetGroups) => {
+  const loadTemplate = async (templateId, groups = presetGroups, importValues) => {
     try {
       const template = await fetchJson(`${baseUrl}templates/${templateId}.json`);
       const hydrated = applyPresetGroups(template, groups);
       setSelectedTemplate(hydrated);
-      setFieldValues(initializeFieldValues(hydrated));
+      setFieldValues(applyImportedValues(hydrated, importValues));
       setFieldErrors({});
       setValidationAttempted(false);
       setCopyStatus("");
       setPreviewTab("patient");
-      updateRecentTemplates(templateId);
       localStorage.setItem(LAST_TEMPLATE_KEY, templateId);
       if (!isDesktop) {
         setMobileOpen(false);
@@ -309,13 +304,6 @@ const App = () => {
     }
   };
 
-  const updateRecentTemplates = (templateId) => {
-    setRecentTemplates((prev) => {
-      const next = [templateId, ...prev.filter((id) => id !== templateId)].slice(0, 5);
-      localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(next));
-      return next;
-    });
-  };
 
   const handleFieldChange = (field, value) => {
     setFieldValues((prev) => ({ ...prev, [field.name]: value }));
@@ -361,6 +349,60 @@ const App = () => {
       } else {
         setCopyStatus("Copy failed — select the letter and copy manually.");
       }
+    }
+  };
+
+  const handleExport = () => {
+    if (!selectedTemplate) {
+      return;
+    }
+    const payload = {
+      templateId: selectedTemplate.id,
+      fieldValues,
+      exportedAt: new Date().toISOString(),
+      version: 1,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${selectedTemplate.id}-draft.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImportFile = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    try {
+      const text = await file.text();
+      const payload = JSON.parse(text);
+      const templateId = payload?.templateId;
+      if (!templateId) {
+        setCopyStatus("Import failed — missing templateId.");
+        return;
+      }
+      const exists = templatesIndex.some((template) => template.id === templateId);
+      if (!exists) {
+        setCopyStatus("Import failed — template not found.");
+        return;
+      }
+      await loadTemplate(templateId, presetGroups, payload.fieldValues || {});
+      setCopyStatus("Draft imported.");
+    } catch (error) {
+      setCopyStatus("Import failed — invalid JSON file.");
+    } finally {
+      event.target.value = "";
     }
   };
 
@@ -415,33 +457,7 @@ const App = () => {
             onChange={(event) => setSearchQuery(event.target.value)}
             size="small"
           />
-          <Box>
-            <Typography
-              variant="subtitle2"
-              sx={{ mb: 1, textTransform: "uppercase", letterSpacing: 0.5 }}
-            >
-              Recent templates
-            </Typography>
-            {recentTemplateObjects.length === 0 ? (
-              <Typography variant="body2" color="text.secondary">
-                No recent templates yet.
-              </Typography>
-            ) : (
-              <List dense disablePadding>
-                {recentTemplateObjects.map((template) => (
-                  <ListItem key={template.id} disablePadding>
-                    <ListItemButton
-                      selected={selectedTemplate?.id === template.id}
-                      onClick={() => loadTemplate(template.id)}
-                    >
-                      <ListItemText primary={template.title} secondary={template.category} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            )}
-          </Box>
-          <Box sx={{ flex: 1, minHeight: 0 }}>
+          <Box sx={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
             <Typography
               variant="subtitle2"
               sx={{ mb: 1, textTransform: "uppercase", letterSpacing: 0.5 }}
@@ -453,7 +469,11 @@ const App = () => {
                 No templates found.
               </Typography>
             ) : (
-              <List dense disablePadding sx={{ maxHeight: 360, overflow: "auto" }}>
+              <List
+                dense
+                disablePadding
+                sx={{ flex: 1, overflow: "auto", pr: 0.5 }}
+              >
                 {filteredTemplates.map((template) => (
                   <ListItem key={template.id} disablePadding>
                     <ListItemButton
@@ -539,10 +559,30 @@ const App = () => {
           <Paper sx={{ p: 2, borderRadius: 3, border: `1px solid ${theme.palette.divider}` }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
               <Typography variant="h6">Clinician inputs</Typography>
-              <Button variant="outlined" size="small" onClick={handleReset} disabled={!selectedTemplate}>
-                Reset fields
-              </Button>
+              <Stack direction="row" spacing={1}>
+                <Button variant="outlined" size="small" onClick={handleImportClick}>
+                  Import JSON
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={handleExport}
+                  disabled={!selectedTemplate}
+                >
+                  Export JSON
+                </Button>
+                <Button variant="outlined" size="small" onClick={handleReset} disabled={!selectedTemplate}>
+                  Reset fields
+                </Button>
+              </Stack>
             </Stack>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/json"
+              onChange={handleImportFile}
+              style={{ display: "none" }}
+            />
             {!selectedTemplate ? (
               <Typography color="text.secondary">Select a template to begin.</Typography>
             ) : (
