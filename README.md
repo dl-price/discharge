@@ -26,14 +26,15 @@ npm run build
 
 ## Add a new template
 
-1. Add `public/templates/<id>.json` with the template definition.
-2. Add an entry to `public/templates/index.json`.
+1. Add `public/templates/letters/<id>.json` with the template definition.
+2. Add an entry to `public/templates/letters/index.json`.
 3. For reusable field presets, add a block in `public/templates/blocks/` and register it in `public/templates/blocks/index.json`.
 3. Commit and push.
 
 ## Template notes
 
-- Templates are stored in `public/templates/` and loaded using relative paths.
-- Each template includes `patientBody` and `gpBody` for the two letter variants.
+- Letter templates are stored in `public/templates/letters/` and loaded using relative paths.
+- Each letter template includes `patientBody` and `gpBody` for the two letter variants.
+- Procedure templates live in `public/templates/procedures/` and use a single `body` for EMR notes.
 - Only `{{field}}` placeholders and `{{#if field}}...{{/if}}` conditional blocks are supported.
 - No patient identifiers are stored by default.

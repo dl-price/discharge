@@ -25,6 +25,8 @@ import {
   Tab,
   Tabs,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Toolbar,
   Typography,
   useMediaQuery,
@@ -151,6 +153,7 @@ const App = () => {
   const searchRef = useRef(null);
 
   const [templatesIndex, setTemplatesIndex] = useState([]);
+  const [procedureIndex, setProcedureIndex] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [fieldValues, setFieldValues] = useState({});
   const [fieldErrors, setFieldErrors] = useState({});
@@ -164,21 +167,26 @@ const App = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [previewTab, setPreviewTab] = useState("patient");
+  const [templateMode, setTemplateMode] = useState("letters");
   const fileInputRef = useRef(null);
 
   const drawerWidth = isDesktop ? (sidebarCollapsed ? DRAWER_COLLAPSED : DRAWER_WIDTH) : DRAWER_WIDTH;
   const baseUrl = import.meta.env.BASE_URL || "/";
 
+  const activeTemplates = useMemo(() => {
+    return templateMode === "procedures" ? procedureIndex : templatesIndex;
+  }, [procedureIndex, templateMode, templatesIndex]);
+
   const filteredTemplates = useMemo(() => {
     if (!searchQuery.trim()) {
-      return templatesIndex;
+      return activeTemplates;
     }
     const query = searchQuery.toLowerCase();
-    return templatesIndex.filter((template) => {
+    return activeTemplates.filter((template) => {
       const keywordText = Array.isArray(template.keywords) ? template.keywords.join(" ") : "";
       return `${template.title} ${template.category} ${keywordText}`.toLowerCase().includes(query);
     });
-  }, [templatesIndex, searchQuery]);
+  }, [activeTemplates, searchQuery]);
 
   const renderBody = (template, values, bodyKey) => {
     const body = template?.[bodyKey] || template?.body || template?.patientBody || "";
@@ -203,9 +211,12 @@ const App = () => {
     if (!selectedTemplate) {
       return "";
     }
+    if (templateMode === "procedures") {
+      return renderBody(selectedTemplate, fieldValues, "body");
+    }
     const key = previewTab === "gp" ? "gpBody" : "patientBody";
     return renderBody(selectedTemplate, fieldValues, key);
-  }, [selectedTemplate, fieldValues, previewTab]);
+  }, [selectedTemplate, fieldValues, previewTab, templateMode]);
 
 
   useEffect(() => {
@@ -229,12 +240,17 @@ const App = () => {
       }
 
       try {
-        const indexData = await fetchJson(`${baseUrl}templates/index.json`);
-        const list = Array.isArray(indexData) ? indexData : [];
-        setTemplatesIndex(list);
+        const [lettersData, proceduresData] = await Promise.all([
+          fetchJson(`${baseUrl}templates/letters/index.json`),
+          fetchJson(`${baseUrl}templates/procedures/index.json`),
+        ]);
+        const letterList = Array.isArray(lettersData) ? lettersData : [];
+        const procedureList = Array.isArray(proceduresData) ? proceduresData : [];
+        setTemplatesIndex(letterList);
+        setProcedureIndex(procedureList);
         const last = localStorage.getItem(LAST_TEMPLATE_KEY);
-        if (last && list.some((template) => template.id === last)) {
-          loadTemplate(last, groups);
+        if (last && letterList.some((template) => template.id === last)) {
+          loadTemplate(last, groups, undefined, "letters");
         }
       } catch (error) {
         setTemplateError(
@@ -285,9 +301,19 @@ const App = () => {
     return () => document.removeEventListener("keydown", handleKeydown);
   }, [filteredTemplates, presetDialogField, isDesktop, selectedTemplate]);
 
-  const loadTemplate = async (templateId, groups = presetGroups, importValues) => {
+  const loadTemplate = async (
+    templateId,
+    groups = presetGroups,
+    importValues,
+    modeOverride
+  ) => {
     try {
-      const template = await fetchJson(`${baseUrl}templates/${templateId}.json`);
+      const mode = modeOverride || templateMode;
+      const templatePath =
+        mode === "procedures"
+          ? `${baseUrl}templates/procedures/${templateId}.json`
+          : `${baseUrl}templates/letters/${templateId}.json`;
+      const template = await fetchJson(templatePath);
       const hydrated = applyPresetGroups(template, groups);
       setSelectedTemplate(hydrated);
       setFieldValues(applyImportedValues(hydrated, importValues));
@@ -295,6 +321,9 @@ const App = () => {
       setValidationAttempted(false);
       setCopyStatus("");
       setPreviewTab("patient");
+      if (modeOverride) {
+        setTemplateMode(modeOverride);
+      }
       localStorage.setItem(LAST_TEMPLATE_KEY, templateId);
       if (!isDesktop) {
         setMobileOpen(false);
@@ -392,12 +421,14 @@ const App = () => {
         setCopyStatus("Import failed — missing templateId.");
         return;
       }
-      const exists = templatesIndex.some((template) => template.id === templateId);
-      if (!exists) {
+      const existsInLetters = templatesIndex.some((template) => template.id === templateId);
+      const existsInProcedures = procedureIndex.some((template) => template.id === templateId);
+      if (!existsInLetters && !existsInProcedures) {
         setCopyStatus("Import failed — template not found.");
         return;
       }
-      await loadTemplate(templateId, presetGroups, payload.fieldValues || {});
+      const mode = existsInProcedures ? "procedures" : "letters";
+      await loadTemplate(templateId, presetGroups, payload.fieldValues || {}, mode);
       setCopyStatus("Draft imported.");
     } catch (error) {
       setCopyStatus("Import failed — invalid JSON file.");
@@ -449,6 +480,24 @@ const App = () => {
       <Divider />
       {!sidebarCollapsed && (
         <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+          <ToggleButtonGroup
+            value={templateMode}
+            exclusive
+            onChange={(event, value) => {
+              if (value) {
+                setTemplateMode(value);
+                setSelectedTemplate(null);
+                setFieldValues({});
+                setFieldErrors({});
+                setCopyStatus("");
+              }
+            }}
+            size="small"
+            color="primary"
+          >
+            <ToggleButton value="letters">Letters</ToggleButton>
+            <ToggleButton value="procedures">Procedures</ToggleButton>
+          </ToggleButtonGroup>
           <TextField
             inputRef={searchRef}
             label="Search templates"
@@ -462,7 +511,7 @@ const App = () => {
               variant="subtitle2"
               sx={{ mb: 1, textTransform: "uppercase", letterSpacing: 0.5 }}
             >
-              All templates
+              {templateMode === "procedures" ? "All procedures" : "All templates"}
             </Typography>
             {filteredTemplates.length === 0 ? (
               <Typography variant="body2" color="text.secondary">
@@ -667,16 +716,18 @@ const App = () => {
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
               <Typography variant="h6">Letter preview</Typography>
             </Stack>
-            <Tabs
-              value={previewTab}
-              onChange={(event, value) => setPreviewTab(value)}
-              textColor="primary"
-              indicatorColor="primary"
-              sx={{ mb: 2 }}
-            >
-              <Tab label="Patient letter" value="patient" />
-              <Tab label="GP letter" value="gp" />
-            </Tabs>
+            {templateMode === "letters" && (
+              <Tabs
+                value={previewTab}
+                onChange={(event, value) => setPreviewTab(value)}
+                textColor="primary"
+                indicatorColor="primary"
+                sx={{ mb: 2 }}
+              >
+                <Tab label="Patient letter" value="patient" />
+                <Tab label="GP letter" value="gp" />
+              </Tabs>
+            )}
             <Box
               sx={{
                 flex: 1,
@@ -689,7 +740,7 @@ const App = () => {
               }}
               component="div"
             >
-              {previewTab === "patient" ? (
+              {templateMode === "letters" && previewTab === "patient" ? (
                 <Box
                   sx={{
                     "& h1, & h2, & h3": {
