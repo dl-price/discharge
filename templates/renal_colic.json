@@ -1,0 +1,46 @@
+{
+  "id": "renal_colic",
+  "title": "Renal colic",
+  "category": "Urology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": ["renal", "colic", "stone", "flank pain", "hydration", "tamsulosin"],
+  "fields": [
+    {
+      "name": "stone_size_mm",
+      "label": "Estimated stone size (mm)",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "tamsulosin",
+      "label": "Tamsulosin prescribed",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "analgesia_plan",
+      "label": "Analgesia plan",
+      "type": "textarea",
+      "required": true,
+      "helpText": "Include what to take regularly and what to use for breakthrough pain."
+    },
+    {
+      "name": "followup_plan",
+      "label": "Follow-up plan",
+      "type": "textarea",
+      "required": true,
+      "default": "See your GP within 48–72 hours. If you were advised to have repeat imaging, arrange this as discussed."
+    },
+    {
+      "name": "urine_strainer",
+      "label": "Urine strainer provided",
+      "type": "checkbox",
+      "required": false,
+      "default": true
+    }
+  ],
+  "body": "You were treated today for renal colic (suspected kidney stone).\n\nHydration advice:\n- Drink enough water to keep your urine pale.\n- Avoid alcohol if you are taking strong pain medicines.\n\nPain control plan:\n{{analgesia_plan}}\n\n{{#if stone_size_mm}}Estimated stone size: {{stone_size_mm}} mm.{{/if}}\n\n{{#if tamsulosin}}Take tamsulosin as prescribed. It can cause light-headedness, so stand up slowly.{{/if}}\n\n{{#if urine_strainer}}Use the urine strainer and bring any stone fragments for analysis.{{/if}}\n\nRed flags – return to ED urgently if you develop:\n- Fever or rigors\n- Uncontrolled pain or persistent vomiting\n- Reduced urine output\n- Worsening symptoms\n\nFollow-up:\n{{followup_plan}}",
+  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+}

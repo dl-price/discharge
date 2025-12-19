@@ -1,0 +1,14 @@
+[
+  {
+    "id": "ankle_sprain",
+    "title": "Ankle sprain",
+    "category": "MSK",
+    "keywords": ["ankle", "sprain", "soft tissue injury", "RICE", "brace"]
+  },
+  {
+    "id": "renal_colic",
+    "title": "Renal colic",
+    "category": "Urology",
+    "keywords": ["renal", "colic", "stone", "flank pain", "hydration", "tamsulosin"]
+  }
+]
