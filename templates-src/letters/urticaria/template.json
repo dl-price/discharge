@@ -1,0 +1,40 @@
+{
+  "id": "urticaria",
+  "title": "Urticaria (hives)",
+  "category": "Allergy",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "urticaria",
+    "hives",
+    "allergy",
+    "rash"
+  ],
+  "fields": [
+    {
+      "name": "antihistamine",
+      "label": "Antihistamine plan",
+      "type": "textarea",
+      "required": true,
+      "helpText": "Include dose/frequency."
+    },
+    {
+      "name": "trigger_avoidance",
+      "label": "Trigger avoidance",
+      "type": "textarea",
+      "required": false,
+      "default": "Avoid known triggers if identified."
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": [
+        "GP in 2–3 days",
+        "Allergy clinic within 2 weeks",
+        "Return if not improving"
+      ]
+    }
+  ]
+}

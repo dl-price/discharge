@@ -1,0 +1,72 @@
+import { promises as fs } from "fs";
+import path from "path";
+
+const readJson = async (filePath) => {
+  const text = await fs.readFile(filePath, "utf8");
+  return JSON.parse(text);
+};
+
+const writeJson = async (filePath, data) => {
+  const text = JSON.stringify(data, null, 2) + "\n";
+  await fs.writeFile(filePath, text, "utf8");
+};
+
+const readText = async (filePath) => {
+  return fs.readFile(filePath, "utf8");
+};
+
+const buildLetters = async (srcRoot, destRoot) => {
+  const entries = await fs.readdir(srcRoot, { withFileTypes: true });
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const dir = path.join(srcRoot, entry.name);
+    const templatePath = path.join(dir, "template.json");
+    const patientPath = path.join(dir, "patient.md");
+    const gpPath = path.join(dir, "gp.md");
+    const [template, patientBody, gpBody] = await Promise.all([
+      readJson(templatePath),
+      readText(patientPath),
+      readText(gpPath),
+    ]);
+    template.patientBody = patientBody.trimEnd();
+    template.gpBody = gpBody.trimEnd();
+    const destPath = path.join(destRoot, `${entry.name}.json`);
+    await writeJson(destPath, template);
+  }
+};
+
+const buildProcedures = async (srcRoot, destRoot) => {
+  const entries = await fs.readdir(srcRoot, { withFileTypes: true });
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const dir = path.join(srcRoot, entry.name);
+    const templatePath = path.join(dir, "template.json");
+    const bodyPath = path.join(dir, "body.md");
+    const [template, body] = await Promise.all([
+      readJson(templatePath),
+      readText(bodyPath),
+    ]);
+    template.body = body.trimEnd();
+    const destPath = path.join(destRoot, `${entry.name}.json`);
+    await writeJson(destPath, template);
+  }
+};
+
+const main = async () => {
+  const srcLetters = path.join("templates-src", "letters");
+  const srcProcedures = path.join("templates-src", "procedures");
+  const destLetters = path.join("public", "templates", "letters");
+  const destProcedures = path.join("public", "templates", "procedures");
+
+  await buildLetters(srcLetters, destLetters);
+  await buildProcedures(srcProcedures, destProcedures);
+};
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

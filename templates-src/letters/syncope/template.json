@@ -1,0 +1,43 @@
+{
+  "id": "syncope",
+  "title": "Syncope (fainting)",
+  "category": "Cardiology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "syncope",
+    "fainting",
+    "collapse",
+    "dizziness"
+  ],
+  "fields": [
+    {
+      "name": "precipitating_factors",
+      "label": "Possible triggers",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "driving_advice",
+      "label": "Driving advice",
+      "type": "select",
+      "required": true,
+      "options": [
+        "Do not drive for 24 hours",
+        "Do not drive for 1 week",
+        "Follow local driving regulations"
+      ]
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": [
+        "GP within 48–72 hours",
+        "Cardiology clinic within 2 weeks",
+        "No routine follow-up"
+      ]
+    }
+  ]
+}

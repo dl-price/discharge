@@ -1,0 +1,40 @@
+{
+  "id": "otitis_media",
+  "title": "Otitis media",
+  "category": "ENT",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "ear infection",
+    "otitis media",
+    "ear pain",
+    "antibiotics"
+  ],
+  "fields": [
+    {
+      "name": "antibiotics",
+      "label": "Antibiotics prescribed",
+      "type": "textarea",
+      "required": false,
+      "presetGroup": "antibiotics_common"
+    },
+    {
+      "name": "analgesia",
+      "label": "Analgesia advice",
+      "type": "textarea",
+      "required": true,
+      "presetGroup": "analgesia_standard"
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": [
+        "GP in 2–3 days",
+        "Return if not improving",
+        "No routine follow-up"
+      ]
+    }
+  ]
+}

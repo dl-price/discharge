@@ -1,0 +1,86 @@
+{
+  "id": "laceration_care",
+  "title": "Laceration care",
+  "category": "Wounds",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "laceration",
+    "wound",
+    "sutures",
+    "dressing"
+  ],
+  "fields": [
+    {
+      "name": "mechanism",
+      "label": "Mechanism of injury",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "wound_location",
+      "label": "Wound location",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "closure_type",
+      "label": "Closure type",
+      "type": "select",
+      "required": true,
+      "options": [
+        "Sutures",
+        "Glue",
+        "Steri-strips",
+        "No closure needed"
+      ]
+    },
+    {
+      "name": "closure_details",
+      "label": "Closure details",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "followup_time",
+      "label": "Suture removal timeframe",
+      "type": "select",
+      "required": false,
+      "options": [
+        "5 days (face)",
+        "7 days (scalp)",
+        "7–10 days (upper limb)",
+        "10–14 days (lower limb)"
+      ]
+    },
+    {
+      "name": "removal_method",
+      "label": "Suture removal method",
+      "type": "select",
+      "required": true,
+      "options": [
+        "Removal of sutures",
+        "Removal of staples",
+        "Wound review"
+      ]
+    },
+    {
+      "name": "tetanus",
+      "label": "Tetanus advice",
+      "type": "select",
+      "required": false,
+      "options": [
+        "Tetanus up to date",
+        "Tetanus booster not indicated",
+        "Tetanus booster (ADT) given"
+      ]
+    },
+    {
+      "name": "antibiotics",
+      "label": "Antibiotics prescribed",
+      "type": "textarea",
+      "required": false,
+      "presetGroup": "antibiotics_common"
+    }
+  ]
+}

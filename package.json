@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "build:templates": "node scripts/build-templates.js",
+    "dev": "npm run build:templates && vite",
+    "build": "npm run build:templates && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

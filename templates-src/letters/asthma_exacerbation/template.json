@@ -1,0 +1,41 @@
+{
+  "id": "asthma_exacerbation",
+  "title": "Asthma exacerbation",
+  "category": "Respiratory",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "asthma",
+    "wheeze",
+    "shortness of breath",
+    "inhaler",
+    "steroids"
+  ],
+  "fields": [
+    {
+      "name": "reliever_plan",
+      "label": "Reliever inhaler plan",
+      "type": "textarea",
+      "required": true,
+      "helpText": "Include dose/frequency for the next 48–72 hours."
+    },
+    {
+      "name": "steroid_course",
+      "label": "Oral steroid course",
+      "type": "textarea",
+      "required": false,
+      "helpText": "Leave blank if not prescribed."
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": [
+        "GP in 24–48 hours",
+        "Respiratory clinic within 1 week",
+        "No routine follow-up"
+      ]
+    }
+  ]
+}

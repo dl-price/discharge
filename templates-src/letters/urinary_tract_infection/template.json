@@ -1,0 +1,40 @@
+{
+  "id": "urinary_tract_infection",
+  "title": "Urinary tract infection",
+  "category": "Urology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "UTI",
+    "urine",
+    "dysuria",
+    "antibiotics"
+  ],
+  "fields": [
+    {
+      "name": "antibiotics",
+      "label": "Antibiotics prescribed",
+      "type": "textarea",
+      "required": true,
+      "presetGroup": "antibiotics_common"
+    },
+    {
+      "name": "hydration_advice",
+      "label": "Hydration advice",
+      "type": "textarea",
+      "required": false,
+      "default": "Drink extra fluids over the next few days unless you are on fluid restriction."
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": [
+        "GP in 2–3 days",
+        "GP in 1 week",
+        "Return if not improving"
+      ]
+    }
+  ]
+}

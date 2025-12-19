@@ -10,5 +10,23 @@
     "title": "Wound care / closure",
     "category": "Procedures",
     "keywords": ["laceration", "suturing", "closure", "wound"]
+  },
+  {
+    "id": "nasogastric_tube_insertion",
+    "title": "Nasogastric tube insertion",
+    "category": "Procedures",
+    "keywords": ["NGT", "nasogastric", "tube", "decompression"]
+  },
+  {
+    "id": "urinary_catheter_insertion",
+    "title": "Urinary catheter insertion",
+    "category": "Procedures",
+    "keywords": ["IDC", "catheter", "urinary", "Foley"]
+  },
+  {
+    "id": "fascia_iliaca_block",
+    "title": "Fascia iliaca block",
+    "category": "Procedures",
+    "keywords": ["regional", "block", "hip", "analgesia"]
   }
 ]

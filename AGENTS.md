@@ -3,8 +3,10 @@
 ## Project Structure & Module Organization
 - `index.html`: Vite entry point; keep the root div stable for React rendering.
 - `src/`: React app source (`App.jsx`, `main.jsx`) using MUI components.
-- `public/templates/letters/`: JSON templates for each condition plus `index.json` registry. Template files are named `<id>.json` and referenced by the same `id`. Keep metadata (id, title, category, keywords, version/lastReviewed if added) close to the proposed schema.
-- `public/templates/procedures/`: JSON templates for procedure notes with a single `body` and `index.json` registry.
+- `templates-src/letters/`: template source folders containing `template.json`, `patient.md`, and `gp.md`.
+- `templates-src/procedures/`: template source folders containing `template.json` and `body.md`.
+- `public/templates/letters/`: compiled JSON templates for each condition plus `index.json` registry.
+- `public/templates/procedures/`: compiled JSON templates for procedure notes plus `index.json` registry.
 - `public/templates/blocks/`: reusable preset blocks (one JSON per block) with `index.json` registry.
 
 ## Build, Test, and Development Commands
@@ -15,7 +17,7 @@
 ## Coding Style & Naming Conventions
 - JavaScript: use `const`/`let`, arrow functions, and 2-space indentation; prefer early returns for clarity.
 - Naming: camelCase for variables/functions; keep template field names consistent with their placeholders in the template text.
-- Templates: include `id`, `title`, `category`, `keywords`, and a `fields` array. Use concise labels and defaults where appropriate. Provide both `patientBody` and `gpBody` for letter content. Procedure templates use a single `body`.
+- Templates: include `id`, `title`, `category`, `keywords`, and a `fields` array. Use concise labels and defaults where appropriate. Provide `patient.md`/`gp.md` for letters and `body.md` for procedures, then run `npm run build:templates` to compile into JSON.
 - Keep additions small and self-contained; avoid introducing dependencies unless essential.
 
 ## Testing Guidelines

@@ -1,0 +1,122 @@
+{
+  "id": "urinary_catheter_insertion",
+  "title": "Urinary catheter insertion",
+  "category": "Procedures",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": ["IDC", "catheter", "urinary", "Foley"],
+  "fields": [
+    {
+      "name": "date",
+      "label": "Date",
+      "type": "date",
+      "required": false
+    },
+    {
+      "name": "time",
+      "label": "Time",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "indication",
+      "label": "Indication",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "catheter_type",
+      "label": "Catheter type",
+      "type": "select",
+      "required": false,
+      "options": ["IDC", "Foley", "Other"]
+    },
+    {
+      "name": "catheter_type_other",
+      "label": "Catheter type (other)",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "size",
+      "label": "Catheter size",
+      "type": "select",
+      "required": false,
+      "options": ["12 Fr", "14 Fr", "16 Fr", "18 Fr", "20 Fr"]
+    },
+    {
+      "name": "balloon_ml",
+      "label": "Balloon volume (mL)",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "aseptic",
+      "label": "Aseptic technique used",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "urine_return",
+      "label": "Free urine return",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "urine_description",
+      "label": "Urine appearance",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "comp_none",
+      "label": "Complications: None",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_trauma",
+      "label": "Complications: Traumatic insertion",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_haematuria",
+      "label": "Complications: Haematuria",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_failed",
+      "label": "Complications: Failed attempt",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_other",
+      "label": "Complications: Other",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "tolerated",
+      "label": "Patient tolerated procedure",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "plan_monitor",
+      "label": "Plan: Monitor urine output and catheter site",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    }
+  ]
+}

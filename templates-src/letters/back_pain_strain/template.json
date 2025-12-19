@@ -1,0 +1,40 @@
+{
+  "id": "back_pain_strain",
+  "title": "Back pain (muscle strain)",
+  "category": "MSK",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "back pain",
+    "strain",
+    "lumbar",
+    "MSK"
+  ],
+  "fields": [
+    {
+      "name": "analgesia_plan",
+      "label": "Analgesia plan",
+      "type": "textarea",
+      "required": true,
+      "presetGroup": "analgesia_standard"
+    },
+    {
+      "name": "activity_advice",
+      "label": "Activity advice",
+      "type": "textarea",
+      "required": false,
+      "default": "Keep moving gently; avoid heavy lifting for a few days."
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": [
+        "GP in 3–5 days",
+        "Physio within 1 week",
+        "Return if not improving"
+      ]
+    }
+  ]
+}

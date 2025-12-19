@@ -1,0 +1,108 @@
+{
+  "id": "fascia_iliaca_block",
+  "title": "Fascia iliaca block",
+  "category": "Procedures",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": ["regional", "block", "hip", "analgesia"],
+  "fields": [
+    {
+      "name": "date",
+      "label": "Date",
+      "type": "date",
+      "required": false
+    },
+    {
+      "name": "time",
+      "label": "Time",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "indication",
+      "label": "Indication",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "side",
+      "label": "Side",
+      "type": "select",
+      "required": false,
+      "options": ["Left", "Right"]
+    },
+    {
+      "name": "consent",
+      "label": "Consent obtained",
+      "type": "select",
+      "required": false,
+      "options": ["Verbal", "Written", "Emergency / implied"]
+    },
+    {
+      "name": "agent",
+      "label": "Local anaesthetic (agent/concentration)",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "volume_ml",
+      "label": "Volume (mL)",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "ultrasound_guided",
+      "label": "Ultrasound-guided",
+      "type": "checkbox",
+      "required": false,
+      "default": true
+    },
+    {
+      "name": "technique",
+      "label": "Technique / approach",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "comp_none",
+      "label": "Complications: None",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_toxicity",
+      "label": "Complications: Local anaesthetic systemic toxicity",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_hematoma",
+      "label": "Complications: Haematoma",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_failed",
+      "label": "Complications: Failed block",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_other",
+      "label": "Complications: Other",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "tolerated",
+      "label": "Patient tolerated procedure",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    }
+  ]
+}

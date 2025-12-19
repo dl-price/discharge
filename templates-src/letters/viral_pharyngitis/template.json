@@ -1,0 +1,40 @@
+{
+  "id": "viral_pharyngitis",
+  "title": "Viral pharyngitis",
+  "category": "ENT",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "sore throat",
+    "pharyngitis",
+    "viral",
+    "tonsils"
+  ],
+  "fields": [
+    {
+      "name": "analgesia",
+      "label": "Analgesia advice",
+      "type": "textarea",
+      "required": true,
+      "presetGroup": "analgesia_standard"
+    },
+    {
+      "name": "hydration_advice",
+      "label": "Hydration advice",
+      "type": "textarea",
+      "required": false,
+      "default": "Warm fluids, honey, and throat lozenges may help."
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": [
+        "GP in 2–3 days",
+        "Return if not improving",
+        "No routine follow-up"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "gastroenteritis",
+  "title": "Gastroenteritis",
+  "category": "Gastroenterology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "vomiting",
+    "diarrhoea",
+    "gastro",
+    "hydration"
+  ],
+  "fields": [
+    {
+      "name": "hydration_plan",
+      "label": "Hydration plan",
+      "type": "textarea",
+      "required": true,
+      "default": "Small, frequent sips of oral rehydration solution; advance diet as tolerated."
+    },
+    {
+      "name": "antiemetic",
+      "label": "Antiemetic prescribed",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": [
+        "GP in 2–3 days",
+        "Return if not improving",
+        "No routine follow-up"
+      ]
+    }
+  ]
+}

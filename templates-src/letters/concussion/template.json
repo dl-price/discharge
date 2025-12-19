@@ -1,0 +1,34 @@
+{
+  "id": "concussion",
+  "title": "Concussion",
+  "category": "Neurology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "concussion",
+    "head injury",
+    "brain",
+    "rest"
+  ],
+  "fields": [
+    {
+      "name": "time_off_work",
+      "label": "Time off work/school",
+      "type": "select",
+      "required": true,
+      "options": [
+        "24–48 hours",
+        "3–5 days",
+        "1 week",
+        "As symptoms allow"
+      ]
+    },
+    {
+      "name": "activity_guidance",
+      "label": "Activity guidance",
+      "type": "textarea",
+      "required": false,
+      "default": "Gradually return to normal activity; avoid contact sport until symptom-free."
+    }
+  ]
+}

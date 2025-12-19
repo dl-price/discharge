@@ -1,0 +1,53 @@
+{
+  "id": "ankle_sprain",
+  "title": "Ankle sprain",
+  "category": "MSK",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "ankle",
+    "sprain",
+    "soft tissue injury",
+    "RICE",
+    "brace"
+  ],
+  "fields": [
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": [
+        "No routine follow-up",
+        "GP in 2–3 days",
+        "Physio within 1 week",
+        "ED review in 48 hours"
+      ]
+    },
+    {
+      "name": "weight_bearing",
+      "label": "Weight-bearing advice",
+      "type": "select",
+      "required": true,
+      "options": [
+        "As tolerated",
+        "Partial weight bearing with crutches",
+        "Non-weight bearing"
+      ]
+    },
+    {
+      "name": "analgesia",
+      "label": "Analgesia plan",
+      "type": "textarea",
+      "required": false,
+      "presetGroup": "analgesia_standard"
+    },
+    {
+      "name": "work_note",
+      "label": "Work/activities note provided",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    }
+  ]
+}

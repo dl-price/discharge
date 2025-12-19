@@ -1,0 +1,51 @@
+{
+  "id": "renal_colic",
+  "title": "Renal colic",
+  "category": "Urology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "renal",
+    "colic",
+    "stone",
+    "flank pain",
+    "hydration",
+    "tamsulosin"
+  ],
+  "fields": [
+    {
+      "name": "stone_size_mm",
+      "label": "Estimated stone size (mm)",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "tamsulosin",
+      "label": "Tamsulosin prescribed",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "analgesia_plan",
+      "label": "Analgesia plan",
+      "type": "textarea",
+      "required": true,
+      "presetGroup": "analgesia_standard"
+    },
+    {
+      "name": "followup_plan",
+      "label": "Follow-up plan",
+      "type": "textarea",
+      "required": true,
+      "default": "See your GP within 48–72 hours. If you were advised to have repeat imaging, arrange this as discussed."
+    },
+    {
+      "name": "urine_strainer",
+      "label": "Urine strainer provided",
+      "type": "checkbox",
+      "required": false,
+      "default": true
+    }
+  ]
+}

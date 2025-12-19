@@ -26,15 +26,16 @@ npm run build
 
 ## Add a new template
 
-1. Add `public/templates/letters/<id>.json` with the template definition.
+1. Add `templates-src/letters/<id>/template.json` plus `patient.md` and `gp.md`.
 2. Add an entry to `public/templates/letters/index.json`.
-3. For reusable field presets, add a block in `public/templates/blocks/` and register it in `public/templates/blocks/index.json`.
+3. Run `npm run build:templates` to compile Markdown into JSON before running `npm run dev` or `npm run build`.
+4. For reusable field presets, add a block in `public/templates/blocks/` and register it in `public/templates/blocks/index.json`.
 3. Commit and push.
 
 ## Template notes
 
-- Letter templates are stored in `public/templates/letters/` and loaded using relative paths.
+- Letter templates are authored in `templates-src/letters/` and compiled into `public/templates/letters/`.
 - Each letter template includes `patientBody` and `gpBody` for the two letter variants.
-- Procedure templates live in `public/templates/procedures/` and use a single `body` for EMR notes.
+- Procedure templates are authored in `templates-src/procedures/` and compiled into `public/templates/procedures/` with a single `body` for EMR notes.
 - Only `{{field}}` placeholders and `{{#if field}}...{{/if}}` conditional blocks are supported.
 - No patient identifiers are stored by default.
