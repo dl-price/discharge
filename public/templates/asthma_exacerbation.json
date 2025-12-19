@@ -4,7 +4,13 @@
   "category": "Respiratory",
   "version": "1.0",
   "lastReviewed": "2025-12-20",
-  "keywords": ["asthma", "wheeze", "shortness of breath", "inhaler", "steroids"],
+  "keywords": [
+    "asthma",
+    "wheeze",
+    "shortness of breath",
+    "inhaler",
+    "steroids"
+  ],
   "fields": [
     {
       "name": "reliever_plan",
@@ -25,9 +31,13 @@
       "label": "Follow-up timeframe",
       "type": "select",
       "required": true,
-      "options": ["GP in 24–48 hours", "Respiratory clinic within 1 week", "No routine follow-up"]
+      "options": [
+        "GP in 24–48 hours",
+        "Respiratory clinic within 1 week",
+        "No routine follow-up"
+      ]
     }
   ],
-  "body": "You were treated today for an asthma flare.\n\nReliever inhaler plan:\n{{reliever_plan}}\n\n{{#if steroid_course}}Oral steroid course:\n{{steroid_course}}\n\n{{/if}}Red flags – return to ED urgently if you develop:\n- Severe shortness of breath, difficulty speaking, or blue lips\n- Reliever not working for more than 4 hours\n- Increasing drowsiness or exhaustion\n\nFollow-up: {{followup_timeframe}}.\n\nContinue your usual preventer inhaler unless advised otherwise.",
-  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+  "patientBody": "## Discharge advice\n\nYou were treated today for an asthma flare.\n\nReliever inhaler plan:\n{{reliever_plan}}\n\n{{#if steroid_course}}Oral steroid course:\n{{steroid_course}}\n\n{{/if}}Red flags – return to ED urgently if you develop:\n- Severe shortness of breath, difficulty speaking, or blue lips\n- Reliever not working for more than 4 hours\n- Increasing drowsiness or exhaustion\n\n## Follow-up\n{{followup_timeframe}}.\n\nContinue your usual preventer inhaler unless advised otherwise.",
+  "gpBody": "## Presentation\nSeen in ED with an asthma exacerbation.\n\n## ED management\nReliever plan provided: {{reliever_plan}}.\n{{#if steroid_course}}Oral steroid course: {{steroid_course}}.{{/if}}\n\n## Discharge advice provided\nWritten worsening advice provided. Continue usual preventer unless advised otherwise.\n\n## Follow-up\n{{followup_timeframe}}."
 }

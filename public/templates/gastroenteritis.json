@@ -4,7 +4,12 @@
   "category": "Gastroenterology",
   "version": "1.0",
   "lastReviewed": "2025-12-20",
-  "keywords": ["vomiting", "diarrhoea", "gastro", "hydration"],
+  "keywords": [
+    "vomiting",
+    "diarrhoea",
+    "gastro",
+    "hydration"
+  ],
   "fields": [
     {
       "name": "hydration_plan",
@@ -24,9 +29,13 @@
       "label": "Follow-up timeframe",
       "type": "select",
       "required": true,
-      "options": ["GP in 2–3 days", "Return if not improving", "No routine follow-up"]
+      "options": [
+        "GP in 2–3 days",
+        "Return if not improving",
+        "No routine follow-up"
+      ]
     }
   ],
-  "body": "You were treated today for gastroenteritis.\n\nHydration plan:\n{{hydration_plan}}\n\n{{#if antiemetic}}Antiemetic:\n{{antiemetic}}\n\n{{/if}}Red flags – return to ED urgently if you develop:\n- Unable to keep fluids down for more than 12 hours\n- Blood in vomit or stool\n- Severe abdominal pain or persistent fever\n- Signs of dehydration (very dry mouth, dizziness, minimal urine)\n\nFollow-up: {{followup_timeframe}}.",
-  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+  "patientBody": "## Discharge advice\n\nYou were treated today for gastroenteritis.\n\nHydration plan:\n{{hydration_plan}}\n\n{{#if antiemetic}}Antiemetic:\n{{antiemetic}}\n\n{{/if}}Red flags – return to ED urgently if you develop:\n- Unable to keep fluids down for more than 12 hours\n- Blood in vomit or stool\n- Severe abdominal pain or persistent fever\n- Signs of dehydration (very dry mouth, dizziness, minimal urine)\n\n## Follow-up\n{{followup_timeframe}}.",
+  "gpBody": "## Presentation\nSeen in ED with gastroenteritis.\n\n## ED management\nHydration plan provided: {{hydration_plan}}.\n{{#if antiemetic}}Antiemetic provided: {{antiemetic}}.{{/if}}\n\n## Discharge advice provided\nWritten return precautions provided to the patient.\n\n## Follow-up\n{{followup_timeframe}}."
 }

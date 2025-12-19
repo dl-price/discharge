@@ -4,7 +4,13 @@
   "category": "MSK",
   "version": "1.0",
   "lastReviewed": "2025-12-20",
-  "keywords": ["ankle", "sprain", "soft tissue injury", "RICE", "brace"],
+  "keywords": [
+    "ankle",
+    "sprain",
+    "soft tissue injury",
+    "RICE",
+    "brace"
+  ],
   "fields": [
     {
       "name": "followup_timeframe",
@@ -44,6 +50,6 @@
       "default": false
     }
   ],
-  "body": "You were treated today for an ankle sprain.\n\nHome care advice:\n- Rest the ankle and avoid painful activities.\n- Ice for 15–20 minutes at a time, several times per day for the first 48 hours.\n- Compression with a brace or bandage can reduce swelling.\n- Elevate the ankle above heart level when resting.\n\nWeight bearing: {{weight_bearing}}. Use support as needed.\n\nPain relief: {{analgesia}}\n\nRed flags – return to ED urgently if you develop:\n- Increasing pain, swelling, or numbness\n- Inability to bear any weight after 48 hours\n- Fever, redness, or spreading warmth\n\nFollow-up: {{followup_timeframe}}.\n\n{{#if work_note}}A work/activities note was provided.{{/if}}",
-  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+  "patientBody": "## Discharge advice\n\nYou were treated today for an ankle sprain.\n\nHome care advice:\n- Rest the ankle and avoid painful activities.\n- Ice for 15–20 minutes at a time, several times per day for the first 48 hours.\n- Compression with a brace or bandage can reduce swelling.\n- Elevate the ankle above heart level when resting.\n\nWeight bearing: {{weight_bearing}}. Use support as needed.\n\nPain relief: {{analgesia}}\n\n## Return to ED urgently if you develop:\n- Increasing pain, swelling, or numbness\n- Inability to bear any weight after 48 hours\n- Fever, redness, or spreading warmth\n\n## Follow-up\n{{followup_timeframe}}.\n\n{{#if work_note}}A work/activities note was provided.{{/if}}",
+  "gpBody": "## Presentation\nSeen in ED with an ankle sprain.\n\n## ED management\nWeight-bearing advice: {{weight_bearing}}. Support recommended as needed.\nPain management plan: {{analgesia}}.\n\n## Discharge advice provided\nHome care advice given (rest, ice, compression, elevation).\nWritten return precautions provided to the patient.\n{{#if work_note}}Work/activities note provided.{{/if}}\n\n## Follow-up\n{{followup_timeframe}}."
 }

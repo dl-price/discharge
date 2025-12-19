@@ -4,30 +4,78 @@
   "category": "Wounds",
   "version": "1.0",
   "lastReviewed": "2025-12-20",
-  "keywords": ["laceration", "wound", "sutures", "dressing"],
+  "keywords": [
+    "laceration",
+    "wound",
+    "sutures",
+    "dressing"
+  ],
   "fields": [
+    {
+      "name": "mechanism",
+      "label": "Mechanism of injury",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "wound_location",
+      "label": "Wound location",
+      "type": "textarea",
+      "required": false
+    },
     {
       "name": "closure_type",
       "label": "Closure type",
       "type": "select",
       "required": true,
-      "options": ["Sutures", "Glue", "Steri-strips", "No closure needed"]
+      "options": [
+        "Sutures",
+        "Glue",
+        "Steri-strips",
+        "No closure needed"
+      ]
     },
     {
-      "name": "suture_removal",
+      "name": "closure_details",
+      "label": "Closure details",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "followup_time",
       "label": "Suture removal timeframe",
       "type": "select",
       "required": false,
-      "options": ["Face: 5 days", "Scalp: 7 days", "Upper limb: 7–10 days", "Lower limb: 10–14 days"]
+      "options": [
+        "5 days (face)",
+        "7 days (scalp)",
+        "7–10 days (upper limb)",
+        "10–14 days (lower limb)"
+      ]
+    },
+    {
+      "name": "removal_method",
+      "label": "Suture removal method",
+      "type": "select",
+      "required": true,
+      "options": [
+        "Removal of sutures",
+        "Removal of staples",
+        "Wound review"
+      ]
     },
     {
       "name": "tetanus",
       "label": "Tetanus advice",
-      "type": "textarea",
+      "type": "select",
       "required": false,
-      "default": "Your tetanus status was reviewed today."
+      "options": [
+        "Tetanus up to date",
+        "Tetanus booster not indicated",
+        "Tetanus booster (ADT) given"
+      ]
     }
   ],
-  "body": "You were treated today for a laceration.\n\nClosure: {{closure_type}}.\n\nKeep the wound clean and dry for 24 hours. After that, you may gently wash and pat dry.\n\n{{#if suture_removal}}Suture removal: {{suture_removal}}.\n\n{{/if}}{{#if tetanus}}Tetanus advice: {{tetanus}}\n\n{{/if}}Return to ED or see your GP urgently if you develop:\n- Increasing redness, swelling, or pus\n- Fever or worsening pain\n- Wound edges opening\n\nArrange follow-up for wound review if needed.",
-  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+  "patientBody": "## Discharge advice\n\nYou presented to the emergency department today with a wound{{#if mechanism}} from {{mechanism}}{{/if}}.\n\nThe wound was assessed, thoroughly cleaned, and closed with{{#if closure_details}} {{closure_details}}\n{{/if}} {{closure_type}}.\n{{#if tetanus}}{{tetanus}}{{/if}}\n\n## Wound care instructions\n\nThe wound should be kept **clean and dry for the next 24–48 hours**. After this period, it may be gently cleaned **once daily with soap and water in the shower**, patted dry with a clean towel, and covered with a clean dressing as required.\n\nYou should:\n- Wash hands before and after touching the wound or changing dressings\n- Change the dressing daily or as instructed\n- Avoid scratching or picking at the wound or scab\n- **Avoid soaking the wound or swimming** until it is fully healed\n\nSome mild redness or a small amount of yellowish discharge may be normal during healing.\n\n## Red flags / when to seek review\n\nSeek urgent medical review if any of the following occur:\n- Fever (temperature **>38°C**) or chills\n- Increasing or severe pain, swelling, or worsening redness\n- Redness spreading or streaking away from the wound\n- Offensive odour or purulent (yellow, green, or grey) discharge\n- Any new or worsening symptoms of concern\n\n## Follow-up\n\nPlease follow up with your GP in {{followup_time}} for {{removal_method}}, provided healing is satisfactory.",
+  "gpBody": "## Presentation\nSeen in ED with a laceration.\n{{#if mechanism}}Mechanism: {{mechanism}}.{{/if}}\n{{#if wound_location}}Location: {{wound_location}}.{{/if}}\n\n## ED management\nClosure: {{closure_type}}.{{#if closure_details}} {{closure_details}}\n{{/if}}{{#if tetanus}}{{tetanus}}.{{/if}}\n\n## Discharge advice provided\nWound care instructions given. Written return precautions provided to the patient.\n\n## Follow-up\nPlease arrange follow-up in {{followup_time}} for {{removal_method}}, provided healing is satisfactory."
 }

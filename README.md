@@ -34,5 +34,6 @@ npm run build
 ## Template notes
 
 - Templates are stored in `public/templates/` and loaded using relative paths.
+- Each template includes `patientBody` and `gpBody` for the two letter variants.
 - Only `{{field}}` placeholders and `{{#if field}}...{{/if}}` conditional blocks are supported.
 - No patient identifiers are stored by default.

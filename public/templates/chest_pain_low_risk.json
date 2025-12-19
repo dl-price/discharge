@@ -4,7 +4,13 @@
   "category": "Cardiology",
   "version": "1.0",
   "lastReviewed": "2025-12-20",
-  "keywords": ["chest pain", "cardiac", "ACS", "troponin", "heart"],
+  "keywords": [
+    "chest pain",
+    "cardiac",
+    "ACS",
+    "troponin",
+    "heart"
+  ],
   "fields": [
     {
       "name": "investigations",
@@ -25,9 +31,13 @@
       "label": "Follow-up timeframe",
       "type": "select",
       "required": true,
-      "options": ["GP within 48–72 hours", "Cardiology clinic within 1–2 weeks", "No routine follow-up"]
+      "options": [
+        "GP within 48–72 hours",
+        "Cardiology clinic within 1–2 weeks",
+        "No routine follow-up"
+      ]
     }
   ],
-  "body": "You were assessed today for chest pain. Your tests did not show evidence of a heart attack at this time.\n\nInvestigations performed:\n{{investigations}}\n\n{{#if risk_factor_followup}}Risk factor follow-up:\n{{risk_factor_followup}}\n\n{{/if}}Return to ED urgently if you develop:\n- Chest pain that is severe, worsening, or lasts more than 10 minutes\n- Shortness of breath, sweating, fainting, or palpitations\n- New pain radiating to jaw, back, or left arm\n\nFollow-up: {{followup_timeframe}}.",
-  "disclaimer": "Chest pain can change. Seek urgent care if symptoms worsen."
+  "patientBody": "## Discharge advice\n\nYou were assessed today for chest pain. Your tests did not show evidence of a heart attack at this time.\n\nInvestigations performed:\n{{investigations}}\n\n{{#if risk_factor_followup}}Risk factor follow-up:\n{{risk_factor_followup}}\n\n{{/if}}Return to ED urgently if you develop:\n- Chest pain that is severe, worsening, or lasts more than 10 minutes\n- Shortness of breath, sweating, fainting, or palpitations\n- New pain radiating to jaw, back, or left arm\n\n## Follow-up\n{{followup_timeframe}}.",
+  "gpBody": "## Presentation\nSeen in ED with chest pain. ED workup did not show evidence of acute coronary syndrome at this time.\n\n## ED investigations\n{{investigations}}\n\n{{#if risk_factor_followup}}## Risk factor follow-up\n{{risk_factor_followup}}\n\n{{/if}}## Discharge advice provided\nWritten return precautions provided to the patient.\n\n## Follow-up\n{{followup_timeframe}}."
 }

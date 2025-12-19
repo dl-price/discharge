@@ -14,7 +14,7 @@
 ## Coding Style & Naming Conventions
 - JavaScript: use `const`/`let`, arrow functions, and 2-space indentation; prefer early returns for clarity.
 - Naming: camelCase for variables/functions; keep template field names consistent with their placeholders in the template text.
-- Templates: include `id`, `title`, `category`, `keywords`, and a `fields` array. Use concise labels and defaults where appropriate.
+- Templates: include `id`, `title`, `category`, `keywords`, and a `fields` array. Use concise labels and defaults where appropriate. Provide both `patientBody` and `gpBody` for letter content.
 - Keep additions small and self-contained; avoid introducing dependencies unless essential.
 
 ## Testing Guidelines
@@ -37,6 +37,6 @@
 ## Product & Template Notes
 - Audience: ED clinicians; aim for plain-language bullets around ~8th grade reading level; avoid jargon unless essential and keep units explicit.
 - Non-goals: no EMR integration or heavy front-end frameworks; static hosting is preferred.
-- Template content should cover diagnosis statement, safety netting/red flags, follow-up plan, and optional ED findings/meds/resources.
+- Template content should cover diagnosis statement, safety netting/red flags, follow-up plan, and optional ED findings/meds/resources. Provide separate `patientBody` and `gpBody` when needed.
 - Conditional sections are allowed via `{{#if field}}...{{/if}}`; placeholders must match field `name` values (text, textarea, number, date, select, checkbox).
 - Interaction expectations: search-as-you-type, keyboard focus on search, Enter selects top template, Cmd/Ctrl+Enter copies; show “Copied” feedback and keep preview scrollable/high-contrast.

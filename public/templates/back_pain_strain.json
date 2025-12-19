@@ -4,7 +4,12 @@
   "category": "MSK",
   "version": "1.0",
   "lastReviewed": "2025-12-20",
-  "keywords": ["back pain", "strain", "lumbar", "MSK"],
+  "keywords": [
+    "back pain",
+    "strain",
+    "lumbar",
+    "MSK"
+  ],
   "fields": [
     {
       "name": "analgesia_plan",
@@ -25,9 +30,13 @@
       "label": "Follow-up timeframe",
       "type": "select",
       "required": true,
-      "options": ["GP in 3–5 days", "Physio within 1 week", "Return if not improving"]
+      "options": [
+        "GP in 3–5 days",
+        "Physio within 1 week",
+        "Return if not improving"
+      ]
     }
   ],
-  "body": "You were treated today for back pain due to a muscle strain.\n\nPain control:\n{{analgesia_plan}}\n\n{{#if activity_advice}}Activity advice: {{activity_advice}}\n\n{{/if}}Return to ED urgently if you develop:\n- New weakness, numbness, or bowel/bladder changes\n- Severe or worsening pain not controlled by medication\n- Fever or unexplained weight loss\n\nFollow-up: {{followup_timeframe}}.",
-  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+  "patientBody": "## Discharge advice\n\nYou were treated today for back pain due to a muscle strain.\n\nPain control:\n{{analgesia_plan}}\n\n{{#if activity_advice}}Activity advice: {{activity_advice}}\n\n{{/if}}Return to ED urgently if you develop:\n- New weakness, numbness, or bowel/bladder changes\n- Severe or worsening pain not controlled by medication\n- Fever or unexplained weight loss\n\n## Follow-up\n{{followup_timeframe}}.",
+  "gpBody": "## Presentation\nSeen in ED with back pain consistent with muscle strain.\n\n## ED management\nAnalgesia plan: {{analgesia_plan}}.\n{{#if activity_advice}}Activity advice: {{activity_advice}}.{{/if}}\n\n## Discharge advice provided\nWritten return precautions provided to the patient.\n\n## Follow-up\n{{followup_timeframe}}."
 }

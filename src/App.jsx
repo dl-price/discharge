@@ -22,6 +22,8 @@ import {
   Paper,
   Snackbar,
   Stack,
+  Tab,
+  Tabs,
   TextField,
   Toolbar,
   Typography,
@@ -33,6 +35,8 @@ import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const RECENT_STORAGE_KEY = "recentTemplates";
 const LAST_TEMPLATE_KEY = "lastSelectedTemplate";
@@ -91,7 +95,7 @@ const renderTemplateBody = (template, values) => {
   body = body.replace(conditionalRegex, (match, fieldName, block) => {
     const value = values[fieldName];
     if (value) {
-      return block.trim();
+      return block.replace(/^\n+/, "").replace(/\n+$/, "");
     }
     return "";
   });
@@ -108,9 +112,7 @@ const renderTemplateBody = (template, values) => {
     return value ? String(value) : "";
   });
 
-  return `${template.title}\n\n${body.trim()}${
-    template.disclaimer ? `\n\n${template.disclaimer}` : ""
-  }`;
+  return body.trim();
 };
 
 const validateField = (field, value) => {
@@ -163,6 +165,7 @@ const App = () => {
   const [presetDialogField, setPresetDialogField] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [previewTab, setPreviewTab] = useState("patient");
 
   const drawerWidth = isDesktop ? (sidebarCollapsed ? DRAWER_COLLAPSED : DRAWER_WIDTH) : DRAWER_WIDTH;
   const baseUrl = import.meta.env.BASE_URL || "/";
@@ -184,12 +187,19 @@ const App = () => {
       .filter(Boolean);
   }, [recentTemplates, templatesIndex]);
 
+  const renderBody = (template, values, bodyKey) => {
+    const body = template?.[bodyKey] || template?.body || template?.patientBody || "";
+    return renderTemplateBody({ ...template, body }, values);
+  };
+
   const previewText = useMemo(() => {
     if (!selectedTemplate) {
       return "";
     }
-    return renderTemplateBody(selectedTemplate, fieldValues);
-  }, [selectedTemplate, fieldValues]);
+    const key = previewTab === "gp" ? "gpBody" : "patientBody";
+    return renderBody(selectedTemplate, fieldValues, key);
+  }, [selectedTemplate, fieldValues, previewTab]);
+
 
   useEffect(() => {
     const init = async () => {
@@ -288,6 +298,7 @@ const App = () => {
       setFieldErrors({});
       setValidationAttempted(false);
       setCopyStatus("");
+      setPreviewTab("patient");
       updateRecentTemplates(templateId);
       localStorage.setItem(LAST_TEMPLATE_KEY, templateId);
       if (!isDesktop) {
@@ -352,6 +363,7 @@ const App = () => {
       }
     }
   };
+
 
   const handleReset = () => {
     if (!selectedTemplate) {
@@ -465,6 +477,8 @@ const App = () => {
       )}
     </Box>
   );
+
+  const isAntibioticDialog = presetDialogField?.presetGroup === "antibiotics_common";
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default" }}>
@@ -613,6 +627,16 @@ const App = () => {
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
               <Typography variant="h6">Letter preview</Typography>
             </Stack>
+            <Tabs
+              value={previewTab}
+              onChange={(event, value) => setPreviewTab(value)}
+              textColor="primary"
+              indicatorColor="primary"
+              sx={{ mb: 2 }}
+            >
+              <Tab label="Patient letter" value="patient" />
+              <Tab label="GP letter" value="gp" />
+            </Tabs>
             <Box
               sx={{
                 flex: 1,
@@ -621,12 +645,38 @@ const App = () => {
                 border: `1px solid ${theme.palette.divider}`,
                 p: 2,
                 minHeight: 320,
-                whiteSpace: "pre-wrap",
                 fontFamily: "inherit",
               }}
-              component="pre"
+              component="div"
             >
-              {previewText}
+              {previewTab === "patient" ? (
+                <Box
+                  sx={{
+                    "& h1, & h2, & h3": {
+                      marginTop: 0,
+                    },
+                    "& p": {
+                      marginTop: 0,
+                    },
+                    "& ul, & ol": {
+                      paddingLeft: "1.2rem",
+                    },
+                  }}
+                >
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{previewText}</ReactMarkdown>
+                </Box>
+              ) : (
+                <Box
+                  component="pre"
+                  sx={{
+                    margin: 0,
+                    whiteSpace: "pre-wrap",
+                    fontFamily: "inherit",
+                  }}
+                >
+                  {previewText}
+                </Box>
+              )}
             </Box>
             <Typography
               variant="body2"
@@ -639,13 +689,26 @@ const App = () => {
         </Box>
       </Box>
 
-      <Dialog open={Boolean(presetDialogField)} onClose={() => setPresetDialogField(null)} fullWidth>
+      <Dialog
+        open={Boolean(presetDialogField)}
+        onClose={() => setPresetDialogField(null)}
+        fullWidth
+        maxWidth={isAntibioticDialog ? "lg" : "sm"}
+      >
         <DialogTitle>{presetDialogField?.presetTitle || "Preset options"}</DialogTitle>
         <DialogContent dividers>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             {presetDialogField?.presetDescription || "Select an option to insert into the field."}
           </Typography>
-          <Stack spacing={1}>
+          <Box
+            sx={{
+              display: "grid",
+              gap: 1.5,
+              gridTemplateColumns: isAntibioticDialog
+                ? { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" }
+                : "1fr",
+            }}
+          >
             {presetDialogField?.presets?.map((preset) => (
               <Button
                 key={preset.label || preset.value}
@@ -654,12 +717,17 @@ const App = () => {
                   handleFieldChange(presetDialogField, preset.value);
                   setPresetDialogField(null);
                 }}
-                sx={{ textAlign: "left", justifyContent: "flex-start" }}
+                sx={{
+                  textAlign: "left",
+                  justifyContent: "flex-start",
+                  whiteSpace: "normal",
+                  alignItems: "flex-start",
+                }}
               >
                 {preset.label || preset.value}
               </Button>
             ))}
-          </Stack>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setPresetDialogField(null)}>Close</Button>
@@ -676,6 +744,7 @@ const App = () => {
           Copied ✓
         </Alert>
       </Snackbar>
+
     </Box>
   );
 };

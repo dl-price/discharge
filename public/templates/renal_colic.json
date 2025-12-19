@@ -4,7 +4,14 @@
   "category": "Urology",
   "version": "1.0",
   "lastReviewed": "2025-12-20",
-  "keywords": ["renal", "colic", "stone", "flank pain", "hydration", "tamsulosin"],
+  "keywords": [
+    "renal",
+    "colic",
+    "stone",
+    "flank pain",
+    "hydration",
+    "tamsulosin"
+  ],
   "fields": [
     {
       "name": "stone_size_mm",
@@ -41,6 +48,6 @@
       "default": true
     }
   ],
-  "body": "You were treated today for renal colic (suspected kidney stone).\n\nHydration advice:\n- Drink enough water to keep your urine pale.\n- Avoid alcohol if you are taking strong pain medicines.\n\nPain control plan:\n{{analgesia_plan}}\n\n{{#if stone_size_mm}}Estimated stone size: {{stone_size_mm}} mm.{{/if}}\n\n{{#if tamsulosin}}Take tamsulosin as prescribed. It can cause light-headedness, so stand up slowly.{{/if}}\n\n{{#if urine_strainer}}Use the urine strainer and bring any stone fragments for analysis.{{/if}}\n\nRed flags – return to ED urgently if you develop:\n- Fever or rigors\n- Uncontrolled pain or persistent vomiting\n- Reduced urine output\n- Worsening symptoms\n\nFollow-up:\n{{followup_plan}}",
-  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+  "patientBody": "## Discharge advice\n\nYou were treated today for renal colic (suspected kidney stone).\n\nHydration advice:\n- Drink enough water to keep your urine pale.\n- Avoid alcohol if you are taking strong pain medicines.\n\nPain control plan:\n{{analgesia_plan}}\n\n{{#if stone_size_mm}}Estimated stone size: {{stone_size_mm}} mm.{{/if}}\n\n{{#if tamsulosin}}Take tamsulosin as prescribed. It can cause light-headedness, so stand up slowly.{{/if}}\n\n{{#if urine_strainer}}Use the urine strainer and bring any stone fragments for analysis.{{/if}}\n\n## Return to ED urgently if you develop:\n- Fever or rigors\n- Uncontrolled pain or persistent vomiting\n- Reduced urine output\n- Worsening symptoms\n\n## Follow-up\n{{followup_plan}}",
+  "gpBody": "## Presentation\nSeen in ED with renal colic (suspected ureteric stone).\n\n## ED management\nAnalgesia plan: {{analgesia_plan}}.\nHydration advice provided.\n{{#if stone_size_mm}}Estimated stone size: {{stone_size_mm}} mm.{{/if}}\n{{#if tamsulosin}}Tamsulosin prescribed.{{/if}}\n{{#if urine_strainer}}Urine strainer provided with collection instructions.{{/if}}\n\n## Discharge advice provided\nWritten return precautions provided to the patient.\n\n## Follow-up\n{{followup_plan}}"
 }

@@ -24,6 +24,82 @@
     {
       "label": "Cephalexin (skin/ENT)",
       "value": "Cephalexin 500 mg four times daily for 5 days (if appropriate)."
+    },
+    {
+      "label": "Amoxicillin (ENT)",
+      "value": "Amoxicillin as prescribed for 5–7 days (if appropriate)."
+    },
+    {
+      "label": "Penicillin V (pharyngitis)",
+      "value": "Phenoxymethylpenicillin (penicillin V) as prescribed for 10 days (if appropriate)."
+    },
+    {
+      "label": "Azithromycin (respiratory)",
+      "value": "Azithromycin as prescribed for 3–5 days (if appropriate)."
+    },
+    {
+      "label": "Clarithromycin (respiratory)",
+      "value": "Clarithromycin as prescribed for 5 days (if appropriate)."
+    },
+    {
+      "label": "Erythromycin (macrolide)",
+      "value": "Erythromycin as prescribed for 5–7 days (if appropriate)."
+    },
+    {
+      "label": "Flucloxacillin (skin)",
+      "value": "Flucloxacillin as prescribed for 5 days (if appropriate)."
+    },
+    {
+      "label": "Clindamycin (skin/dental)",
+      "value": "Clindamycin as prescribed for 5 days (if appropriate)."
+    },
+    {
+      "label": "Metronidazole (anaerobes)",
+      "value": "Metronidazole as prescribed for 5–7 days (if appropriate)."
+    },
+    {
+      "label": "Trimethoprim-sulfamethoxazole (skin/UTI)",
+      "value": "Trimethoprim-sulfamethoxazole as prescribed for 5 days (if appropriate)."
+    },
+    {
+      "label": "Fosfomycin (UTI)",
+      "value": "Fosfomycin 3 g single dose (if suitable)."
+    },
+    {
+      "label": "Pivmecillinam (UTI)",
+      "value": "Pivmecillinam as prescribed for 3–5 days (if suitable)."
+    },
+    {
+      "label": "Cefuroxime (respiratory/ENT)",
+      "value": "Cefuroxime as prescribed for 5 days (if appropriate)."
+    },
+    {
+      "label": "Cefpodoxime (respiratory/UTI)",
+      "value": "Cefpodoxime as prescribed for 5–7 days (if appropriate)."
+    },
+    {
+      "label": "Cefixime (UTI)",
+      "value": "Cefixime as prescribed for 5–7 days (if appropriate)."
+    },
+    {
+      "label": "Doxycycline (skin)",
+      "value": "Doxycycline as prescribed for 5–7 days (if appropriate)."
+    },
+    {
+      "label": "Ciprofloxacin (UTI)",
+      "value": "Ciprofloxacin as prescribed for 3–5 days (if appropriate)."
+    },
+    {
+      "label": "Levofloxacin (respiratory)",
+      "value": "Levofloxacin as prescribed for 5 days (if appropriate)."
+    },
+    {
+      "label": "Amoxicillin (sinusitis)",
+      "value": "Amoxicillin as prescribed for 5–7 days (if appropriate)."
+    },
+    {
+      "label": "Roxithromycin (respiratory)",
+      "value": "Roxithromycin as prescribed for 5 days (if appropriate)."
     }
   ]
 }
