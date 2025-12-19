@@ -24,24 +24,7 @@
       "label": "Analgesia plan",
       "type": "textarea",
       "required": true,
-      "helpText": "Include what to take regularly and what to use for breakthrough pain.",
-      "presetLabel": "Standard options",
-      "presetTitle": "Standard analgesia options",
-      "presetDescription": "Select a preset to insert into the analgesia plan.",
-      "presets": [
-        {
-          "label": "NSAID + paracetamol baseline",
-          "value": "Paracetamol regularly as directed (if safe for you), plus an anti-inflammatory (e.g. ibuprofen) with food if safe. Use stronger pain relief only as prescribed for breakthrough pain."
-        },
-        {
-          "label": "NSAID-only option",
-          "value": "Ibuprofen or other anti-inflammatory as directed with food (if safe for you). Avoid other anti-inflammatories at the same time. Use prescribed rescue medication only if pain is severe."
-        },
-        {
-          "label": "Opioid rescue option",
-          "value": "Paracetamol regularly as directed. Use prescribed opioid only if pain remains severe after regular analgesia. Do not drive or operate machinery after taking opioid medication."
-        }
-      ]
+      "presetGroup": "analgesia_standard"
     },
     {
       "name": "followup_plan",

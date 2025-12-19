@@ -34,7 +34,7 @@
       "label": "Analgesia plan",
       "type": "textarea",
       "required": false,
-      "default": "Paracetamol and/or ibuprofen as directed (if safe for you)."
+      "presetGroup": "analgesia_standard"
     },
     {
       "name": "work_note",

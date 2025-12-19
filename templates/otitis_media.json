@@ -17,7 +17,7 @@
       "label": "Analgesia advice",
       "type": "textarea",
       "required": true,
-      "default": "Paracetamol and/or ibuprofen as directed (if safe for you)."
+      "presetGroup": "analgesia_standard"
     },
     {
       "name": "followup_timeframe",

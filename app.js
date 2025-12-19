@@ -6,6 +6,7 @@ const state = {
   recentTemplates: [],
   searchQuery: "",
   validationAttempted: false,
+  presetGroups: {},
 };
 
 const elements = {
@@ -24,6 +25,11 @@ const elements = {
   presetModalDescription: document.getElementById("presetModalDescription"),
   presetModalOptions: document.getElementById("presetModalOptions"),
   presetModalClose: document.getElementById("presetModalClose"),
+  sidebar: document.getElementById("templateSidebar"),
+  sidebarToggle: document.getElementById("sidebarToggle"),
+  sidebarOverlay: document.getElementById("sidebarOverlay"),
+  appShell: document.querySelector(".app-shell"),
+  mobileSidebarToggle: document.getElementById("mobileSidebarToggle"),
 };
 
 const RECENT_STORAGE_KEY = "recentTemplates";
@@ -46,13 +52,50 @@ const loadTemplatesIndex = async () => {
   }
 };
 
+const loadPresetGroups = async () => {
+  try {
+    const response = await fetch("./templates/blocks.json");
+    if (!response.ok) {
+      throw new Error("Unable to load preset groups.");
+    }
+    const data = await response.json();
+    state.presetGroups = data && data.presetGroups ? data.presetGroups : {};
+  } catch (error) {
+    state.presetGroups = {};
+  }
+};
+
+const applyPresetGroups = (template) => {
+  if (!template || !Array.isArray(template.fields)) {
+    return template;
+  }
+  if (!state.presetGroups || Object.keys(state.presetGroups).length === 0) {
+    return template;
+  }
+  const nextFields = template.fields.map((field) => {
+    if (!field.presetGroup) {
+      return field;
+    }
+    const group = state.presetGroups[field.presetGroup];
+    if (!group) {
+      return field;
+    }
+    return {
+      ...group,
+      ...field,
+      presets: field.presets ?? group.presets,
+    };
+  });
+  return { ...template, fields: nextFields };
+};
+
 const loadTemplate = async (templateId) => {
   try {
     const response = await fetch(`./templates/${templateId}.json`);
     if (!response.ok) {
       throw new Error("Unable to load template.");
     }
-    const template = await response.json();
+    const template = applyPresetGroups(await response.json());
     state.selectedTemplate = template;
     initializeFieldValues(template);
     state.fieldErrors = {};
@@ -294,6 +337,38 @@ const closePresetModal = () => {
   elements.presetModal.hidden = true;
 };
 
+const isDesktopLayout = () => window.matchMedia("(min-width: 1025px)").matches;
+
+const setSidebarState = (isOpen) => {
+  if (isDesktopLayout()) {
+    elements.sidebar.classList.toggle("is-collapsed", !isOpen);
+    elements.sidebar.classList.remove("is-open");
+    elements.appShell.classList.toggle("is-collapsed", !isOpen);
+    elements.sidebarOverlay.hidden = true;
+    elements.sidebarToggle.textContent = isOpen ? "Hide" : "Show";
+    elements.sidebarToggle.setAttribute("aria-expanded", String(isOpen));
+    elements.mobileSidebarToggle.setAttribute("aria-expanded", "false");
+    elements.mobileSidebarToggle.textContent = "Templates";
+  } else {
+    elements.sidebar.classList.toggle("is-open", isOpen);
+    elements.sidebarOverlay.hidden = !isOpen;
+    elements.sidebarToggle.textContent = isOpen ? "Close" : "Open";
+    elements.sidebarToggle.setAttribute("aria-expanded", String(isOpen));
+    elements.mobileSidebarToggle.setAttribute("aria-expanded", String(isOpen));
+    elements.mobileSidebarToggle.textContent = isOpen ? "Close templates" : "Templates";
+  }
+};
+
+const toggleSidebar = () => {
+  if (isDesktopLayout()) {
+    const isOpen = !elements.sidebar.classList.contains("is-collapsed");
+    setSidebarState(!isOpen);
+  } else {
+    const isOpen = elements.sidebar.classList.contains("is-open");
+    setSidebarState(!isOpen);
+  }
+};
+
 const validateField = (field) => {
   const value = state.fieldValues[field.name];
   let isValid = true;
@@ -436,8 +511,16 @@ const handleKeydown = (event) => {
     return;
   }
 
+  if (event.key === "Escape" && !isDesktopLayout()) {
+    setSidebarState(false);
+    return;
+  }
+
   if (event.key === "/" && document.activeElement !== elements.searchInput) {
     event.preventDefault();
+    if (!isDesktopLayout() && !elements.sidebar.classList.contains("is-open")) {
+      setSidebarState(true);
+    }
     elements.searchInput.focus();
     return;
   }
@@ -456,10 +539,12 @@ const handleKeydown = (event) => {
   }
 };
 
-const init = () => {
+const init = async () => {
   closePresetModal();
   restoreRecentTemplates();
+  await loadPresetGroups();
   loadTemplatesIndex();
+  setSidebarState(isDesktopLayout());
 
   elements.searchInput.addEventListener("input", (event) => {
     state.searchQuery = event.target.value;
@@ -474,6 +559,10 @@ const init = () => {
       closePresetModal();
     }
   });
+  elements.sidebarToggle.addEventListener("click", toggleSidebar);
+  elements.mobileSidebarToggle.addEventListener("click", toggleSidebar);
+  elements.sidebarOverlay.addEventListener("click", () => setSidebarState(false));
+  window.addEventListener("resize", () => setSidebarState(isDesktopLayout()));
 
   document.addEventListener("keydown", handleKeydown);
 };

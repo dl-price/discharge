@@ -9,6 +9,8 @@
   --border: #d9dee9;
   --danger: #b3261e;
   --success: #117a37;
+  --sidebar-width: 320px;
+  --sidebar-collapsed: 76px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -26,9 +28,20 @@ body {
   padding: 24px clamp(16px, 4vw, 40px) 8px;
 }
 
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .app-header h1 {
   margin: 0 0 8px;
   font-size: clamp(1.6rem, 2vw, 2.2rem);
+}
+
+.mobile-sidebar-toggle {
+  display: none;
 }
 
 .privacy-banner {
@@ -41,11 +54,74 @@ body {
   max-width: 980px;
 }
 
-.app-grid {
+.app-shell {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   padding: 16px clamp(16px, 4vw, 40px) 40px;
+  transition: grid-template-columns 0.2s ease;
+}
+
+.app-shell.is-collapsed {
+  grid-template-columns: var(--sidebar-collapsed) minmax(0, 1fr);
+}
+
+.sidebar {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar .panel-header {
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  padding-bottom: 8px;
+  z-index: 1;
+}
+
+.sidebar-toggle {
+  white-space: nowrap;
+}
+
+.sidebar .template-list {
+  max-height: 280px;
+  overflow: auto;
+}
+
+.sidebar.is-collapsed .search-label,
+.sidebar.is-collapsed input,
+.sidebar.is-collapsed .panel-subsection,
+.sidebar.is-collapsed #templateError {
+  display: none;
+}
+
+.sidebar.is-collapsed {
+  align-items: center;
+}
+
+.sidebar.is-collapsed .panel-header {
+  justify-content: center;
+  flex-direction: column;
+}
+
+.sidebar.is-collapsed h2 {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 0.95rem;
+}
+
+.workspace {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .panel {
@@ -285,7 +361,39 @@ textarea {
 }
 
 @media (max-width: 1024px) {
-  .app-grid {
+  .mobile-sidebar-toggle {
+    display: inline-flex;
+  }
+
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell.is-collapsed {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(90vw, 360px);
+    transform: translateX(-110%);
+    transition: transform 0.2s ease;
+    z-index: 20;
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 15;
+  }
+
+  .workspace {
     grid-template-columns: 1fr;
   }
 }
