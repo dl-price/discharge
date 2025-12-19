@@ -1,14 +1,15 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `index.html`: static entry point; keep IDs/classes stable because `app.js` queries them directly. Layout: left (template search/list), middle (fields), right (preview + copy).
-- `styles.css`: shared styling; favor existing utility classes before adding new rules.
-- `app.js`: vanilla JS for template loading, form rendering, and preview generation; organize helpers near their usage.
-- `templates/`: JSON templates for each condition plus `index.json` registry. Template files are named `<id>.json` and referenced by the same `id`. Keep metadata (id, title, category, keywords, version/lastReviewed if added) close to the proposed schema.
+- `index.html`: Vite entry point; keep the root div stable for React rendering.
+- `src/`: React app source (`App.jsx`, `main.jsx`) using MUI components.
+- `public/templates/`: JSON templates for each condition plus `index.json` registry. Template files are named `<id>.json` and referenced by the same `id`. Keep metadata (id, title, category, keywords, version/lastReviewed if added) close to the proposed schema.
+- `public/templates/blocks/`: reusable preset blocks (one JSON per block) with `index.json` registry.
 
 ## Build, Test, and Development Commands
-- `python -m http.server` (from repo root): serve the site locally at `http://localhost:8000`; required because templates load via `fetch`.
-- No build step or package install is needed; verify changes by refreshing the served page.
+- `npm install`: install dependencies.
+- `npm run dev`: serve locally via Vite.
+- `npm run build`: build static assets into `dist/` for GitHub Pages.
 
 ## Coding Style & Naming Conventions
 - JavaScript: use `const`/`let`, arrow functions, and 2-space indentation; prefer early returns for clarity.
