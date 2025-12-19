@@ -1,0 +1,33 @@
+{
+  "id": "chest_pain_low_risk",
+  "title": "Chest pain (low risk)",
+  "category": "Cardiology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": ["chest pain", "cardiac", "ACS", "troponin", "heart"],
+  "fields": [
+    {
+      "name": "investigations",
+      "label": "Investigations performed",
+      "type": "textarea",
+      "required": true,
+      "helpText": "E.g. ECGs, troponin tests, CXR."
+    },
+    {
+      "name": "risk_factor_followup",
+      "label": "Risk factor follow-up",
+      "type": "textarea",
+      "required": false,
+      "helpText": "Optional: smoking cessation, lipid checks, etc."
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": ["GP within 48–72 hours", "Cardiology clinic within 1–2 weeks", "No routine follow-up"]
+    }
+  ],
+  "body": "You were assessed today for chest pain. Your tests did not show evidence of a heart attack at this time.\n\nInvestigations performed:\n{{investigations}}\n\n{{#if risk_factor_followup}}Risk factor follow-up:\n{{risk_factor_followup}}\n\n{{/if}}Return to ED urgently if you develop:\n- Chest pain that is severe, worsening, or lasts more than 10 minutes\n- Shortness of breath, sweating, fainting, or palpitations\n- New pain radiating to jaw, back, or left arm\n\nFollow-up: {{followup_timeframe}}.",
+  "disclaimer": "Chest pain can change. Seek urgent care if symptoms worsen."
+}

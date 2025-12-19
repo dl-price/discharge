@@ -1,0 +1,33 @@
+{
+  "id": "otitis_media",
+  "title": "Otitis media",
+  "category": "ENT",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": ["ear infection", "otitis media", "ear pain", "antibiotics"],
+  "fields": [
+    {
+      "name": "antibiotics",
+      "label": "Antibiotics prescribed",
+      "type": "textarea",
+      "required": false,
+      "presetGroup": "antibiotics_common"
+    },
+    {
+      "name": "analgesia",
+      "label": "Analgesia advice",
+      "type": "textarea",
+      "required": true,
+      "presetGroup": "analgesia_standard"
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": ["GP in 2–3 days", "Return if not improving", "No routine follow-up"]
+    }
+  ],
+  "body": "You were treated today for otitis media (middle ear infection).\n\nPain control:\n{{analgesia}}\n\n{{#if antibiotics}}Antibiotics: {{antibiotics}}\n\n{{/if}}Return to ED urgently if you develop:\n- Severe headache, neck stiffness, or confusion\n- Swelling or redness behind the ear\n- Persistent fever or worsening pain\n\nFollow-up: {{followup_timeframe}}.",
+  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+}

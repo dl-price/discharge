@@ -1,0 +1,29 @@
+{
+  "id": "antibiotics_common",
+  "helpText": "Include antibiotic, dose, and duration. Confirm allergies and local guidelines.",
+  "presetLabel": "Standard options",
+  "presetTitle": "Common antibiotic regimens",
+  "presetDescription": "Insert a common regimen and tailor for local guidance, allergies, and renal function.",
+  "presets": [
+    {
+      "label": "Amoxicillin-clavulanate (general)",
+      "value": "Amoxicillin-clavulanate as prescribed for 5 days."
+    },
+    {
+      "label": "Doxycycline (respiratory)",
+      "value": "Doxycycline as prescribed for 5 days (if appropriate)."
+    },
+    {
+      "label": "Nitrofurantoin (UTI)",
+      "value": "Nitrofurantoin 100 mg twice daily for 5 days (if suitable)."
+    },
+    {
+      "label": "Trimethoprim (UTI)",
+      "value": "Trimethoprim 300 mg nightly for 3 days (if suitable)."
+    },
+    {
+      "label": "Cephalexin (skin/ENT)",
+      "value": "Cephalexin 500 mg four times daily for 5 days (if appropriate)."
+    }
+  ]
+}

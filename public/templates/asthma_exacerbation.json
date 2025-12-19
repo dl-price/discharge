@@ -1,0 +1,33 @@
+{
+  "id": "asthma_exacerbation",
+  "title": "Asthma exacerbation",
+  "category": "Respiratory",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": ["asthma", "wheeze", "shortness of breath", "inhaler", "steroids"],
+  "fields": [
+    {
+      "name": "reliever_plan",
+      "label": "Reliever inhaler plan",
+      "type": "textarea",
+      "required": true,
+      "helpText": "Include dose/frequency for the next 48–72 hours."
+    },
+    {
+      "name": "steroid_course",
+      "label": "Oral steroid course",
+      "type": "textarea",
+      "required": false,
+      "helpText": "Leave blank if not prescribed."
+    },
+    {
+      "name": "followup_timeframe",
+      "label": "Follow-up timeframe",
+      "type": "select",
+      "required": true,
+      "options": ["GP in 24–48 hours", "Respiratory clinic within 1 week", "No routine follow-up"]
+    }
+  ],
+  "body": "You were treated today for an asthma flare.\n\nReliever inhaler plan:\n{{reliever_plan}}\n\n{{#if steroid_course}}Oral steroid course:\n{{steroid_course}}\n\n{{/if}}Red flags – return to ED urgently if you develop:\n- Severe shortness of breath, difficulty speaking, or blue lips\n- Reliever not working for more than 4 hours\n- Increasing drowsiness or exhaustion\n\nFollow-up: {{followup_timeframe}}.\n\nContinue your usual preventer inhaler unless advised otherwise.",
+  "disclaimer": "This letter is general advice and does not replace follow-up with your usual clinician."
+}
