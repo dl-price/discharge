@@ -117,6 +117,33 @@ const renderTemplateBody = (template, values) => {
   return body.trim();
 };
 
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const applyAbbreviationExpansions = (text, expansions) => {
+  if (!expansions || typeof expansions !== "object") {
+    return text;
+  }
+  const entries = Object.entries(expansions)
+    .filter(([key, value]) => key && value)
+    .sort((a, b) => b[0].length - a[0].length);
+  if (entries.length === 0) {
+    return text;
+  }
+  return entries.reduce((result, [key, value]) => {
+    const escaped = escapeRegExp(key);
+    const regex = new RegExp(`(^|[^A-Za-z0-9])(${escaped})(?=$|[^A-Za-z0-9])`, "gi");
+    return result.replace(regex, (match, lead, word) => {
+      const replacement =
+        word.toUpperCase() === word
+          ? value.toUpperCase()
+          : word[0] === word[0]?.toUpperCase()
+          ? `${value[0]?.toUpperCase()}${value.slice(1)}`
+          : value;
+      return `${lead}${replacement}`;
+    });
+  }, text);
+};
+
 const validateField = (field, value) => {
   if (!field.required) {
     return "";
@@ -174,6 +201,8 @@ const AppContent = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [previewTab, setPreviewTab] = useState("patient");
   const [templateMode, setTemplateMode] = useState("letters");
+  const [expandAbbreviations, setExpandAbbreviations] = useState(false);
+  const [abbreviationExpansions, setAbbreviationExpansions] = useState({});
   const fileInputRef = useRef(null);
 
   const drawerWidth = isDesktop ? (sidebarCollapsed ? DRAWER_COLLAPSED : DRAWER_WIDTH) : DRAWER_WIDTH;
@@ -227,15 +256,29 @@ const AppContent = () => {
       return renderBody(selectedTemplate, fieldValues, "body");
     }
     const key = previewTab === "gp" ? "gpBody" : "patientBody";
-    return renderBody(selectedTemplate, fieldValues, key);
-  }, [selectedTemplate, fieldValues, previewTab, templateMode]);
+    const baseText = renderBody(selectedTemplate, fieldValues, key);
+    if (templateMode === "letters" && previewTab === "patient" && expandAbbreviations) {
+      return applyAbbreviationExpansions(baseText, abbreviationExpansions);
+    }
+    return baseText;
+  }, [
+    selectedTemplate,
+    fieldValues,
+    previewTab,
+    templateMode,
+    expandAbbreviations,
+    abbreviationExpansions,
+  ]);
 
 
   useEffect(() => {
     const init = async () => {
       let groups = {};
       try {
-        const blockIndex = await fetchJson(`${baseUrl}templates/blocks/index.json`);
+        const [blockIndex, expansions] = await Promise.all([
+          fetchJson(`${baseUrl}templates/blocks/index.json`),
+          fetchJson(`${baseUrl}templates/expansions.json`),
+        ]);
         const blockIds = Array.isArray(blockIndex) ? blockIndex : [];
         const blockData = await Promise.all(
           blockIds.map((blockId) => fetchJson(`${baseUrl}templates/blocks/${blockId}.json`))
@@ -247,8 +290,10 @@ const AppContent = () => {
           return accumulator;
         }, {});
         setPresetGroups(groups);
+        setAbbreviationExpansions(expansions || {});
       } catch (error) {
         setPresetGroups({});
+        setAbbreviationExpansions({});
       }
 
       try {
@@ -293,14 +338,6 @@ const AppContent = () => {
         setMobileOpen(false);
         return;
       }
-      if (event.key === "/" && document.activeElement !== searchRef.current) {
-        event.preventDefault();
-        if (!isDesktop) {
-          setMobileOpen(true);
-        }
-        searchRef.current?.focus();
-        return;
-      }
       if (event.key === "Enter" && document.activeElement === searchRef.current) {
         if (filteredTemplates[0]) {
           loadTemplate(filteredTemplates[0].id);
@@ -339,6 +376,7 @@ const AppContent = () => {
       setValidationAttempted(false);
       setCopyStatus("");
       setPreviewTab("patient");
+      setExpandAbbreviations(false);
       if (modeOverride) {
         setTemplateMode(modeOverride);
       }
@@ -887,6 +925,20 @@ const AppContent = () => {
           <Paper sx={{ p: 2, borderRadius: 3, border: `1px solid ${theme.palette.divider}` }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
               <Typography variant="h6">Letter preview</Typography>
+              {templateMode === "letters" &&
+                previewTab === "patient" &&
+                Object.keys(abbreviationExpansions).length > 0 && (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        size="small"
+                        checked={expandAbbreviations}
+                        onChange={(event) => setExpandAbbreviations(event.target.checked)}
+                      />
+                    }
+                    label="Expand abbreviations"
+                  />
+                )}
             </Stack>
             {templateMode === "letters" && (
               <Tabs
