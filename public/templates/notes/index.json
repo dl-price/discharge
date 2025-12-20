@@ -16,5 +16,11 @@
     "title": "ED clinician note: Eye injury",
     "category": "ED notes",
     "keywords": ["eye injury", "ocular", "ED note"]
+  },
+  {
+    "id": "haematuria_note",
+    "title": "ED clinician note: Haematuria",
+    "category": "ED notes",
+    "keywords": ["haematuria", "hematuria", "blood in urine", "ED note"]
   }
 ]
