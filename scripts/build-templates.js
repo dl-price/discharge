@@ -11,12 +11,17 @@ const writeJson = async (filePath, data) => {
   await fs.writeFile(filePath, text, "utf8");
 };
 
+const ensureDir = async (dirPath) => {
+  await fs.mkdir(dirPath, { recursive: true });
+};
+
 const readText = async (filePath) => {
   return fs.readFile(filePath, "utf8");
 };
 
 const buildLetters = async (srcRoot, destRoot) => {
   const entries = await fs.readdir(srcRoot, { withFileTypes: true });
+  const index = [];
   for (const entry of entries) {
     if (!entry.isDirectory()) {
       continue;
@@ -34,11 +39,25 @@ const buildLetters = async (srcRoot, destRoot) => {
     template.gpBody = gpBody.trimEnd();
     const destPath = path.join(destRoot, `${entry.name}.json`);
     await writeJson(destPath, template);
+    index.push(template);
   }
+  const indexPath = path.join(destRoot, "index.json");
+  await writeJson(
+    indexPath,
+    index.map((template) => ({
+      id: template.id,
+      title: template.title,
+      category: template.category,
+      keywords: template.keywords,
+      version: template.version,
+      lastReviewed: template.lastReviewed,
+    }))
+  );
 };
 
 const buildProcedures = async (srcRoot, destRoot) => {
   const entries = await fs.readdir(srcRoot, { withFileTypes: true });
+  const index = [];
   for (const entry of entries) {
     if (!entry.isDirectory()) {
       continue;
@@ -53,11 +72,25 @@ const buildProcedures = async (srcRoot, destRoot) => {
     template.body = body.trimEnd();
     const destPath = path.join(destRoot, `${entry.name}.json`);
     await writeJson(destPath, template);
+    index.push(template);
   }
+  const indexPath = path.join(destRoot, "index.json");
+  await writeJson(
+    indexPath,
+    index.map((template) => ({
+      id: template.id,
+      title: template.title,
+      category: template.category,
+      keywords: template.keywords,
+      version: template.version,
+      lastReviewed: template.lastReviewed,
+    }))
+  );
 };
 
 const buildNotes = async (srcRoot, destRoot) => {
   const entries = await fs.readdir(srcRoot, { withFileTypes: true });
+  const index = [];
   for (const entry of entries) {
     if (!entry.isDirectory()) {
       continue;
@@ -69,11 +102,25 @@ const buildNotes = async (srcRoot, destRoot) => {
     template.body = body.trimEnd();
     const destPath = path.join(destRoot, `${entry.name}.json`);
     await writeJson(destPath, template);
+    index.push(template);
   }
+  const indexPath = path.join(destRoot, "index.json");
+  await writeJson(
+    indexPath,
+    index.map((template) => ({
+      id: template.id,
+      title: template.title,
+      category: template.category,
+      keywords: template.keywords,
+      version: template.version,
+      lastReviewed: template.lastReviewed,
+    }))
+  );
 };
 
 const buildFieldBlocks = async (srcRoot, destRoot) => {
   const entries = await fs.readdir(srcRoot, { withFileTypes: true });
+  const index = [];
   for (const entry of entries) {
     if (!entry.isDirectory()) {
       continue;
@@ -85,7 +132,12 @@ const buildFieldBlocks = async (srcRoot, destRoot) => {
     template.body = body.trimEnd();
     const destPath = path.join(destRoot, `${entry.name}.json`);
     await writeJson(destPath, template);
+    if (template.id) {
+      index.push(template.id);
+    }
   }
+  const indexPath = path.join(destRoot, "index.json");
+  await writeJson(indexPath, index);
 };
 
 const main = async () => {
@@ -97,6 +149,13 @@ const main = async () => {
   const destProcedures = path.join("public", "templates", "procedures");
   const destNotes = path.join("public", "templates", "notes");
   const destFieldBlocks = path.join("public", "templates", "field-blocks");
+
+  await Promise.all([
+    ensureDir(destLetters),
+    ensureDir(destProcedures),
+    ensureDir(destNotes),
+    ensureDir(destFieldBlocks),
+  ]);
 
   await buildLetters(srcLetters, destLetters);
   await buildProcedures(srcProcedures, destProcedures);

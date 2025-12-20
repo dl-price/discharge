@@ -40,6 +40,9 @@ npm run build
 - ED notes templates are authored in `templates-src/notes/` and compiled into `public/templates/notes/` with a single `body`.
 - Field blocks (reusable field groups with markdown bodies) live in `templates-src/field-blocks/` and compile to `public/templates/field-blocks/`.
 - Templates can include `blocks: ["obs"]` and reference blocks with `{{obs}}` or individual fields via `{{obs.hr}}`.
-- Only `{{field}}` placeholders and `{{#if field}}...{{/if}}` conditional blocks are supported.
+- Section layout is defined by `type: "section"` fields (e.g. `{ "type": "section", "label": "Observations", "layout": "inline", "fields": [...] }`).
+- Sections can also pull in blocks via `blocks: ["obs"]` on the section.
+- Conditionals support nesting, boolean expressions (`&&`, `||`, `!`, parentheses), comparisons (`==`, `!=`, `>`, `<`, `>=`, `<=`), and basic arithmetic (`+`, `-`, `*`, `/`).
+- You can also output calculations with `{{calc ...}}`, e.g. `{{calc obs.sbp - obs.dbp}}` or `{{calc obs.rr * 2}}`.
 - Abbreviation expansions are defined globally in `public/templates/expansions.json` and can be toggled in patient previews.
 - No patient identifiers are stored by default.

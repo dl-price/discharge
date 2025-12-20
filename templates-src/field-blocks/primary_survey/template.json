@@ -1,0 +1,149 @@
+{
+  "id": "primary_survey",
+  "title": "Primary survey (A–E)",
+  "fields": [
+    {
+      "name": "a",
+      "label": "A - Airway",
+      "type": "textarea",
+      "presetLabel": "Airway options",
+      "presetTitle": "Airway presets",
+      "presetDescription": "Select one or more airway findings to append.",
+      "presets": [
+        {
+          "label": "Patent, own",
+          "value": "Patent, own"
+        },
+        {
+          "label": "SGA",
+          "value": "SGA"
+        },
+        {
+          "label": "Intubated",
+          "value": "Intubated"
+        }
+      ],
+      "required": false
+    },
+    {
+      "name": "b",
+      "label": "B - Breathing",
+      "type": "textarea",
+      "presetLabel": "Breathing options",
+      "presetTitle": "Breathing presets",
+      "presetDescription": "Select one or more breathing findings to append.",
+      "presets": [
+        {
+          "label": "Work of breathing normal",
+          "value": "Work of breathing normal"
+        },
+        {
+          "label": "Equal air entry bilaterally",
+          "value": "Equal air entry bilaterally"
+        },
+        {
+          "label": "No wheeze",
+          "value": "No wheeze"
+        },
+        {
+          "label": "No crackles",
+          "value": "No crackles"
+        },
+        {
+          "label": "On room air",
+          "value": "On room air"
+        }
+      ],
+      "required": false
+    },
+    {
+      "name": "c",
+      "label": "C - Circulation",
+      "type": "textarea",
+      "presetLabel": "Circulation options",
+      "presetTitle": "Circulation presets",
+      "presetDescription": "Select one or more circulation findings to append.",
+      "presets": [
+        {
+          "label": "Warm, well perfused",
+          "value": "Warm, well perfused"
+        },
+        {
+          "label": "CRT <2s",
+          "value": "CRT <2s"
+        },
+        {
+          "label": "No active bleeding",
+          "value": "No active bleeding"
+        },
+        {
+          "label": "Peripheral pulses present",
+          "value": "Peripheral pulses present"
+        },
+        {
+          "label": "No chest pain at rest",
+          "value": "No chest pain at rest"
+        }
+      ],
+      "required": false
+    },
+    {
+      "name": "d",
+      "label": "D - Disability",
+      "type": "textarea",
+      "presetLabel": "Disability options",
+      "presetTitle": "Disability presets",
+      "presetDescription": "Select one or more disability findings to append.",
+      "presets": [
+        {
+          "label": "GCS 15",
+          "value": "GCS 15"
+        },
+        {
+          "label": "Alert and oriented",
+          "value": "Alert and oriented"
+        },
+        {
+          "label": "Pupils equal and reactive",
+          "value": "Pupils equal and reactive"
+        },
+        {
+          "label": "No focal neurology",
+          "value": "No focal neurology"
+        },
+        {
+          "label": "BM within normal range",
+          "value": "BM within normal range"
+        }
+      ],
+      "required": false
+    },
+    {
+      "name": "e",
+      "label": "E - Exposure",
+      "type": "textarea",
+      "presetLabel": "Exposure options",
+      "presetTitle": "Exposure presets",
+      "presetDescription": "Select one or more exposure findings to append.",
+      "presets": [
+        {
+          "label": "Abdomen soft, non tender",
+          "value": "Abdomen soft, non tender"
+        },
+        {
+          "label": "Calves soft, non tender",
+          "value": "Calves soft, non tender"
+        },
+        {
+          "label": "No rash",
+          "value": "No rash"
+        },
+        {
+          "label": "No external bleeding",
+          "value": "No external bleeding"
+        }
+      ],
+      "required": false
+    }
+  ]
+}
