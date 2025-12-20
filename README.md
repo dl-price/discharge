@@ -38,6 +38,8 @@ npm run build
 - Each letter template includes `patientBody` and `gpBody` for the two letter variants.
 - Procedure templates are authored in `templates-src/procedures/` and compiled into `public/templates/procedures/` with a single `body` for EMR notes.
 - ED notes templates are authored in `templates-src/notes/` and compiled into `public/templates/notes/` with a single `body`.
+- Field blocks (reusable field groups with markdown bodies) live in `templates-src/field-blocks/` and compile to `public/templates/field-blocks/`.
+- Templates can include `blocks: ["obs"]` and reference blocks with `{{obs}}` or individual fields via `{{obs.hr}}`.
 - Only `{{field}}` placeholders and `{{#if field}}...{{/if}}` conditional blocks are supported.
 - Abbreviation expansions are defined globally in `public/templates/expansions.json` and can be toggled in patient previews.
 - No patient identifiers are stored by default.

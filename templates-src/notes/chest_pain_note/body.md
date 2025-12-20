@@ -34,35 +34,23 @@ Associated symptoms:
 {{/if}}{{#if risk_factors}}Risk factors: {{risk_factors}}
 {{/if}}
 
-Vital signs:
-{{#if hr}}HR: {{hr}}
-{{/if}}{{#if sbp}}SBP: {{sbp}}
-{{/if}}{{#if dbp}}DBP: {{dbp}}
-{{/if}}{{#if rr}}RR: {{rr}}
-{{/if}}{{#if spo2}}SpO2: {{spo2}}%
-{{/if}}{{#if temp}}Temp: {{temp}} C
-{{/if}}{{#if pain_score}}Pain score: {{pain_score}}/10
-{{/if}}{{#if gcs}}GCS: {{gcs}}
-{{/if}}{{#if bsl}}BSL: {{bsl}} mmol/L
-{{/if}}{{#if oxygen}}Oxygen: {{oxygen}}
-{{/if}}{{#if appearance}}General appearance/distress: {{appearance}}
-{{/if}}
+{{obs}}
 
 {{#if exam}}Exam:
 {{exam}}
 
 {{/if}}Primary survey (A–E):
-{{#if oxygen}}A: Airway – {{oxygen}}
-{{/if}}{{#if rr}}B: Breathing – RR {{rr}}
-{{/if}}{{#if spo2}}B: SpO2 {{spo2}}%
-{{/if}}{{#if hr}}C: Circulation – HR {{hr}}
-{{/if}}{{#if sbp}}C: SBP {{sbp}}
-{{/if}}{{#if dbp}}C: DBP {{dbp}}
-{{/if}}{{#if gcs}}D: Disability – GCS {{gcs}}
-{{/if}}{{#if pain_score}}D: Pain score {{pain_score}}/10
-{{/if}}{{#if bsl}}D: BSL {{bsl}} mmol/L
-{{/if}}{{#if temp}}E: Temp {{temp}} C
-{{/if}}{{#if appearance}}E: General appearance/distress – {{appearance}}
+{{#if obs.oxygen}}A: Airway – {{obs.oxygen}}
+{{/if}}{{#if obs.rr}}B: Breathing – RR {{obs.rr}}
+{{/if}}{{#if obs.spo2}}B: SpO2 {{obs.spo2}}%
+{{/if}}{{#if obs.hr}}C: Circulation – HR {{obs.hr}}
+{{/if}}{{#if obs.sbp}}C: SBP {{obs.sbp}}
+{{/if}}{{#if obs.dbp}}C: DBP {{obs.dbp}}
+{{/if}}{{#if obs.gcs}}D: Disability – GCS {{obs.gcs}}
+{{/if}}{{#if obs.pain_score}}D: Pain score {{obs.pain_score}}/10
+{{/if}}{{#if obs.bsl}}D: BSL {{obs.bsl}} mmol/L
+{{/if}}{{#if obs.temp}}E: Temp {{obs.temp}} C
+{{/if}}{{#if obs.appearance}}E: General appearance/distress – {{obs.appearance}}
 {{/if}}
 
 Investigations:

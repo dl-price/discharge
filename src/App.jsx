@@ -77,6 +77,41 @@ const applyPresetGroups = (template, presetGroups) => {
   return { ...template, fields: nextFields };
 };
 
+const applyFieldBlocks = (template, fieldBlocks) => {
+  if (!template || !Array.isArray(template.blocks) || template.blocks.length === 0) {
+    return template;
+  }
+  if (!fieldBlocks || Object.keys(fieldBlocks).length === 0) {
+    return template;
+  }
+  const nextFields = [...template.fields];
+  const blockBodies = {};
+
+  template.blocks.forEach((blockId) => {
+    const block = fieldBlocks[blockId];
+    if (!block) {
+      return;
+    }
+    const prefix = block.prefix || block.id || blockId;
+    block.fields?.forEach((field) => {
+      const section = field.section || block.section;
+      nextFields.push({
+        ...field,
+        name: `${prefix}.${field.name}`,
+        section,
+      });
+    });
+    if (block.body) {
+      const withPrefix = block.body
+        .replace(/\{\{#if\s+(\w+)\}\}/g, `{{#if ${prefix}.$1}}`)
+        .replace(/\{\{(\w+)\}\}/g, `{{${prefix}.$1}}`);
+      blockBodies[prefix] = withPrefix;
+    }
+  });
+
+  return { ...template, fields: nextFields, blockBodies };
+};
+
 const initializeFieldValues = (template) => {
   const nextValues = {};
   template.fields.forEach((field) => {
@@ -93,7 +128,13 @@ const initializeFieldValues = (template) => {
 
 const renderTemplateBody = (template, values) => {
   let body = template.body;
-  const conditionalRegex = /\{\{#if\s+(\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g;
+  if (template.blockBodies) {
+    Object.entries(template.blockBodies).forEach(([blockId, blockBody]) => {
+      const blockRegex = new RegExp(`\\{\\{${blockId}\\}\\}`, "g");
+      body = body.replace(blockRegex, blockBody);
+    });
+  }
+  const conditionalRegex = /\{\{#if\s+([\w.]+)\}\}([\s\S]*?)\{\{\/if\}\}/g;
   body = body.replace(conditionalRegex, (match, fieldName, block) => {
     const value = values[fieldName];
     if (value) {
@@ -102,7 +143,7 @@ const renderTemplateBody = (template, values) => {
     return "";
   });
 
-  const placeholderRegex = /\{\{(\w+)\}\}/g;
+  const placeholderRegex = /\{\{([\w.]+)\}\}/g;
   body = body.replace(placeholderRegex, (match, fieldName) => {
     if (!(fieldName in values)) {
       return "";
@@ -193,6 +234,7 @@ const AppContent = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [validationAttempted, setValidationAttempted] = useState(false);
   const [presetGroups, setPresetGroups] = useState({});
+  const [fieldBlocks, setFieldBlocks] = useState({});
   const [templateError, setTemplateError] = useState("");
   const [copyStatus, setCopyStatus] = useState("");
   const [toastOpen, setToastOpen] = useState(false);
@@ -297,6 +339,23 @@ const AppContent = () => {
       }
 
       try {
+        const blockIndex = await fetchJson(`${baseUrl}templates/field-blocks/index.json`);
+        const blockIds = Array.isArray(blockIndex) ? blockIndex : [];
+        const blockData = await Promise.all(
+          blockIds.map((blockId) => fetchJson(`${baseUrl}templates/field-blocks/${blockId}.json`))
+        );
+        const nextBlocks = blockData.reduce((accumulator, block) => {
+          if (block && block.id) {
+            accumulator[block.id] = block;
+          }
+          return accumulator;
+        }, {});
+        setFieldBlocks(nextBlocks);
+      } catch (error) {
+        setFieldBlocks({});
+      }
+
+      try {
         const [lettersData, proceduresData, notesData] = await Promise.all([
           fetchJson(`${baseUrl}templates/letters/index.json`),
           fetchJson(`${baseUrl}templates/procedures/index.json`),
@@ -368,8 +427,9 @@ const AppContent = () => {
           : mode === "notes"
           ? `${baseUrl}templates/notes/${templateId}.json`
           : `${baseUrl}templates/letters/${templateId}.json`;
-      const template = await fetchJson(templatePath);
-      const hydrated = applyPresetGroups(template, groups);
+    const template = await fetchJson(templatePath);
+      const withBlocks = applyFieldBlocks(template, fieldBlocks);
+      const hydrated = applyPresetGroups(withBlocks, groups);
       setSelectedTemplate(hydrated);
       setFieldValues(applyImportedValues(hydrated, importValues));
       setFieldErrors({});
@@ -528,7 +588,7 @@ const AppContent = () => {
       return;
     }
     loadTemplate(routeId, presetGroups, undefined, routeMode, true);
-  }, [routeMode, routeId, navigate, presetGroups, selectedTemplate, templateMode]);
+  }, [routeMode, routeId, navigate, presetGroups, fieldBlocks, selectedTemplate, templateMode]);
 
   const handleDrawerToggle = () => {
     if (isDesktop) {

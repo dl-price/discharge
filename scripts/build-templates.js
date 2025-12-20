@@ -72,17 +72,36 @@ const buildNotes = async (srcRoot, destRoot) => {
   }
 };
 
+const buildFieldBlocks = async (srcRoot, destRoot) => {
+  const entries = await fs.readdir(srcRoot, { withFileTypes: true });
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const dir = path.join(srcRoot, entry.name);
+    const templatePath = path.join(dir, "template.json");
+    const bodyPath = path.join(dir, "body.md");
+    const [template, body] = await Promise.all([readJson(templatePath), readText(bodyPath)]);
+    template.body = body.trimEnd();
+    const destPath = path.join(destRoot, `${entry.name}.json`);
+    await writeJson(destPath, template);
+  }
+};
+
 const main = async () => {
   const srcLetters = path.join("templates-src", "letters");
   const srcProcedures = path.join("templates-src", "procedures");
   const srcNotes = path.join("templates-src", "notes");
+  const srcFieldBlocks = path.join("templates-src", "field-blocks");
   const destLetters = path.join("public", "templates", "letters");
   const destProcedures = path.join("public", "templates", "procedures");
   const destNotes = path.join("public", "templates", "notes");
+  const destFieldBlocks = path.join("public", "templates", "field-blocks");
 
   await buildLetters(srcLetters, destLetters);
   await buildProcedures(srcProcedures, destProcedures);
   await buildNotes(srcNotes, destNotes);
+  await buildFieldBlocks(srcFieldBlocks, destFieldBlocks);
 };
 
 main().catch((error) => {
