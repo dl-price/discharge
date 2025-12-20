@@ -5,6 +5,7 @@
   "version": "1.0",
   "lastReviewed": "2025-12-20",
   "keywords": ["chest pain", "ACS", "cardiac", "ED note"],
+  "blocks": ["obs"],
   "fields": [
     {
       "name": "presentation",
@@ -229,93 +230,6 @@
       "label": "Relevant risk factors",
       "type": "textarea",
       "section": "History",
-      "required": false
-    },
-    {
-      "name": "hr",
-      "label": "HR",
-      "type": "number",
-      "section": "Vitals",
-      "width": "xs",
-      "required": false
-    },
-    {
-      "name": "sbp",
-      "label": "SBP",
-      "type": "number",
-      "section": "Vitals",
-      "width": "xs",
-      "required": false
-    },
-    {
-      "name": "dbp",
-      "label": "DBP",
-      "type": "number",
-      "section": "Vitals",
-      "width": "xs",
-      "required": false
-    },
-    {
-      "name": "rr",
-      "label": "RR",
-      "type": "number",
-      "section": "Vitals",
-      "width": "xs",
-      "required": false
-    },
-    {
-      "name": "spo2",
-      "label": "SpO2 %",
-      "type": "number",
-      "section": "Vitals",
-      "width": "xs",
-      "required": false
-    },
-    {
-      "name": "temp",
-      "label": "Temp C",
-      "type": "number",
-      "section": "Vitals",
-      "width": "xs",
-      "required": false
-    },
-    {
-      "name": "pain_score",
-      "label": "Pain score (0-10)",
-      "type": "number",
-      "section": "Vitals",
-      "width": "xs",
-      "required": false
-    },
-    {
-      "name": "gcs",
-      "label": "GCS",
-      "type": "number",
-      "section": "Vitals",
-      "width": "xs",
-      "required": false
-    },
-    {
-      "name": "bsl",
-      "label": "BSL (mmol/L)",
-      "type": "number",
-      "section": "Vitals",
-      "width": "xs",
-      "required": false
-    },
-    {
-      "name": "oxygen",
-      "label": "Oxygen",
-      "type": "text",
-      "section": "Vitals",
-      "width": "xs",
-      "required": false
-    },
-    {
-      "name": "appearance",
-      "label": "General appearance / distress",
-      "type": "text",
-      "section": "Vitals",
       "required": false
     },
     {

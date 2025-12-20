@@ -1,0 +1,83 @@
+{
+  "id": "obs",
+  "title": "Standard observations",
+  "section": "Observations",
+  "fields": [
+    {
+      "name": "hr",
+      "label": "HR",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "sbp",
+      "label": "SBP",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "dbp",
+      "label": "DBP",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "rr",
+      "label": "RR",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "spo2",
+      "label": "SpO2 %",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "temp",
+      "label": "Temp C",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "pain_score",
+      "label": "Pain score (0-10)",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "gcs",
+      "label": "GCS",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "bsl",
+      "label": "BSL (mmol/L)",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "oxygen",
+      "label": "Oxygen",
+      "type": "text",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "appearance",
+      "label": "General appearance / distress",
+      "type": "text",
+      "required": false
+    }
+  ]
+}
