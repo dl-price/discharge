@@ -1,0 +1,53 @@
+{
+  "id": "skull_fracture",
+  "title": "Skull fracture",
+  "category": "Neurology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "skull",
+    "fracture",
+    "head injury",
+    "brain",
+    "trauma"
+  ],
+  "fields": [
+    {
+      "name": "fracture_description",
+      "label": "Fracture description",
+      "type": "text",
+      "required": false,
+      "default": "non-displaced skull fracture"
+    },
+    {
+      "name": "analgesia_plan",
+      "label": "Analgesia plan",
+      "type": "textarea",
+      "required": true,
+      "presetGroup": "analgesia_standard"
+    },
+    {
+      "name": "activity_restrictions",
+      "label": "Activity restrictions",
+      "type": "textarea",
+      "required": true,
+      "default": "Avoid contact sport, heavy lifting, or activities with risk of head impact until cleared."
+    },
+    {
+      "name": "followup_plan",
+      "label": "Follow-up plan",
+      "type": "textarea",
+      "required": true,
+      "default": "Follow up with your GP or neurosurgery clinic within 7 days, or as arranged."
+    },
+    {
+      "name": "on_blood_thinners",
+      "label": "Patient is on blood thinners",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    }
+  ],
+  "patientBody": "## Discharge advice\n\nYou were assessed in ED and diagnosed with a skull fracture{{#if fracture_description}} ({{fracture_description}}){{/if}}.\n\nHome care:\n- Rest and avoid alcohol or sedating medications unless prescribed.\n- Keep any wounds clean and dry as directed.\n- Pain relief: {{analgesia_plan}}\n\nActivity restrictions:\n{{activity_restrictions}}\n\n{{#if on_blood_thinners}}Because you take blood thinners, return to ED immediately if you develop worsening headache, repeated vomiting, confusion, drowsiness, new bleeding, or if you hit your head again. Do not stop blood thinners unless your clinician tells you to.\n\n{{/if}}Return to ED urgently if you develop:\n- Worsening headache, repeated vomiting, or seizures\n- Increasing confusion, drowsiness, or agitation\n- Clear fluid or blood from the nose or ears\n- New weakness, numbness, or vision changes\n\n## Follow-up\n{{followup_plan}}",
+  "gpBody": "## Presentation\nSeen in ED for a skull fracture{{#if fracture_description}} ({{fracture_description}}){{/if}}.\n\n## ED management\nAnalgesia plan provided: {{analgesia_plan}}\nActivity restrictions: {{activity_restrictions}}\n\n{{#if on_blood_thinners}}## Anticoagulation\nPatient is on blood thinners. Advised to return urgently with any neurological deterioration or new head injury, and not to stop anticoagulation unless advised.\n\n{{/if}}## Discharge advice provided\nWritten head injury return precautions provided.\n\n## Follow-up\n{{followup_plan}}"
+}
