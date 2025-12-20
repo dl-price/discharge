@@ -1,3 +1,7 @@
 /.idea/
 node_modules
 .vite/
+public/templates/field-blocks
+public/templates/letters
+public/templates/notes
+public/templates/procedures
