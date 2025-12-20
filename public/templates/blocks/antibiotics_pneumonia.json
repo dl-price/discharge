@@ -1,0 +1,25 @@
+{
+  "id": "antibiotics_pneumonia",
+  "helpText": "Include antibiotic, dose, and duration. Confirm allergies and local guidelines.",
+  "presetLabel": "Pneumonia options",
+  "presetTitle": "Common pneumonia regimens",
+  "presetDescription": "Insert a common regimen and tailor for local guidance, allergies, and renal function.",
+  "presets": [
+    {
+      "label": "Amoxicillin 1 g PO tds",
+      "value": "Amoxicillin 1 g orally every 8 hours for 5 days"
+    },
+    {
+      "label": "Amoxicillin-clavulanate 875/125 mg PO bd",
+      "value": "Amoxicillin-clavulanate 875/125 mg orally every 12 hours for 5 days"
+    },
+    {
+      "label": "Doxycycline 100 mg PO bd",
+      "value": "Doxycycline 100 mg orally every 12 hours for 5 days"
+    },
+    {
+      "label": "Azithromycin 500 mg PO daily",
+      "value": "Azithromycin 500 mg orally once daily for 3 days"
+    }
+  ]
+}
