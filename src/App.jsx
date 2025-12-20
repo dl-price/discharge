@@ -6,6 +6,7 @@ import {
   Button,
   ButtonGroup,
   Checkbox,
+  Chip,
   CssBaseline,
   Dialog,
   DialogActions,
@@ -45,6 +46,11 @@ import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 const LAST_TEMPLATE_KEY = "lastSelectedTemplate";
 const DRAWER_WIDTH = 320;
 const DRAWER_COLLAPSED = 76;
+const REVIEW_BADGES = {
+  alpha: { label: "Alpha", color: "#b71c1c" },
+  beta: { label: "Beta", color: "#ef6c00" },
+  reviewed: { label: "Reviewed", color: "#2e7d32" },
+};
 
 const fetchJson = async (url) => {
   const response = await fetch(url);
@@ -1178,12 +1184,29 @@ const AppContent = () => {
                       selected={selectedTemplate?.id === template.id}
                       onClick={() => loadTemplate(template.id)}
                     >
-                      <ListItemText
-                        primary={template.title}
-                        secondary={[template.category, ...template.keywords?.slice(0, 3)]
-                          .filter(Boolean)
-                          .join(" • ")}
-                      />
+                      <Box sx={{ display: "flex", alignItems: "center", width: "100%", gap: 1 }}>
+                        <ListItemText
+                          primary={template.title}
+                          secondary={[template.category, ...template.keywords?.slice(0, 3)]
+                            .filter(Boolean)
+                            .join(" • ")}
+                        />
+                        <Chip
+                          size="small"
+                          label={
+                            REVIEW_BADGES[template.reviewStatus]?.label ||
+                            REVIEW_BADGES.alpha.label
+                          }
+                          sx={{
+                            bgcolor:
+                              REVIEW_BADGES[template.reviewStatus]?.color ||
+                              REVIEW_BADGES.alpha.color,
+                            color: "common.white",
+                            height: 20,
+                            fontWeight: 600,
+                          }}
+                        />
+                      </Box>
                     </ListItemButton>
                   </ListItem>
                 ))}
