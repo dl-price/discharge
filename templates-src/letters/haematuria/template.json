@@ -1,0 +1,59 @@
+{
+  "id": "haematuria",
+  "title": "Haematuria",
+  "category": "Urology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "haematuria",
+    "hematuria",
+    "blood in urine",
+    "urology",
+    "urinary"
+  ],
+  "fields": [
+    {
+      "name": "presentation",
+      "label": "Presentation summary",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "exam",
+      "label": "Exam",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "investigations",
+      "label": "Investigations/results",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "treatment",
+      "label": "Treatment in ED",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "diagnosis",
+      "label": "Working diagnosis",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "followup_plan",
+      "label": "Follow-up plan",
+      "type": "textarea",
+      "required": true,
+      "default": "See your GP within 2–5 days for review and repeat urinalysis. Arrange urology follow-up if haematuria persists or recurs."
+    },
+    {
+      "name": "additional_return_precautions",
+      "label": "Additional return precautions",
+      "type": "textarea",
+      "required": false
+    }
+  ]
+}

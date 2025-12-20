@@ -6,9 +6,13 @@ Catheter type: {{catheter_type}}{{#if catheter_type_other}} ({{catheter_type_oth
 Catheter size: {{size}}
 {{#if balloon_ml}}Balloon volume: {{balloon_ml}} mL
 {{/if}}
+{{#if balloon_sterile_water}}- Balloon filled with sterile water
+{{/if}}
 Procedure:
 {{#if aseptic}}- Aseptic technique used
 {{/if}}- Catheter inserted using standard technique
+{{#if foreskin_replaced}}- Foreskin replaced
+{{/if}}
 
 Outcome:
 {{#if urine_return}}- Free urine return

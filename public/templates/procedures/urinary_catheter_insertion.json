@@ -66,8 +66,22 @@
       "required": false
     },
     {
+      "name": "balloon_sterile_water",
+      "label": "Balloon filled with sterile water",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
       "name": "aseptic",
       "label": "Aseptic technique used",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "foreskin_replaced",
+      "label": "Foreskin replaced",
       "type": "checkbox",
       "required": false,
       "default": false
@@ -134,5 +148,5 @@
       "default": false
     }
   ],
-  "body": "Urinary catheter insertion note\nDate: {{date}}\nTime: {{time}}\nIndication: {{indication}}\nCatheter type: {{catheter_type}}{{#if catheter_type_other}} ({{catheter_type_other}}){{/if}}\nCatheter size: {{size}}\n{{#if balloon_ml}}Balloon volume: {{balloon_ml}} mL\n{{/if}}\nProcedure:\n{{#if aseptic}}- Aseptic technique used\n{{/if}}- Catheter inserted using standard technique\n\nOutcome:\n{{#if urine_return}}- Free urine return\n{{/if}}{{#if urine_description}}- Urine appearance: {{urine_description}}\n{{/if}}\nComplications:\n{{#if comp_none}}- None\n{{/if}}{{#if comp_trauma}}- Traumatic insertion\n{{/if}}{{#if comp_haematuria}}- Haematuria\n{{/if}}{{#if comp_failed}}- Failed attempt\n{{/if}}{{#if comp_other}}- Other: {{comp_other}}\n{{/if}}\n{{#if tolerated}}Patient tolerated procedure.\n{{/if}}\nPlan:\n{{#if plan_monitor}}- Monitor urine output and catheter site\n{{/if}}"
+  "body": "Urinary catheter insertion note\nDate: {{date}}\nTime: {{time}}\nIndication: {{indication}}\nCatheter type: {{catheter_type}}{{#if catheter_type_other}} ({{catheter_type_other}}){{/if}}\nCatheter size: {{size}}\n{{#if balloon_ml}}Balloon volume: {{balloon_ml}} mL\n{{/if}}\n{{#if balloon_sterile_water}}- Balloon filled with sterile water\n{{/if}}\nProcedure:\n{{#if aseptic}}- Aseptic technique used\n{{/if}}- Catheter inserted using standard technique\n{{#if foreskin_replaced}}- Foreskin replaced\n{{/if}}\n\nOutcome:\n{{#if urine_return}}- Free urine return\n{{/if}}{{#if urine_description}}- Urine appearance: {{urine_description}}\n{{/if}}\nComplications:\n{{#if comp_none}}- None\n{{/if}}{{#if comp_trauma}}- Traumatic insertion\n{{/if}}{{#if comp_haematuria}}- Haematuria\n{{/if}}{{#if comp_failed}}- Failed attempt\n{{/if}}{{#if comp_other}}- Other: {{comp_other}}\n{{/if}}\n{{#if tolerated}}Patient tolerated procedure.\n{{/if}}\nPlan:\n{{#if plan_monitor}}- Monitor urine output and catheter site\n{{/if}}"
 }
