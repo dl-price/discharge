@@ -12,6 +12,12 @@
     "keywords": ["renal", "colic", "stone", "flank pain", "hydration", "tamsulosin"]
   },
   {
+    "id": "haematuria",
+    "title": "Haematuria",
+    "category": "Urology",
+    "keywords": ["haematuria", "hematuria", "blood in urine", "urology", "urinary"]
+  },
+  {
     "id": "asthma_exacerbation",
     "title": "Asthma exacerbation",
     "category": "Respiratory",
