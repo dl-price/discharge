@@ -1,0 +1,51 @@
+{
+  "id": "skull_fracture",
+  "title": "Skull fracture",
+  "category": "Neurology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "keywords": [
+    "skull",
+    "fracture",
+    "head injury",
+    "brain",
+    "trauma"
+  ],
+  "fields": [
+    {
+      "name": "fracture_description",
+      "label": "Fracture description",
+      "type": "text",
+      "required": false,
+      "default": "non-displaced skull fracture"
+    },
+    {
+      "name": "analgesia_plan",
+      "label": "Analgesia plan",
+      "type": "textarea",
+      "required": true,
+      "presetGroup": "analgesia_standard"
+    },
+    {
+      "name": "activity_restrictions",
+      "label": "Activity restrictions",
+      "type": "textarea",
+      "required": true,
+      "default": "Avoid contact sport, heavy lifting, or activities with risk of head impact until cleared."
+    },
+    {
+      "name": "followup_plan",
+      "label": "Follow-up plan",
+      "type": "textarea",
+      "required": true,
+      "default": "Follow up with your GP or neurosurgery clinic within 7 days, or as arranged."
+    },
+    {
+      "name": "on_blood_thinners",
+      "label": "Patient is on blood thinners",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    }
+  ]
+}
