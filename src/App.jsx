@@ -54,6 +54,14 @@ const fetchJson = async (url) => {
   return response.json();
 };
 
+const fetchText = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Request failed");
+  }
+  return response.text();
+};
+
 const applyPresetGroupsToFields = (fields, presetGroups) =>
   fields.map((field) => {
     if (field.type === "section") {
@@ -186,9 +194,46 @@ const renderTemplateBody = (template, values) => {
       body = body.replace(blockRegex, blockBody);
     });
   }
-  const placeholderRegex = /\{\{([\w.]+)\}\}/g;
+  const placeholderRegex = /\{\{([^}]+)\}\}/g;
+  const formatBullets = (value, indent = 0) => {
+    if (value === null || value === undefined) {
+      return "";
+    }
+    const text = String(value);
+    const lines = text.replace(/\r\n/g, "\n").split("\n");
+    const indentText = " ".repeat(Math.max(0, Number(indent) || 0));
+    const entries = lines
+      .filter((line) => line.trim())
+      .map((line) => {
+        const leading = line.match(/^[ \t]*/)?.[0] || "";
+        const extraIndent = leading.replace(/\t/g, "  ");
+        return `${indentText}${extraIndent}- ${line.trimStart()}`;
+      });
+    return entries.join("\n");
+  };
   const replacePlaceholders = (text) =>
-    text.replace(placeholderRegex, (match, fieldName) => {
+    text.replace(placeholderRegex, (match, token) => {
+      const trimmed = token.trim();
+      if (!trimmed || trimmed.startsWith("/")) {
+        return match;
+      }
+      const parts = trimmed.split(/\s+/);
+      if (parts[0] === "#bullets") {
+        const fieldName = parts[1];
+        const indentArg = parts[2];
+        if (!fieldName || !(fieldName in values)) {
+          return "";
+        }
+        const indent =
+          indentArg && indentArg.startsWith("indent=")
+            ? Number(indentArg.slice("indent=".length))
+            : Number(indentArg);
+        return formatBullets(values[fieldName], indent);
+      }
+      if (trimmed.startsWith("#")) {
+        return match;
+      }
+      const fieldName = trimmed;
       if (!(fieldName in values)) {
         return "";
       }
@@ -588,6 +633,8 @@ const AppContent = () => {
   const [previewMode, setPreviewMode] = useState("side");
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
   const [fieldBlocksReady, setFieldBlocksReady] = useState(false);
+  const [disclaimerText, setDisclaimerText] = useState("");
+  const [reviewFilter, setReviewFilter] = useState("beta");
   const fileInputRef = useRef(null);
 
   const drawerWidth = isDesktop ? (sidebarCollapsed ? DRAWER_COLLAPSED : DRAWER_WIDTH) : DRAWER_WIDTH;
@@ -604,19 +651,30 @@ const AppContent = () => {
   }, [noteIndex, procedureIndex, templateMode, templatesIndex]);
 
   const filteredTemplates = useMemo(() => {
+    const statusMatches = (template) => {
+      const status = template.reviewStatus || "alpha";
+      if (reviewFilter === "reviewed") {
+        return status === "reviewed";
+      }
+      if (reviewFilter === "beta") {
+        return status === "beta" || status === "reviewed";
+      }
+      return true;
+    };
+    const filteredByStatus = activeTemplates.filter(statusMatches);
     if (!searchQuery.trim()) {
-      return activeTemplates;
+      return filteredByStatus;
     }
     const query = searchQuery.toLowerCase();
-    return activeTemplates.filter((template) => {
+    return filteredByStatus.filter((template) => {
       const keywordText = Array.isArray(template.keywords) ? template.keywords.join(" ") : "";
       return `${template.title} ${template.category} ${keywordText}`.toLowerCase().includes(query);
     });
-  }, [activeTemplates, searchQuery]);
+  }, [activeTemplates, searchQuery, reviewFilter]);
 
   const renderBody = (template, values, bodyKey) => {
     const body = template?.[bodyKey] || template?.body || template?.patientBody || "";
-    return renderTemplateBody({ ...template, body }, values);
+    return renderTemplateBody({ ...template, body }, { ...values, disclaimer: disclaimerText });
   };
 
   const applyImportedValues = (template, importValues) => {
@@ -653,6 +711,7 @@ const AppContent = () => {
     templateMode,
     expandAbbreviations,
     abbreviationExpansions,
+    disclaimerText,
   ]);
 
 
@@ -679,6 +738,13 @@ const AppContent = () => {
       } catch (error) {
         setPresetGroups({});
         setAbbreviationExpansions({});
+      }
+
+      try {
+        const disclaimer = await fetchText(`${baseUrl}templates/disclaimer.md`);
+        setDisclaimerText(disclaimer.trimEnd());
+      } catch (error) {
+        setDisclaimerText("");
       }
 
       try {
@@ -1037,7 +1103,7 @@ const AppContent = () => {
       <Divider />
       {!sidebarCollapsed && (
         <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-            <ToggleButtonGroup
+          <ToggleButtonGroup
               value={templateMode}
               exclusive
               onChange={(event, value) => {
@@ -1057,6 +1123,26 @@ const AppContent = () => {
             <ToggleButton value="procedures">Procedures</ToggleButton>
             <ToggleButton value="notes">ED Notes</ToggleButton>
           </ToggleButtonGroup>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+            <Typography variant="caption" color="text.secondary">
+              Review status
+            </Typography>
+            <ToggleButtonGroup
+              value={reviewFilter}
+              exclusive
+              onChange={(event, value) => {
+                if (value) {
+                  setReviewFilter(value);
+                }
+              }}
+              size="small"
+              color="primary"
+            >
+              <ToggleButton value="alpha">Alpha</ToggleButton>
+              <ToggleButton value="beta">Beta</ToggleButton>
+              <ToggleButton value="reviewed">Reviewed</ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
           <TextField
             inputRef={searchRef}
             label="Search templates"

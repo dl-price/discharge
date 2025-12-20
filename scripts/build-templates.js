@@ -11,6 +11,10 @@ const writeJson = async (filePath, data) => {
   await fs.writeFile(filePath, text, "utf8");
 };
 
+const writeText = async (filePath, text) => {
+  await fs.writeFile(filePath, text, "utf8");
+};
+
 const ensureDir = async (dirPath) => {
   await fs.mkdir(dirPath, { recursive: true });
 };
@@ -19,7 +23,99 @@ const readText = async (filePath) => {
   return fs.readFile(filePath, "utf8");
 };
 
-const buildLetters = async (srcRoot, destRoot) => {
+const ALLOWED_FIELD_TYPES = new Set([
+  "text",
+  "textarea",
+  "number",
+  "date",
+  "select",
+  "checkbox",
+  "section",
+]);
+const REVIEW_STATUSES = new Set(["alpha", "beta", "reviewed"]);
+
+const validateTemplate = (template, bodies, context, report, options = {}) => {
+  const errors = [];
+  const warnings = [];
+  if (!template?.id) {
+    errors.push("Missing template id.");
+  }
+  if (!template?.title) {
+    errors.push("Missing template title.");
+  }
+  if (!template?.category) {
+    errors.push("Missing template category.");
+  }
+  if (!Array.isArray(template?.fields)) {
+    errors.push("Missing fields array.");
+  }
+  if (!Array.isArray(template?.keywords) || template.keywords.length === 0) {
+    warnings.push("Missing keywords.");
+  }
+  if (!REVIEW_STATUSES.has(template?.reviewStatus)) {
+    warnings.push('Missing or invalid reviewStatus (alpha, beta, reviewed).');
+  }
+  if (options.requireDisclaimer === "gp" && bodies?.gpBody) {
+    if (!bodies.gpBody.includes("{{disclaimer}}")) {
+      warnings.push("Missing {{disclaimer}} placeholder in gp.md.");
+    }
+  }
+
+  const names = new Set();
+  const validateField = (field) => {
+    if (!field) {
+      errors.push("Field entry is empty.");
+      return;
+    }
+    if (!ALLOWED_FIELD_TYPES.has(field.type)) {
+      errors.push(`Invalid field type${field.name ? ` for ${field.name}` : ""}: ${field.type}`);
+      return;
+    }
+    if (field.type === "section") {
+      if (!Array.isArray(field.fields)) {
+        warnings.push("Section field missing fields array.");
+        return;
+      }
+      field.fields.forEach(validateField);
+      return;
+    }
+    if (!field.name) {
+      errors.push("Field missing name.");
+      return;
+    }
+    if (names.has(field.name)) {
+      errors.push(`Duplicate field name: ${field.name}`);
+    }
+    names.add(field.name);
+    if (field.type === "select" && (!Array.isArray(field.options) || field.options.length === 0)) {
+      errors.push(`Select field missing options: ${field.name}`);
+    }
+  };
+  (template.fields || []).forEach(validateField);
+
+  if (errors.length || warnings.length) {
+    report.push({
+      context,
+      errors,
+      warnings,
+    });
+  }
+};
+
+const normalizeReviewStatus = (template) => {
+  const status = template?.reviewStatus;
+  if (status === "alpha" || status === "beta" || status === "reviewed") {
+    return { ...template, reviewStatus: status };
+  }
+  return { ...template, reviewStatus: "alpha" };
+};
+
+const copyTextFile = async (srcPath, destPath) => {
+  const text = await readText(srcPath);
+  await writeText(destPath, text);
+};
+
+const buildLetters = async (srcRoot, destRoot, report) => {
   const entries = await fs.readdir(srcRoot, { withFileTypes: true });
   const index = [];
   for (const entry of entries) {
@@ -35,11 +131,19 @@ const buildLetters = async (srcRoot, destRoot) => {
       readText(patientPath),
       readText(gpPath),
     ]);
-    template.patientBody = patientBody.trimEnd();
-    template.gpBody = gpBody.trimEnd();
+    validateTemplate(
+      template,
+      { patientBody, gpBody },
+      `letters/${entry.name}`,
+      report,
+      { requireDisclaimer: "gp" }
+    );
+    const normalized = normalizeReviewStatus(template);
+    normalized.patientBody = patientBody.trimEnd();
+    normalized.gpBody = gpBody.trimEnd();
     const destPath = path.join(destRoot, `${entry.name}.json`);
-    await writeJson(destPath, template);
-    index.push(template);
+    await writeJson(destPath, normalized);
+    index.push(normalized);
   }
   const indexPath = path.join(destRoot, "index.json");
   await writeJson(
@@ -51,11 +155,12 @@ const buildLetters = async (srcRoot, destRoot) => {
       keywords: template.keywords,
       version: template.version,
       lastReviewed: template.lastReviewed,
+      reviewStatus: template.reviewStatus,
     }))
   );
 };
 
-const buildProcedures = async (srcRoot, destRoot) => {
+const buildProcedures = async (srcRoot, destRoot, report) => {
   const entries = await fs.readdir(srcRoot, { withFileTypes: true });
   const index = [];
   for (const entry of entries) {
@@ -69,10 +174,12 @@ const buildProcedures = async (srcRoot, destRoot) => {
       readJson(templatePath),
       readText(bodyPath),
     ]);
-    template.body = body.trimEnd();
+    validateTemplate(template, { body }, `procedures/${entry.name}`, report);
+    const normalized = normalizeReviewStatus(template);
+    normalized.body = body.trimEnd();
     const destPath = path.join(destRoot, `${entry.name}.json`);
-    await writeJson(destPath, template);
-    index.push(template);
+    await writeJson(destPath, normalized);
+    index.push(normalized);
   }
   const indexPath = path.join(destRoot, "index.json");
   await writeJson(
@@ -84,11 +191,12 @@ const buildProcedures = async (srcRoot, destRoot) => {
       keywords: template.keywords,
       version: template.version,
       lastReviewed: template.lastReviewed,
+      reviewStatus: template.reviewStatus,
     }))
   );
 };
 
-const buildNotes = async (srcRoot, destRoot) => {
+const buildNotes = async (srcRoot, destRoot, report) => {
   const entries = await fs.readdir(srcRoot, { withFileTypes: true });
   const index = [];
   for (const entry of entries) {
@@ -99,10 +207,12 @@ const buildNotes = async (srcRoot, destRoot) => {
     const templatePath = path.join(dir, "template.json");
     const bodyPath = path.join(dir, "body.md");
     const [template, body] = await Promise.all([readJson(templatePath), readText(bodyPath)]);
-    template.body = body.trimEnd();
+    validateTemplate(template, { body }, `notes/${entry.name}`, report);
+    const normalized = normalizeReviewStatus(template);
+    normalized.body = body.trimEnd();
     const destPath = path.join(destRoot, `${entry.name}.json`);
-    await writeJson(destPath, template);
-    index.push(template);
+    await writeJson(destPath, normalized);
+    index.push(normalized);
   }
   const indexPath = path.join(destRoot, "index.json");
   await writeJson(
@@ -114,6 +224,7 @@ const buildNotes = async (srcRoot, destRoot) => {
       keywords: template.keywords,
       version: template.version,
       lastReviewed: template.lastReviewed,
+      reviewStatus: template.reviewStatus,
     }))
   );
 };
@@ -145,10 +256,14 @@ const main = async () => {
   const srcProcedures = path.join("templates-src", "procedures");
   const srcNotes = path.join("templates-src", "notes");
   const srcFieldBlocks = path.join("templates-src", "field-blocks");
+  const srcDisclaimer = path.join("templates-src", "disclaimer.md");
   const destLetters = path.join("public", "templates", "letters");
   const destProcedures = path.join("public", "templates", "procedures");
   const destNotes = path.join("public", "templates", "notes");
   const destFieldBlocks = path.join("public", "templates", "field-blocks");
+  const destDisclaimer = path.join("public", "templates", "disclaimer.md");
+  const strict = process.argv.includes("--strict");
+  const report = [];
 
   await Promise.all([
     ensureDir(destLetters),
@@ -157,10 +272,33 @@ const main = async () => {
     ensureDir(destFieldBlocks),
   ]);
 
-  await buildLetters(srcLetters, destLetters);
-  await buildProcedures(srcProcedures, destProcedures);
-  await buildNotes(srcNotes, destNotes);
+  await buildLetters(srcLetters, destLetters, report);
+  await buildProcedures(srcProcedures, destProcedures, report);
+  await buildNotes(srcNotes, destNotes, report);
   await buildFieldBlocks(srcFieldBlocks, destFieldBlocks);
+  await copyTextFile(srcDisclaimer, destDisclaimer);
+
+  const warnings = report.filter((item) => item.warnings.length > 0);
+  const errors = report.filter((item) => item.errors.length > 0);
+  if (warnings.length > 0) {
+    console.warn("Template validation warnings:");
+    warnings.forEach((item) => {
+      item.warnings.forEach((warning) => {
+        console.warn(`- ${item.context}: ${warning}`);
+      });
+    });
+  }
+  if (errors.length > 0) {
+    console.error("Template validation errors:");
+    errors.forEach((item) => {
+      item.errors.forEach((error) => {
+        console.error(`- ${item.context}: ${error}`);
+      });
+    });
+  }
+  if (errors.length > 0 || (strict && warnings.length > 0)) {
+    throw new Error("Template validation failed.");
+  }
 };
 
 main().catch((error) => {

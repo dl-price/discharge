@@ -14,3 +14,5 @@ Antibiotics:
 
 ## Follow-up
 {{followup_timeframe}}.
+
+{{disclaimer}}

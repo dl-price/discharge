@@ -21,3 +21,5 @@ Pain relief: {{analgesia}}
 {{followup_timeframe}}.
 
 {{#if work_note}}A work/activities note was provided.{{/if}}
+
+{{disclaimer}}

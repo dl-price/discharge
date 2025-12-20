@@ -4,6 +4,7 @@
   "category": "Respiratory",
   "version": "1.0",
   "lastReviewed": "2025-12-20",
+  "reviewStatus": "beta",
   "keywords": [
     "pneumonia",
     "cough",
@@ -15,26 +16,43 @@
       "name": "antibiotics",
       "label": "Antibiotics prescribed",
       "type": "textarea",
-      "required": true,
-      "presetGroup": "antibiotics_common"
-    },
-    {
-      "name": "hydration_advice",
-      "label": "Hydration advice",
-      "type": "textarea",
       "required": false,
-      "default": "Drink enough fluids to keep urine pale."
+      "presetGroup": "antibiotics_pneumonia"
     },
     {
-      "name": "followup_timeframe",
-      "label": "Follow-up timeframe",
+      "name": "other_meds",
+      "label": "Other medication instructions given to patient",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "see_gp",
+      "label": "GP follow up",
       "type": "select",
-      "required": true,
+      "required": false,
       "options": [
-        "GP within 48–72 hours",
-        "GP within 1 week",
-        "Return if not improving"
+        "2-3 days"
+        ]
+    },
+    {
+      "name": "repeat_xr",
+      "label": "Repeat x ray",
+      "type": "select",
+      "required": false,
+      "options": [
+        "6 weeks"
       ]
+    },
+    {
+      "name": "chase_xr_report",
+      "label": "Chase X-ray report",
+      "type": "checkbox"
+    },
+    {
+      "name": "other_fu",
+      "label": "Other follow up advice given to patient",
+      "type": "textarea",
+      "required": false
     }
   ]
 }

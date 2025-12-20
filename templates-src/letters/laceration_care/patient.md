@@ -33,3 +33,5 @@ Seek urgent medical review if any of the following occur:
 ## Follow-up
 
 Please follow up with your GP in {{followup_time}} for {{removal_method}}, provided healing is satisfactory.
+
+{{disclaimer}}

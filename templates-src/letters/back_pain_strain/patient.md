@@ -14,3 +14,5 @@ Pain control:
 
 ## Follow-up
 {{followup_timeframe}}.
+
+{{disclaimer}}

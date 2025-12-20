@@ -15,3 +15,5 @@ Investigations performed:
 
 ## Follow-up
 {{followup_timeframe}}.
+
+{{disclaimer}}

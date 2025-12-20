@@ -17,3 +17,5 @@ Reliever inhaler plan:
 {{followup_timeframe}}.
 
 Continue your usual preventer inhaler unless advised otherwise.
+
+{{disclaimer}}

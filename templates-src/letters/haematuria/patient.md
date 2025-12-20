@@ -22,3 +22,5 @@ Tests and results:
 
 {{/if}}## Follow-up
 {{followup_plan}}
+
+{{disclaimer}}

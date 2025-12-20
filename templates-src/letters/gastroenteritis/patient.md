@@ -16,3 +16,5 @@ Hydration plan:
 
 ## Follow-up
 {{followup_timeframe}}.
+
+{{disclaimer}}

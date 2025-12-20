@@ -18,3 +18,5 @@ Driving advice: {{driving_advice}}.
 
 ## Follow-up
 {{followup_timeframe}}.
+
+{{disclaimer}}

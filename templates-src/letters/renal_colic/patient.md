@@ -23,3 +23,5 @@ Pain control plan:
 
 ## Follow-up
 {{followup_plan}}
+
+{{disclaimer}}

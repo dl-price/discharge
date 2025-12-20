@@ -16,3 +16,5 @@ Rest and recovery:
 - New weakness, numbness, or vision changes
 
 Arrange GP follow-up if symptoms persist beyond 7–10 days.
+
+{{disclaimer}}
