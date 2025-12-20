@@ -51,8 +51,22 @@
       "required": false
     },
     {
+      "name": "balloon_sterile_water",
+      "label": "Balloon filled with sterile water",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
       "name": "aseptic",
       "label": "Aseptic technique used",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "foreskin_replaced",
+      "label": "Foreskin replaced",
       "type": "checkbox",
       "required": false,
       "default": false
