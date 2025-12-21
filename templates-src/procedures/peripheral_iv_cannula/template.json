@@ -8,124 +8,168 @@
   "keywords": ["cannula", "iv", "peripheral", "vascular", "line"],
   "fields": [
     {
-      "name": "date",
-      "label": "Date",
-      "type": "date",
-      "required": false
-    },
-    {
-      "name": "time",
-      "label": "Time",
-      "type": "text",
-      "required": false
-    },
-    {
       "name": "indication",
       "label": "Indication",
       "type": "textarea",
-      "required": true
+      "required": false,
+      "section": "Procedure details"
     },
     {
       "name": "site",
       "label": "Insertion site",
       "type": "text",
-      "required": true
+      "required": true,
+      "section": "Procedure details"
     },
     {
       "name": "side",
       "label": "Side",
       "type": "select",
       "required": false,
-      "options": ["Left", "Right", "Not specified"]
+      "options": ["Left", "Right", "Not specified"],
+      "section": "Procedure details"
     },
     {
       "name": "gauge",
       "label": "Cannula size",
       "type": "select",
       "required": false,
-      "options": ["14G", "16G", "18G", "20G", "22G", "24G"]
+      "options": ["14G", "16G", "18G", "20G", "22G", "24G"],
+      "section": "Procedure details"
     },
     {
       "name": "attempts",
       "label": "Number of attempts",
       "type": "number",
-      "required": false
+      "required": false,
+      "section": "Procedure details"
     },
     {
       "name": "aseptic",
       "label": "Aseptic technique used",
       "type": "checkbox",
       "required": false,
-      "default": true
+      "default": true,
+      "section": "Technique"
     },
     {
       "name": "local_anaesthetic",
       "label": "Local anaesthetic used",
       "type": "checkbox",
       "required": false,
-      "default": false
+      "default": false,
+      "section": "Technique"
     },
     {
       "name": "blood_return",
       "label": "Blood return",
       "type": "checkbox",
       "required": false,
-      "default": false
+      "default": false,
+      "section": "Technique"
+    },
+    {
+      "name": "blood_bottle_edta",
+      "label": "EDTA",
+      "type": "checkbox",
+      "required": false,
+      "default": false,
+      "section": "Blood bottles taken"
+    },
+    {
+      "name": "blood_bank_bottle",
+      "label": "EDTA (blood bank)",
+      "type": "checkbox",
+      "required": false,
+      "default": false,
+      "section": "Blood bottles taken"
+    },
+    {
+      "name": "blood_bottle_sst",
+      "label": "SST",
+      "type": "checkbox",
+      "required": false,
+      "default": false,
+      "section": "Blood bottles taken"
+    },
+    {
+      "name": "blood_bottle_rst",
+      "label": "RST",
+      "type": "checkbox",
+      "required": false,
+      "default": false,
+      "section": "Blood bottles taken"
+    },
+    {
+      "name": "blood_bottle_citrate",
+      "label": "Citrate",
+      "type": "checkbox",
+      "required": false,
+      "default": false,
+      "section": "Blood bottles taken"
     },
     {
       "name": "flush_patent",
       "label": "Flushed and patent",
       "type": "checkbox",
       "required": false,
-      "default": false
+      "default": false,
+      "section": "Technique"
     },
     {
       "name": "secured",
       "label": "Secured with dressing",
       "type": "checkbox",
       "required": false,
-      "default": false
+      "default": false,
+      "section": "Technique"
     },
     {
       "name": "comp_none",
       "label": "Complications: None",
       "type": "checkbox",
       "required": false,
-      "default": false
+      "default": false,
+      "section": "Complications"
     },
     {
       "name": "comp_arterial",
       "label": "Complications: Suspected arterial puncture",
       "type": "checkbox",
       "required": false,
-      "default": false
+      "default": false,
+      "section": "Complications"
     },
     {
       "name": "comp_haematoma",
       "label": "Complications: Haematoma",
       "type": "checkbox",
       "required": false,
-      "default": false
+      "default": false,
+      "section": "Complications"
     },
     {
       "name": "comp_infiltration",
       "label": "Complications: Infiltration/extravasation",
       "type": "checkbox",
       "required": false,
-      "default": false
+      "default": false,
+      "section": "Complications"
     },
     {
       "name": "comp_other",
       "label": "Complications: Other",
       "type": "text",
-      "required": false
+      "required": false,
+      "section": "Complications"
     },
     {
       "name": "tolerated",
       "label": "Patient tolerated procedure",
       "type": "checkbox",
       "required": false,
-      "default": false
+      "default": false,
+      "section": "Outcome"
     }
   ]
 }
