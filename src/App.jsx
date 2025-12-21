@@ -610,6 +610,7 @@ const AppContent = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery("(min-width:1025px)");
   const searchRef = useRef(null);
+  const previewMarkdownRef = useRef(null);
   const navigate = useNavigate();
   const { mode: routeMode, id: routeId } = useParams();
 
@@ -626,6 +627,8 @@ const AppContent = () => {
   const [templateError, setTemplateError] = useState("");
   const [copyStatus, setCopyStatus] = useState("");
   const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastSeverity, setToastSeverity] = useState("success");
   const [presetDialogField, setPresetDialogField] = useState(null);
   const [presetDialogValue, setPresetDialogValue] = useState("");
   const [presetQuery, setPresetQuery] = useState("");
@@ -655,6 +658,7 @@ const AppContent = () => {
     }
     return templatesIndex;
   }, [noteIndex, procedureIndex, templateMode, templatesIndex]);
+
 
   const filteredTemplates = useMemo(() => {
     const statusMatches = (template) => {
@@ -719,7 +723,6 @@ const AppContent = () => {
     abbreviationExpansions,
     disclaimerText,
   ]);
-
 
   useEffect(() => {
     const init = async () => {
@@ -856,7 +859,7 @@ const AppContent = () => {
           : mode === "notes"
           ? `${baseUrl}templates/notes/${templateId}.json`
           : `${baseUrl}templates/letters/${templateId}.json`;
-    const template = await fetchJson(templatePath);
+      const template = await fetchJson(templatePath);
       const withBlocks = applyFieldBlocks(template, fieldBlocks);
       const hydrated = applyPresetGroups(withBlocks, groups);
       setSelectedTemplate(hydrated);
@@ -957,20 +960,48 @@ const AppContent = () => {
       return;
     }
     if (!validateAllFields()) {
-      setCopyStatus("Please complete required fields before copying.");
+      const message = "Please complete required fields before copying.";
+      setCopyStatus(message);
+      setToastMessage(message);
+      setToastSeverity("error");
+      setToastOpen(true);
       return;
     }
+    const hasFormattedPreview =
+      templateMode === "letters" && previewTab === "patient" && previewMarkdownRef.current;
+    const htmlContent = hasFormattedPreview
+      ? `<div>${previewMarkdownRef.current.innerHTML}</div>`
+      : "";
     try {
-      await navigator.clipboard.writeText(previewText);
+      if (hasFormattedPreview && window.ClipboardItem) {
+        const plainBlob = new Blob([previewText], { type: "text/plain" });
+        const htmlBlob = new Blob([htmlContent], { type: "text/html" });
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            "text/plain": plainBlob,
+            "text/html": htmlBlob,
+          }),
+        ]);
+      } else {
+        await navigator.clipboard.writeText(previewText);
+      }
       setCopyStatus("Copied to clipboard.");
+      setToastMessage("Copied to clipboard.");
+      setToastSeverity("success");
       setToastOpen(true);
     } catch (error) {
       const fallbackSuccess = fallbackCopy(previewText);
       if (fallbackSuccess) {
         setCopyStatus("Copied to clipboard.");
+        setToastMessage("Copied to clipboard.");
+        setToastSeverity("success");
         setToastOpen(true);
       } else {
-        setCopyStatus("Copy failed — select the letter and copy manually.");
+        const message = "Copy failed — select the letter and copy manually.";
+        setCopyStatus(message);
+        setToastMessage(message);
+        setToastSeverity("error");
+        setToastOpen(true);
       }
     }
   };
@@ -1259,6 +1290,7 @@ const AppContent = () => {
                 paddingLeft: "1.2rem",
               },
             }}
+            ref={previewMarkdownRef}
           >
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{previewText}</ReactMarkdown>
           </Box>
@@ -1875,12 +1907,24 @@ const AppContent = () => {
 
       <Snackbar
         open={toastOpen}
-        autoHideDuration={2200}
+        autoHideDuration={3200}
         onClose={() => setToastOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity="success" onClose={() => setToastOpen(false)} sx={{ width: "100%" }}>
-          Copied ✓
+        <Alert
+          variant="filled"
+          severity={toastSeverity}
+          onClose={() => setToastOpen(false)}
+          sx={{
+            width: "100%",
+            fontSize: "0.95rem",
+            fontWeight: 600,
+            letterSpacing: 0.2,
+            boxShadow: 6,
+            alignItems: "center",
+          }}
+        >
+          {toastMessage}
         </Alert>
       </Snackbar>
 

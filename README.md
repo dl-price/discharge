@@ -46,3 +46,18 @@ npm run build
 - You can also output calculations with `{{calc ...}}`, e.g. `{{calc obs.sbp - obs.dbp}}` or `{{calc obs.rr * 2}}`.
 - Abbreviation expansions are defined globally in `public/templates/expansions.json` and can be toggled in patient previews.
 - No patient identifiers are stored by default.
+
+## Templating language
+
+Use these helpers inside `patient.md`, `gp.md`, or `body.md` files.
+
+- `{{fieldName}}`: Inserts the value from a field `name`. Booleans render as `Yes`/`No`.
+- `{{#if fieldName}}...{{/if}}`: Conditionally render a section when the field is truthy.
+- `{{#if expression}}...{{/if}}`: Expressions support `&&`, `||`, `!`, parentheses, `==`, `!=`, `>`, `<`, `>=`, `<=`, plus arithmetic (`+`, `-`, `*`, `/`).
+- `{{calc expression}}`: Emits the rounded numeric value of an expression (e.g. `{{calc obs.sbp - obs.dbp}}`).
+- `{{#bullets fieldName}}`: Turns each non-empty line in a textarea field into a bullet.
+- `{{#bullets fieldName indent=2}}`: Same, but with extra indentation (number of spaces).
+
+Notes:
+- For field blocks, `{{blockId}}` injects the block body and `{{blockId.fieldName}}` references a block field.
+- Placeholders must match field `name` values (including any `blockId.` prefixes).
