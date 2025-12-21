@@ -3,84 +3,230 @@
     "id": "ankle_sprain",
     "title": "Ankle sprain",
     "category": "MSK",
-    "keywords": ["ankle", "sprain", "soft tissue injury", "RICE", "brace"]
-  },
-  {
-    "id": "renal_colic",
-    "title": "Renal colic",
-    "category": "Urology",
-    "keywords": ["renal", "colic", "stone", "flank pain", "hydration", "tamsulosin"]
+    "keywords": [
+      "ankle",
+      "sprain",
+      "soft tissue injury",
+      "RICE",
+      "brace"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "asthma_exacerbation",
     "title": "Asthma exacerbation",
     "category": "Respiratory",
-    "keywords": ["asthma", "wheeze", "shortness of breath", "inhaler", "steroids"]
+    "keywords": [
+      "asthma",
+      "wheeze",
+      "shortness of breath",
+      "inhaler",
+      "steroids"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "back_pain_strain",
     "title": "Back pain (muscle strain)",
     "category": "MSK",
-    "keywords": ["back pain", "strain", "lumbar", "MSK"]
+    "keywords": [
+      "back pain",
+      "strain",
+      "lumbar",
+      "MSK"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "chest_pain_low_risk",
     "title": "Chest pain (low risk)",
     "category": "Cardiology",
-    "keywords": ["chest pain", "cardiac", "ACS", "troponin", "heart"]
+    "keywords": [
+      "chest pain",
+      "cardiac",
+      "ACS",
+      "troponin",
+      "heart"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "concussion",
     "title": "Concussion",
     "category": "Neurology",
-    "keywords": ["concussion", "head injury", "brain", "rest"]
+    "keywords": [
+      "concussion",
+      "head injury",
+      "brain",
+      "rest"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "gastroenteritis",
     "title": "Gastroenteritis",
     "category": "Gastroenterology",
-    "keywords": ["vomiting", "diarrhoea", "gastro", "hydration"]
+    "keywords": [
+      "vomiting",
+      "diarrhoea",
+      "gastro",
+      "hydration"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
+  },
+  {
+    "id": "generic_discharge_letter",
+    "title": "Generic discharge letter",
+    "category": "General",
+    "keywords": [
+      "general",
+      "discharge",
+      "summary",
+      "gp"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "beta"
+  },
+  {
+    "id": "haematuria",
+    "title": "Haematuria",
+    "category": "Urology",
+    "keywords": [
+      "haematuria",
+      "hematuria",
+      "blood in urine",
+      "urology",
+      "urinary"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "laceration_care",
     "title": "Laceration care",
     "category": "Wounds",
-    "keywords": ["laceration", "wound", "sutures", "dressing"]
+    "keywords": [
+      "laceration",
+      "wound",
+      "sutures",
+      "dressing"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "otitis_media",
     "title": "Otitis media",
     "category": "ENT",
-    "keywords": ["ear infection", "otitis media", "ear pain", "antibiotics"]
+    "keywords": [
+      "ear infection",
+      "otitis media",
+      "ear pain",
+      "antibiotics"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "pneumonia",
     "title": "Pneumonia",
     "category": "Respiratory",
-    "keywords": ["pneumonia", "cough", "fever", "antibiotics"]
+    "keywords": [
+      "pneumonia",
+      "cough",
+      "fever",
+      "antibiotics"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "beta"
+  },
+  {
+    "id": "renal_colic",
+    "title": "Renal colic",
+    "category": "Urology",
+    "keywords": [
+      "renal",
+      "colic",
+      "stone",
+      "flank pain",
+      "hydration",
+      "tamsulosin"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "syncope",
     "title": "Syncope (fainting)",
     "category": "Cardiology",
-    "keywords": ["syncope", "fainting", "collapse", "dizziness"]
+    "keywords": [
+      "syncope",
+      "fainting",
+      "collapse",
+      "dizziness"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "urinary_tract_infection",
     "title": "Urinary tract infection",
     "category": "Urology",
-    "keywords": ["UTI", "urine", "dysuria", "antibiotics"]
+    "keywords": [
+      "UTI",
+      "urine",
+      "dysuria",
+      "antibiotics"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "urticaria",
     "title": "Urticaria (hives)",
     "category": "Allergy",
-    "keywords": ["urticaria", "hives", "allergy", "rash"]
+    "keywords": [
+      "urticaria",
+      "hives",
+      "allergy",
+      "rash"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   },
   {
     "id": "viral_pharyngitis",
     "title": "Viral pharyngitis",
     "category": "ENT",
-    "keywords": ["sore throat", "pharyngitis", "viral", "tonsils"]
+    "keywords": [
+      "sore throat",
+      "pharyngitis",
+      "viral",
+      "tonsils"
+    ],
+    "version": "1.0",
+    "lastReviewed": "2025-12-20",
+    "reviewStatus": "alpha"
   }
 ]

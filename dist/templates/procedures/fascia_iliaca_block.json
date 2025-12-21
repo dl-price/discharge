@@ -117,5 +117,6 @@
       "default": false
     }
   ],
+  "reviewStatus": "alpha",
   "body": "Fascia iliaca block note\nDate: {{date}}\nTime: {{time}}\nIndication: {{indication}}\nSide: {{side}}\nConsent: {{consent}}\n{{#if ultrasound_guided}}Ultrasound-guided: Yes\n{{/if}}{{#if agent}}Local anaesthetic: {{agent}}{{/if}}{{#if volume_ml}} ({{volume_ml}} mL){{/if}}\n{{#if technique}}Technique: {{technique}}\n{{/if}}\nComplications:\n{{#if comp_none}}- None\n{{/if}}{{#if comp_toxicity}}- Local anaesthetic systemic toxicity\n{{/if}}{{#if comp_hematoma}}- Haematoma\n{{/if}}{{#if comp_failed}}- Failed block\n{{/if}}{{#if comp_other}}- Other: {{comp_other}}\n{{/if}}\n{{#if tolerated}}Patient tolerated procedure.\n{{/if}}"
 }

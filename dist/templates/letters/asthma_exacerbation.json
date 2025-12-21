@@ -38,6 +38,7 @@
       ]
     }
   ],
-  "patientBody": "## Discharge advice\n\nYou were treated today for an asthma flare.\n\nReliever inhaler plan:\n{{reliever_plan}}\n\n{{#if steroid_course}}Oral steroid course:\n{{steroid_course}}\n\n{{/if}}Red flags – return to ED urgently if you develop:\n- Severe shortness of breath, difficulty speaking, or blue lips\n- Reliever not working for more than 4 hours\n- Increasing drowsiness or exhaustion\n\n## Follow-up\n{{followup_timeframe}}.\n\nContinue your usual preventer inhaler unless advised otherwise.",
+  "reviewStatus": "alpha",
+  "patientBody": "## Discharge advice\n\nYou were treated today for an asthma flare.\n\nReliever inhaler plan:\n{{reliever_plan}}\n\n{{#if steroid_course}}Oral steroid course:\n{{steroid_course}}\n\n{{/if}}Red flags – return to ED urgently if you develop:\n- Severe shortness of breath, difficulty speaking, or blue lips\n- Reliever not working for more than 4 hours\n- Increasing drowsiness or exhaustion\n\n## Follow-up\n{{followup_timeframe}}.\n\nContinue your usual preventer inhaler unless advised otherwise.\n\n{{disclaimer}}",
   "gpBody": "## Presentation\nSeen in ED with an asthma exacerbation.\n\n## ED management\nReliever plan provided: {{reliever_plan}}.\n{{#if steroid_course}}Oral steroid course: {{steroid_course}}.{{/if}}\n\n## Discharge advice provided\nWritten worsening advice provided. Continue usual preventer unless advised otherwise.\n\n## Follow-up\n{{followup_timeframe}}."
 }

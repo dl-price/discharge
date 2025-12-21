@@ -4,6 +4,7 @@
   "category": "Respiratory",
   "version": "1.0",
   "lastReviewed": "2025-12-20",
+  "reviewStatus": "beta",
   "keywords": [
     "pneumonia",
     "cough",
@@ -15,28 +16,45 @@
       "name": "antibiotics",
       "label": "Antibiotics prescribed",
       "type": "textarea",
-      "required": true,
-      "presetGroup": "antibiotics_common"
-    },
-    {
-      "name": "hydration_advice",
-      "label": "Hydration advice",
-      "type": "textarea",
       "required": false,
-      "default": "Drink enough fluids to keep urine pale."
+      "presetGroup": "antibiotics_pneumonia"
     },
     {
-      "name": "followup_timeframe",
-      "label": "Follow-up timeframe",
+      "name": "other_meds",
+      "label": "Other medication instructions given to patient",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "see_gp",
+      "label": "GP follow up",
       "type": "select",
-      "required": true,
+      "required": false,
       "options": [
-        "GP within 48–72 hours",
-        "GP within 1 week",
-        "Return if not improving"
+        "2-3 days"
       ]
+    },
+    {
+      "name": "repeat_xr",
+      "label": "Repeat x ray",
+      "type": "select",
+      "required": false,
+      "options": [
+        "6 weeks"
+      ]
+    },
+    {
+      "name": "chase_xr_report",
+      "label": "Chase X-ray report",
+      "type": "checkbox"
+    },
+    {
+      "name": "other_fu",
+      "label": "Other follow up advice given to patient",
+      "type": "textarea",
+      "required": false
     }
   ],
-  "patientBody": "## Discharge advice\n\nYou were treated today for pneumonia.\n\nAntibiotics:\n{{antibiotics}}\n\n{{#if hydration_advice}}Hydration: {{hydration_advice}}\n\n{{/if}}Return to ED urgently if you develop:\n- Worsening shortness of breath or chest pain\n- Persistent fever or shaking chills\n- Confusion or severe weakness\n\n## Follow-up\n{{followup_timeframe}}.",
-  "gpBody": "## Presentation\nSeen in ED with pneumonia.\n\n## ED management\nAntibiotics prescribed: {{antibiotics}}.\n{{#if hydration_advice}}Hydration advice: {{hydration_advice}}.{{/if}}\n\n## Discharge advice provided\nWritten return precautions provided to the patient.\n\n## Follow-up\n{{followup_timeframe}}."
+  "patientBody": "# Emergency Department Discharge Advice\n## Pneumonia (Chest Infection)\n\n### Why you came to the Emergency Department\nYou were seen in the Emergency Department because you were diagnosed with **pneumonia**, also known as a chest infection. Pneumonia is an infection of the lung tissue, most commonly caused by bacteria or viruses. It can cause symptoms such as cough, fever, shortness of breath, chest pain, and fatigue.\n\nBased on your assessment today (including your symptoms, observations, and any tests performed), it is safe for you to continue your recovery **at home**.\n\n---\n\n### Looking after yourself at home\nRecovery from pneumonia can take **several weeks**, even after treatment has started. It is normal to feel tired during this time.\n\nPlease follow this advice:\n\n- **Rest regularly**, but try gentle activity (such as short walks) as you start to feel better.\n- **Drink plenty of fluids** to avoid dehydration.\n- Eat small, nutritious meals if your appetite is reduced.\n- Avoid smoking or vaping.\n- Avoid alcohol while unwell and while taking antibiotics.\n- Gradually return to normal activities as your energy improves.\n\n---\n\n{{#if antibiotics}}\n### Antibiotics\n- Take your **antibiotics exactly as prescribed**.\n{{#bullets antibiotics indent=2}}\n- It is important to **complete the full course**, even if you start to feel better.\n{{/if}}\n\n### Medications\n- You may take **paracetamol** for fever, aches, or chest discomfort.\n{{#bullets other_meds}}\n- Use other medications only as advised by your doctor.\n\n---\n\n### Cough and breathing\n- A cough is common and helps clear infection from your lungs.\n\n---\n\n### Follow-up\n{{#if see_gp}}\n- See your **GP** within **{{see_gp}}** to check your recovery.\n{{/if}}\n- If you do not feel back to your baseline within several weeks you should see your GP to see if there is something else going on\n{{#if repeat_xr}}\n- You may need a repeat chest X-ray in {{repeat_xr}} — your GP will arrange this if required.\n{{/if}}\n{{#if chase_xr_report}}\n- Your x ray has been reviewed by a doctor but not formally reported by a radiologist. You will be contacted if there are any further concerns or follow up required based on the formal report.\n{{/if}}\n{{#bullets other_fu}}\n\n---\n\n### Worsening advice\nWhile it is safe for you continue treatment at home, sometimes things will get worse despite treatment.\n\n#### Call **000** immediately if you develop:\n- Severe difficulty breathing or you are struggling to speak in full sentences\n- Blue or grey lips or fingertips\n- Sudden collapse or loss of consciousness\n- Severe chest pain not relieved by rest\n- Confusion or marked drowsiness\n\n#### Return to the Emergency Department urgently if you have:\n- Worsening shortness of breath\n- Fever that is not improving after **48 hours** of treatment\n- Shaking chills or rigors\n- Coughing up increasing amounts of sputum, especially if bloody\n- Increasing chest pain\n- Vomiting or inability to keep fluids or medications down\n- You feel generally worse rather than better\n- Any new or concerning symptoms\n\n---\n\n{{disclaimer}}",
+  "gpBody": "## Presentation\nSeen in ED with pneumonia.\n\n## ED management\n{{#if antibiotics}}\n{{#bullets antibiotics}}\n{{/if}}\n\n## Discharge advice provided\nWritten return precautions provided to the patient.\n\n## Follow-up\n{{#if chase_xr_report}}\n- Chest x ray has been reviewed by a doctor but not formally reported by a radiologist. Please review the report when available.\n  {{/if}}"
 }

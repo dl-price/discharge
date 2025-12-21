@@ -37,6 +37,7 @@
       ]
     }
   ],
-  "patientBody": "## Discharge advice\n\nYou were treated today for a urinary tract infection.\n\nAntibiotics:\n{{antibiotics}}\n\n{{#if hydration_advice}}Hydration: {{hydration_advice}}\n\n{{/if}}Return to ED urgently if you develop:\n- Fever, rigors, or flank pain\n- Persistent vomiting or inability to keep fluids down\n- Worsening pain or confusion\n\n## Follow-up\n{{followup_timeframe}}.",
+  "reviewStatus": "alpha",
+  "patientBody": "## Discharge advice\n\nYou were treated today for a urinary tract infection.\n\nAntibiotics:\n{{antibiotics}}\n\n{{#if hydration_advice}}Hydration: {{hydration_advice}}\n\n{{/if}}Return to ED urgently if you develop:\n- Fever, rigors, or flank pain\n- Persistent vomiting or inability to keep fluids down\n- Worsening pain or confusion\n\n## Follow-up\n{{followup_timeframe}}.\n\n{{disclaimer}}",
   "gpBody": "## Presentation\nSeen in ED with urinary tract infection.\n\n## ED management\nAntibiotics prescribed: {{antibiotics}}.\n{{#if hydration_advice}}Hydration advice: {{hydration_advice}}.{{/if}}\n\n## Discharge advice provided\nWritten return precautions provided to the patient.\n\n## Follow-up\n{{followup_timeframe}}."
 }

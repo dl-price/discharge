@@ -48,5 +48,6 @@
       "required": false
     }
   ],
+  "reviewStatus": "alpha",
   "body": "Wound care performed.\n\nLocation: {{location}}.\n{{#if wound_details}}Wound details: {{wound_details}}.{{/if}}\n{{#if anaesthetic}}Anaesthetic: {{anaesthetic}}.{{/if}}\n{{#if irrigation}}Irrigation/cleaning: {{irrigation}}.{{/if}}\nClosure method: {{closure}}.\n{{#if dressing}}Dressing: {{dressing}}.{{/if}}"
 }

@@ -129,5 +129,6 @@
       "default": false
     }
   ],
+  "reviewStatus": "alpha",
   "body": "Nasogastric tube insertion note\nDate: {{date}}\nTime: {{time}}\nIndication: {{indication}}\nTube size: {{tube_size}}\nNostril: {{nostril}}\n{{#if length_cm}}Length inserted: {{length_cm}} cm\n{{/if}}\nProcedure:\n- Tube inserted using lubrication and standard technique\n\nConfirmation of placement:\n{{#if confirm_aspirate}}- Aspirate obtained\n{{/if}}{{#if confirm_ph}}- pH testing performed\n{{/if}}{{#if confirm_xray}}- X-ray confirmation\n{{/if}}\nComplications:\n{{#if comp_none}}- None\n{{/if}}{{#if comp_epistaxis}}- Epistaxis\n{{/if}}{{#if comp_coiling}}- Coiling\n{{/if}}{{#if comp_failed}}- Failed attempt\n{{/if}}{{#if comp_other}}- Other: {{comp_other}}\n{{/if}}\n{{#if tolerated}}Patient tolerated procedure.\n{{/if}}\nPlan:\n{{#if plan_ready}}- Tube ready for use\n{{/if}}"
 }

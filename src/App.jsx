@@ -31,6 +31,7 @@ import {
   ToggleButtonGroup,
   Toolbar,
   Typography,
+  Tooltip,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -39,6 +40,8 @@ import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
@@ -606,8 +609,9 @@ const fallbackCopy = (text) => {
 
 const VALID_MODES = new Set(["letters", "procedures", "notes"]);
 
-const AppContent = () => {
+const AppContent = ({ onToggleColorMode, themePreference }) => {
   const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
   const isDesktop = useMediaQuery("(min-width:1025px)");
   const searchRef = useRef(null);
   const previewMarkdownRef = useRef(null);
@@ -1268,7 +1272,10 @@ const AppContent = () => {
       <Box
         sx={{
           flex: 1,
-          bgcolor: "#f1f5ff",
+          bgcolor:
+            theme.palette.mode === "dark"
+              ? "rgba(20, 31, 53, 0.9)"
+              : "rgba(241, 245, 255, 0.9)",
           borderRadius: 2,
           border: `1px solid ${theme.palette.divider}`,
           p: 2,
@@ -1503,6 +1510,17 @@ const AppContent = () => {
               Open preview
             </Button>
           )}
+          <Tooltip
+            title={
+              themePreference === "system"
+                ? "System theme (toggle to override)"
+                : "Toggle dark mode"
+            }
+          >
+            <IconButton color="inherit" onClick={onToggleColorMode} aria-label="Toggle dark mode">
+              {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+          </Tooltip>
           <Button variant="contained" onClick={handleCopy} disabled={!selectedTemplate}>
             Copy to Clipboard
           </Button>
@@ -1965,11 +1983,20 @@ const AppContent = () => {
   );
 };
 
-const App = () => (
+const App = ({ onToggleColorMode, themePreference }) => (
   <Routes>
-    <Route path="/" element={<AppContent />} />
-    <Route path="/:mode" element={<AppContent />} />
-    <Route path="/:mode/:id" element={<AppContent />} />
+    <Route
+      path="/"
+      element={<AppContent onToggleColorMode={onToggleColorMode} themePreference={themePreference} />}
+    />
+    <Route
+      path="/:mode"
+      element={<AppContent onToggleColorMode={onToggleColorMode} themePreference={themePreference} />}
+    />
+    <Route
+      path="/:mode/:id"
+      element={<AppContent onToggleColorMode={onToggleColorMode} themePreference={themePreference} />}
+    />
   </Routes>
 );
 
