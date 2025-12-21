@@ -1,0 +1,58 @@
+{
+  "id": "generic_discharge_letter",
+  "title": "Generic discharge letter",
+  "category": "General",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "reviewStatus": "beta",
+  "keywords": [
+    "general",
+    "discharge",
+    "summary",
+    "gp"
+  ],
+  "fields": [
+    {
+      "name": "presenting_problem",
+      "label": "Presenting problem",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "review_summary",
+      "label": "On review",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "investigations",
+      "label": "Relevant investigations",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "treatment",
+      "label": "Treatment in ED",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "recommendations",
+      "label": "Recommendations",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "outstanding_investigations",
+      "label": "Outstanding investigations",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "red_flags",
+      "label": "Red flags / return precautions",
+      "type": "textarea",
+      "required": true
+    }
+  ]
+}

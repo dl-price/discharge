@@ -55,9 +55,9 @@ const validateTemplate = (template, bodies, context, report, options = {}) => {
   if (!REVIEW_STATUSES.has(template?.reviewStatus)) {
     warnings.push('Missing or invalid reviewStatus (alpha, beta, reviewed).');
   }
-  if (options.requireDisclaimer === "gp" && bodies?.gpBody) {
-    if (!bodies.gpBody.includes("{{disclaimer}}")) {
-      warnings.push("Missing {{disclaimer}} placeholder in gp.md.");
+  if (options.requireDisclaimer === "patient" && bodies?.patientBody) {
+    if (!bodies.patientBody.includes("{{disclaimer}}")) {
+      warnings.push("Missing {{disclaimer}} placeholder in patient.md.");
     }
   }
 
@@ -136,7 +136,7 @@ const buildLetters = async (srcRoot, destRoot, report) => {
       { patientBody, gpBody },
       `letters/${entry.name}`,
       report,
-      { requireDisclaimer: "gp" }
+      { requireDisclaimer: "patient" }
     );
     const normalized = normalizeReviewStatus(template);
     normalized.patientBody = patientBody.trimEnd();

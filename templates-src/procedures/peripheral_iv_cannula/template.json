@@ -1,0 +1,131 @@
+{
+  "id": "peripheral_iv_cannula",
+  "title": "Peripheral IV cannula insertion",
+  "category": "Procedures",
+  "version": "1.0",
+  "lastReviewed": "2025-12-20",
+  "reviewStatus": "alpha",
+  "keywords": ["cannula", "iv", "peripheral", "vascular", "line"],
+  "fields": [
+    {
+      "name": "date",
+      "label": "Date",
+      "type": "date",
+      "required": false
+    },
+    {
+      "name": "time",
+      "label": "Time",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "indication",
+      "label": "Indication",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "site",
+      "label": "Insertion site",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "side",
+      "label": "Side",
+      "type": "select",
+      "required": false,
+      "options": ["Left", "Right", "Not specified"]
+    },
+    {
+      "name": "gauge",
+      "label": "Cannula size",
+      "type": "select",
+      "required": false,
+      "options": ["14G", "16G", "18G", "20G", "22G", "24G"]
+    },
+    {
+      "name": "attempts",
+      "label": "Number of attempts",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "aseptic",
+      "label": "Aseptic technique used",
+      "type": "checkbox",
+      "required": false,
+      "default": true
+    },
+    {
+      "name": "local_anaesthetic",
+      "label": "Local anaesthetic used",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "blood_return",
+      "label": "Blood return",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "flush_patent",
+      "label": "Flushed and patent",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "secured",
+      "label": "Secured with dressing",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_none",
+      "label": "Complications: None",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_arterial",
+      "label": "Complications: Suspected arterial puncture",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_haematoma",
+      "label": "Complications: Haematoma",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_infiltration",
+      "label": "Complications: Infiltration/extravasation",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "comp_other",
+      "label": "Complications: Other",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "tolerated",
+      "label": "Patient tolerated procedure",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    }
+  ]
+}
