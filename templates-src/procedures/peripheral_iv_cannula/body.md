@@ -9,12 +9,9 @@ Procedure:
 {{/if}}{{#if local_anaesthetic}}- Local anaesthetic used
 {{/if}}- Cannula inserted using standard technique
 {{#if blood_return}}- Blood return obtained
-{{/if}}Blood bottles taken:
-{{#if blood_bottle_edta}}- EDTA
-{{/if}}{{#if blood_bottle_sst}}- SST
-{{/if}}{{#if blood_bottle_rst}}- RST
-{{/if}}{{#if blood_bottle_citrate}}- Citrate
-{{/if}}{{#if flush_patent}}- Flushed and patent
+{{/if}}{{#if blood_bottles}}Blood bottles taken:
+{{blood_bottles}}{{/if}}
+{{#if flush_patent}}- Flushed and patent
 {{/if}}{{#if secured}}- Secured with dressing
 {{/if}}
 Complications:

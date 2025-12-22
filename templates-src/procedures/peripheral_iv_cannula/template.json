@@ -69,43 +69,18 @@
       "section": "Technique"
     },
     {
-      "name": "blood_bottle_edta",
-      "label": "EDTA",
-      "type": "checkbox",
+      "name": "blood_bottles",
+      "label": "Blood bottles taken",
+      "type": "select",
+      "multiple": true,
       "required": false,
-      "default": false,
-      "section": "Blood bottles taken"
-    },
-    {
-      "name": "blood_bank_bottle",
-      "label": "EDTA (blood bank)",
-      "type": "checkbox",
-      "required": false,
-      "default": false,
-      "section": "Blood bottles taken"
-    },
-    {
-      "name": "blood_bottle_sst",
-      "label": "SST",
-      "type": "checkbox",
-      "required": false,
-      "default": false,
-      "section": "Blood bottles taken"
-    },
-    {
-      "name": "blood_bottle_rst",
-      "label": "RST",
-      "type": "checkbox",
-      "required": false,
-      "default": false,
-      "section": "Blood bottles taken"
-    },
-    {
-      "name": "blood_bottle_citrate",
-      "label": "Citrate",
-      "type": "checkbox",
-      "required": false,
-      "default": false,
+      "options": [
+        "EDTA",
+        "EDTA (blood bank)",
+        "SST",
+        "RST",
+        "Citrate"
+      ],
       "section": "Blood bottles taken"
     },
     {

@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { pathToFileURL } from "url";
 
 const readJson = async (filePath) => {
   const text = await fs.readFile(filePath, "utf8");
@@ -251,7 +252,7 @@ const buildFieldBlocks = async (srcRoot, destRoot) => {
   await writeJson(indexPath, index);
 };
 
-const main = async () => {
+export const buildTemplates = async ({ strict = false } = {}) => {
   const srcLetters = path.join("templates-src", "letters");
   const srcProcedures = path.join("templates-src", "procedures");
   const srcNotes = path.join("templates-src", "notes");
@@ -262,7 +263,6 @@ const main = async () => {
   const destNotes = path.join("public", "templates", "notes");
   const destFieldBlocks = path.join("public", "templates", "field-blocks");
   const destDisclaimer = path.join("public", "templates", "disclaimer.md");
-  const strict = process.argv.includes("--strict");
   const report = [];
 
   await Promise.all([
@@ -301,7 +301,10 @@ const main = async () => {
   }
 };
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+const isCli = import.meta.url === pathToFileURL(process.argv[1]).href;
+if (isCli) {
+  buildTemplates({ strict: process.argv.includes("--strict") }).catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}

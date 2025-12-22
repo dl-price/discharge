@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build:templates": "node scripts/build-templates.js",
-    "dev": "npm run build:templates && vite",
+    "build:templates:watch": "node scripts/watch-templates.js",
+    "dev": "npm run build:templates && npm run build:templates:watch & vite",
     "build": "npm run build:templates && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

@@ -6,1404 +6,803 @@
   "presets": [
     {
       "label": "Acetazolamide",
-      "value": "Acetazolamide",
-      "options": [
-        "Acetazolamide 250 mg BD"
-      ]
+      "value": "Acetazolamide"
     },
     {
       "label": "Acyclovir",
-      "value": "Acyclovir",
-      "options": [
-        "Acyclovir 400 mg BD"
-      ]
+      "value": "Acyclovir"
     },
     {
       "label": "Alendronate",
-      "value": "Alendronate",
-      "options": [
-        "Alendronate 70 mg weekly"
-      ]
+      "value": "Alendronate"
     },
     {
       "label": "Allopurinol",
-      "value": "Allopurinol",
-      "options": [
-        "Allopurinol 300 mg OD"
-      ]
+      "value": "Allopurinol"
     },
     {
       "label": "Amiloride",
-      "value": "Amiloride",
-      "options": [
-        "Amiloride 5 mg OD"
-      ]
+      "value": "Amiloride"
     },
     {
       "label": "Amiodarone",
-      "value": "Amiodarone",
-      "options": [
-        "Amiodarone 200 mg OD"
-      ]
+      "value": "Amiodarone"
     },
     {
       "label": "Amitriptyline",
-      "value": "Amitriptyline",
-      "options": [
-        "Amitriptyline 10 mg nocte"
-      ]
+      "value": "Amitriptyline"
     },
     {
       "label": "Amlodipine",
-      "value": "Amlodipine",
-      "options": [
-        "Amlodipine 5 mg OD",
-        "Amlodipine 10 mg OD"
-      ]
+      "value": "Amlodipine"
     },
     {
       "label": "Amoxicillin",
-      "value": "Amoxicillin",
-      "options": [
-        "Amoxicillin 500 mg TDS"
-      ]
+      "value": "Amoxicillin"
     },
     {
       "label": "Amoxicillin-clavulanate",
-      "value": "Amoxicillin-clavulanate",
-      "options": [
-        "Amoxicillin-clavulanate 875/125 mg BD"
-      ]
+      "value": "Amoxicillin-clavulanate"
     },
     {
       "label": "Apixaban",
-      "value": "Apixaban",
-      "options": [
-        "Apixaban 5 mg BD"
-      ]
+      "value": "Apixaban"
     },
     {
       "label": "Aripiprazole",
-      "value": "Aripiprazole",
-      "options": [
-        "Aripiprazole 10 mg OD"
-      ]
+      "value": "Aripiprazole"
     },
     {
       "label": "Aspirin",
-      "value": "Aspirin",
-      "options": [
-        "Aspirin 100 mg OD"
-      ]
+      "value": "Aspirin"
     },
     {
       "label": "Atenolol",
-      "value": "Atenolol",
-      "options": [
-        "Atenolol 50 mg OD"
-      ]
+      "value": "Atenolol"
     },
     {
       "label": "Atorvastatin",
-      "value": "Atorvastatin",
-      "options": [
-        "Atorvastatin 20 mg nocte"
-      ]
+      "value": "Atorvastatin"
     },
     {
       "label": "Azathioprine",
-      "value": "Azathioprine",
-      "options": [
-        "Azathioprine 50 mg OD"
-      ]
+      "value": "Azathioprine"
     },
     {
       "label": "Azithromycin",
-      "value": "Azithromycin",
-      "options": [
-        "Azithromycin 500 mg OD"
-      ]
+      "value": "Azithromycin"
     },
     {
       "label": "Baclofen",
-      "value": "Baclofen",
-      "options": [
-        "Baclofen 5 mg TDS"
-      ]
+      "value": "Baclofen"
     },
     {
       "label": "Beclometasone",
-      "value": "Beclometasone",
-      "options": [
-        "Beclometasone 100 mcg 2 puffs BD"
-      ]
+      "value": "Beclometasone"
     },
     {
       "label": "Betahistine",
-      "value": "Betahistine",
-      "options": [
-        "Betahistine 16 mg TDS"
-      ]
+      "value": "Betahistine"
     },
     {
       "label": "Bisacodyl",
-      "value": "Bisacodyl",
-      "options": [
-        "Bisacodyl 10 mg nocte PRN"
-      ]
+      "value": "Bisacodyl"
     },
     {
       "label": "Bisoprolol",
-      "value": "Bisoprolol",
-      "options": [
-        "Bisoprolol 2.5 mg OD"
-      ]
+      "value": "Bisoprolol"
     },
     {
       "label": "Budesonide",
-      "value": "Budesonide",
-      "options": [
-        "Budesonide 200 mcg 2 puffs BD"
-      ]
+      "value": "Budesonide"
     },
     {
       "label": "Bumetanide",
-      "value": "Bumetanide",
-      "options": [
-        "Bumetanide 1 mg OD"
-      ]
+      "value": "Bumetanide"
     },
     {
       "label": "Buprenorphine",
-      "value": "Buprenorphine",
-      "options": [
-        "Buprenorphine 5 mcg/h patch"
-      ]
+      "value": "Buprenorphine"
     },
     {
       "label": "Calcium carbonate",
-      "value": "Calcium carbonate",
-      "options": [
-        "Calcium carbonate 1 g BD"
-      ]
+      "value": "Calcium carbonate"
     },
     {
       "label": "Calcium/vitamin D",
-      "value": "Calcium/vitamin D",
-      "options": [
-        "Calcium/vitamin D 1 tab BD"
-      ]
+      "value": "Calcium/vitamin D"
     },
     {
       "label": "Canagliflozin",
-      "value": "Canagliflozin",
-      "options": [
-        "Canagliflozin 100 mg OD"
-      ]
+      "value": "Canagliflozin"
     },
     {
       "label": "Candesartan",
-      "value": "Candesartan",
-      "options": [
-        "Candesartan 8 mg OD"
-      ]
+      "value": "Candesartan"
     },
     {
       "label": "Captopril",
-      "value": "Captopril",
-      "options": [
-        "Captopril 25 mg TDS"
-      ]
+      "value": "Captopril"
     },
     {
       "label": "Carbamazepine",
-      "value": "Carbamazepine",
-      "options": [
-        "Carbamazepine 200 mg BD"
-      ]
+      "value": "Carbamazepine"
     },
     {
       "label": "Carbimazole",
-      "value": "Carbimazole",
-      "options": [
-        "Carbimazole 10 mg BD"
-      ]
+      "value": "Carbimazole"
     },
     {
       "label": "Carvedilol",
-      "value": "Carvedilol",
-      "options": [
-        "Carvedilol 6.25 mg BD"
-      ]
+      "value": "Carvedilol"
     },
     {
       "label": "Cefalexin",
-      "value": "Cefalexin",
-      "options": [
-        "Cefalexin 500 mg QID"
-      ]
+      "value": "Cefalexin"
     },
     {
       "label": "Ceftriaxone",
-      "value": "Ceftriaxone",
-      "options": [
-        "Ceftriaxone 1 g IV OD"
-      ]
+      "value": "Ceftriaxone"
     },
     {
       "label": "Celecoxib",
-      "value": "Celecoxib",
-      "options": [
-        "Celecoxib 200 mg OD"
-      ]
+      "value": "Celecoxib"
     },
     {
       "label": "Cetirizine",
-      "value": "Cetirizine",
-      "options": [
-        "Cetirizine 10 mg OD"
-      ]
+      "value": "Cetirizine"
     },
     {
       "label": "Chlorpromazine",
-      "value": "Chlorpromazine",
-      "options": [
-        "Chlorpromazine 25 mg TDS"
-      ]
+      "value": "Chlorpromazine"
     },
     {
       "label": "Cholecalciferol",
-      "value": "Cholecalciferol",
-      "options": [
-        "Cholecalciferol 1000 IU OD"
-      ]
+      "value": "Cholecalciferol"
     },
     {
       "label": "Ciprofloxacin",
-      "value": "Ciprofloxacin",
-      "options": [
-        "Ciprofloxacin 500 mg BD"
-      ]
+      "value": "Ciprofloxacin"
     },
     {
       "label": "Citalopram",
-      "value": "Citalopram",
-      "options": [
-        "Citalopram 20 mg OD"
-      ]
+      "value": "Citalopram"
     },
     {
       "label": "Clarithromycin",
-      "value": "Clarithromycin",
-      "options": [
-        "Clarithromycin 500 mg BD"
-      ]
+      "value": "Clarithromycin"
     },
     {
       "label": "Clindamycin",
-      "value": "Clindamycin",
-      "options": [
-        "Clindamycin 300 mg QID"
-      ]
+      "value": "Clindamycin"
     },
     {
       "label": "Clonazepam",
-      "value": "Clonazepam",
-      "options": [
-        "Clonazepam 0.5 mg BD"
-      ]
+      "value": "Clonazepam"
     },
     {
       "label": "Clonidine",
-      "value": "Clonidine",
-      "options": [
-        "Clonidine 100 mcg BD"
-      ]
+      "value": "Clonidine"
     },
     {
       "label": "Clopidogrel",
-      "value": "Clopidogrel",
-      "options": [
-        "Clopidogrel 75 mg OD"
-      ]
+      "value": "Clopidogrel"
     },
     {
       "label": "Co-careldopa",
-      "value": "Co-careldopa",
-      "options": [
-        "Co-careldopa 100/25 mg TDS"
-      ]
+      "value": "Co-careldopa"
     },
     {
       "label": "Codeine",
-      "value": "Codeine",
-      "options": [
-        "Codeine 30 mg QID PRN"
-      ]
+      "value": "Codeine"
     },
     {
       "label": "Colchicine",
-      "value": "Colchicine",
-      "options": [
-        "Colchicine 0.5 mg BD"
-      ]
+      "value": "Colchicine"
     },
     {
       "label": "Cyclizine",
-      "value": "Cyclizine",
-      "options": [
-        "Cyclizine 50 mg TDS PRN"
-      ]
+      "value": "Cyclizine"
     },
     {
       "label": "Dabigatran",
-      "value": "Dabigatran",
-      "options": [
-        "Dabigatran 150 mg BD"
-      ]
+      "value": "Dabigatran"
     },
     {
       "label": "Dapagliflozin",
-      "value": "Dapagliflozin",
-      "options": [
-        "Dapagliflozin 10 mg OD"
-      ]
+      "value": "Dapagliflozin"
     },
     {
       "label": "Desloratadine",
-      "value": "Desloratadine",
-      "options": [
-        "Desloratadine 5 mg OD"
-      ]
+      "value": "Desloratadine"
     },
     {
       "label": "Dexamethasone",
-      "value": "Dexamethasone",
-      "options": [
-        "Dexamethasone 8 mg OD"
-      ]
+      "value": "Dexamethasone"
     },
     {
       "label": "Diazepam",
-      "value": "Diazepam",
-      "options": [
-        "Diazepam 5 mg BD PRN"
-      ]
+      "value": "Diazepam"
     },
     {
       "label": "Diclofenac",
-      "value": "Diclofenac",
-      "options": [
-        "Diclofenac 50 mg TDS"
-      ]
+      "value": "Diclofenac"
     },
     {
       "label": "Digoxin",
-      "value": "Digoxin",
-      "options": [
-        "Digoxin 125 mcg OD"
-      ]
+      "value": "Digoxin"
     },
     {
       "label": "Diltiazem",
-      "value": "Diltiazem",
-      "options": [
-        "Diltiazem 120 mg OD"
-      ]
+      "value": "Diltiazem"
     },
     {
       "label": "Docusate",
-      "value": "Docusate",
-      "options": [
-        "Docusate 100 mg BD"
-      ]
+      "value": "Docusate"
     },
     {
       "label": "Domperidone",
-      "value": "Domperidone",
-      "options": [
-        "Domperidone 10 mg TDS PRN"
-      ]
+      "value": "Domperidone"
     },
     {
       "label": "Donepezil",
-      "value": "Donepezil",
-      "options": [
-        "Donepezil 5 mg nocte"
-      ]
+      "value": "Donepezil"
     },
     {
       "label": "Doxycycline",
-      "value": "Doxycycline",
-      "options": [
-        "Doxycycline 100 mg BD"
-      ]
+      "value": "Doxycycline"
     },
     {
       "label": "Duloxetine",
-      "value": "Duloxetine",
-      "options": [
-        "Duloxetine 30 mg OD"
-      ]
+      "value": "Duloxetine"
     },
     {
       "label": "Edoxaban",
-      "value": "Edoxaban",
-      "options": [
-        "Edoxaban 60 mg OD"
-      ]
+      "value": "Edoxaban"
     },
     {
       "label": "Empagliflozin",
-      "value": "Empagliflozin",
-      "options": [
-        "Empagliflozin 10 mg OD"
-      ]
+      "value": "Empagliflozin"
     },
     {
       "label": "Enoxaparin",
-      "value": "Enoxaparin",
-      "options": [
-        "Enoxaparin 40 mg SC OD"
-      ]
+      "value": "Enoxaparin"
     },
     {
       "label": "Eplerenone",
-      "value": "Eplerenone",
-      "options": [
-        "Eplerenone 25 mg OD"
-      ]
+      "value": "Eplerenone"
     },
     {
       "label": "Erythromycin",
-      "value": "Erythromycin",
-      "options": [
-        "Erythromycin 250 mg QID"
-      ]
+      "value": "Erythromycin"
     },
     {
       "label": "Escitalopram",
-      "value": "Escitalopram",
-      "options": [
-        "Escitalopram 10 mg OD"
-      ]
+      "value": "Escitalopram"
     },
     {
       "label": "Esomeprazole",
-      "value": "Esomeprazole",
-      "options": [
-        "Esomeprazole 20 mg OD"
-      ]
+      "value": "Esomeprazole"
     },
     {
       "label": "Famotidine",
-      "value": "Famotidine",
-      "options": [
-        "Famotidine 20 mg BD"
-      ]
+      "value": "Famotidine"
     },
     {
       "label": "Fentanyl",
-      "value": "Fentanyl",
-      "options": [
-        "Fentanyl 25 mcg/h patch"
-      ]
+      "value": "Fentanyl"
     },
     {
       "label": "Ferrous sulfate",
-      "value": "Ferrous sulfate",
-      "options": [
-        "Ferrous sulfate 325 mg BD"
-      ]
+      "value": "Ferrous sulfate"
     },
     {
       "label": "Fexofenadine",
-      "value": "Fexofenadine",
-      "options": [
-        "Fexofenadine 180 mg OD"
-      ]
+      "value": "Fexofenadine"
     },
     {
       "label": "Finasteride",
-      "value": "Finasteride",
-      "options": [
-        "Finasteride 5 mg OD"
-      ]
+      "value": "Finasteride"
     },
     {
       "label": "Fluconazole",
-      "value": "Fluconazole",
-      "options": [
-        "Fluconazole 150 mg stat"
-      ]
+      "value": "Fluconazole"
     },
     {
       "label": "Fluoxetine",
-      "value": "Fluoxetine",
-      "options": [
-        "Fluoxetine 20 mg OD"
-      ]
+      "value": "Fluoxetine"
     },
     {
       "label": "Fluticasone",
-      "value": "Fluticasone",
-      "options": [
-        "Fluticasone 100 mcg 2 puffs BD"
-      ]
+      "value": "Fluticasone"
     },
     {
       "label": "Folic acid",
-      "value": "Folic acid",
-      "options": [
-        "Folic acid 5 mg weekly"
-      ]
+      "value": "Folic acid"
     },
     {
       "label": "Formoterol",
-      "value": "Formoterol",
-      "options": [
-        "Formoterol 12 mcg BD"
-      ]
+      "value": "Formoterol"
     },
     {
       "label": "Furosemide",
-      "value": "Furosemide",
-      "options": [
-        "Furosemide 40 mg OD"
-      ]
+      "value": "Furosemide"
     },
     {
       "label": "Gabapentin",
-      "value": "Gabapentin",
-      "options": [
-        "Gabapentin 300 mg TDS"
-      ]
+      "value": "Gabapentin"
     },
     {
       "label": "Gentamicin",
-      "value": "Gentamicin",
-      "options": [
-        "Gentamicin 5 mg/kg IV OD"
-      ]
+      "value": "Gentamicin"
     },
     {
       "label": "Glibenclamide",
-      "value": "Glibenclamide",
-      "options": [
-        "Glibenclamide 5 mg OD"
-      ]
+      "value": "Glibenclamide"
     },
     {
       "label": "Gliclazide",
-      "value": "Gliclazide",
-      "options": [
-        "Gliclazide 80 mg BD"
-      ]
+      "value": "Gliclazide"
     },
     {
       "label": "Glimepiride",
-      "value": "Glimepiride",
-      "options": [
-        "Glimepiride 2 mg OD"
-      ]
+      "value": "Glimepiride"
     },
     {
       "label": "Glyceryl trinitrate",
-      "value": "Glyceryl trinitrate",
-      "options": [
-        "Glyceryl trinitrate 400 mcg SL PRN"
-      ]
+      "value": "Glyceryl trinitrate"
     },
     {
       "label": "Hydralazine",
-      "value": "Hydralazine",
-      "options": [
-        "Hydralazine 25 mg TDS"
-      ]
+      "value": "Hydralazine"
     },
     {
       "label": "Hydrochlorothiazide",
-      "value": "Hydrochlorothiazide",
-      "options": [
-        "Hydrochlorothiazide 25 mg OD"
-      ]
+      "value": "Hydrochlorothiazide"
     },
     {
       "label": "Hydrocortisone",
-      "value": "Hydrocortisone",
-      "options": [
-        "Hydrocortisone 100 mg IV"
-      ]
+      "value": "Hydrocortisone"
     },
     {
       "label": "Hydroxychloroquine",
-      "value": "Hydroxychloroquine",
-      "options": [
-        "Hydroxychloroquine 200 mg BD"
-      ]
+      "value": "Hydroxychloroquine"
     },
     {
       "label": "Hyoscine butylbromide",
-      "value": "Hyoscine butylbromide",
-      "options": [
-        "Hyoscine butylbromide 10 mg QID PRN"
-      ]
+      "value": "Hyoscine butylbromide"
     },
     {
       "label": "Ibuprofen",
-      "value": "Ibuprofen",
-      "options": [
-        "Ibuprofen 400 mg PO TDS"
-      ]
+      "value": "Ibuprofen"
     },
     {
       "label": "Insulin aspart",
-      "value": "Insulin aspart",
-      "options": [
-        "Insulin aspart 4 units TDS with meals"
-      ]
+      "value": "Insulin aspart"
     },
     {
       "label": "Insulin glargine",
-      "value": "Insulin glargine",
-      "options": [
-        "Insulin glargine 10 units nocte"
-      ]
+      "value": "Insulin glargine"
     },
     {
       "label": "Ipratropium",
-      "value": "Ipratropium",
-      "options": [
-        "Ipratropium 2 puffs QID"
-      ]
+      "value": "Ipratropium"
     },
     {
       "label": "Irbesartan",
-      "value": "Irbesartan",
-      "options": [
-        "Irbesartan 150 mg OD"
-      ]
+      "value": "Irbesartan"
     },
     {
       "label": "Isosorbide mononitrate",
-      "value": "Isosorbide mononitrate",
-      "options": [
-        "Isosorbide mononitrate 30 mg OD"
-      ]
+      "value": "Isosorbide mononitrate"
     },
     {
       "label": "Ketorolac",
-      "value": "Ketorolac",
-      "options": [
-        "Ketorolac 10 mg QID PRN"
-      ]
+      "value": "Ketorolac"
     },
     {
       "label": "Labetalol",
-      "value": "Labetalol",
-      "options": [
-        "Labetalol 100 mg BD"
-      ]
+      "value": "Labetalol"
     },
     {
       "label": "Lactulose",
-      "value": "Lactulose",
-      "options": [
-        "Lactulose 15 mL BD"
-      ]
+      "value": "Lactulose"
     },
     {
       "label": "Lamotrigine",
-      "value": "Lamotrigine",
-      "options": [
-        "Lamotrigine 50 mg BD"
-      ]
+      "value": "Lamotrigine"
     },
     {
       "label": "Leflunomide",
-      "value": "Leflunomide",
-      "options": [
-        "Leflunomide 20 mg OD"
-      ]
+      "value": "Leflunomide"
     },
     {
       "label": "Levetiracetam",
-      "value": "Levetiracetam",
-      "options": [
-        "Levetiracetam 500 mg BD"
-      ]
+      "value": "Levetiracetam"
     },
     {
       "label": "Levocetirizine",
-      "value": "Levocetirizine",
-      "options": [
-        "Levocetirizine 5 mg OD"
-      ]
+      "value": "Levocetirizine"
     },
     {
       "label": "Levofloxacin",
-      "value": "Levofloxacin",
-      "options": [
-        "Levofloxacin 500 mg OD"
-      ]
+      "value": "Levofloxacin"
     },
     {
       "label": "Levothyroxine",
-      "value": "Levothyroxine",
-      "options": [
-        "Levothyroxine 100 mcg OD"
-      ]
+      "value": "Levothyroxine"
     },
     {
       "label": "Lidocaine patch",
-      "value": "Lidocaine patch",
-      "options": [
-        "Lidocaine 5% patch daily"
-      ]
+      "value": "Lidocaine patch"
     },
     {
       "label": "Linagliptin",
-      "value": "Linagliptin",
-      "options": [
-        "Linagliptin 5 mg OD"
-      ]
+      "value": "Linagliptin"
     },
     {
       "label": "Liraglutide",
-      "value": "Liraglutide",
-      "options": [
-        "Liraglutide 0.6 mg OD"
-      ]
+      "value": "Liraglutide"
     },
     {
       "label": "Lisinopril",
-      "value": "Lisinopril",
-      "options": [
-        "Lisinopril 10 mg OD"
-      ]
+      "value": "Lisinopril"
     },
     {
       "label": "Loperamide",
-      "value": "Loperamide",
-      "options": [
-        "Loperamide 2 mg PRN"
-      ]
+      "value": "Loperamide"
     },
     {
       "label": "Loratadine",
-      "value": "Loratadine",
-      "options": [
-        "Loratadine 10 mg OD"
-      ]
+      "value": "Loratadine"
     },
     {
       "label": "Lorazepam",
-      "value": "Lorazepam",
-      "options": [
-        "Lorazepam 1 mg PRN"
-      ]
+      "value": "Lorazepam"
     },
     {
       "label": "Losartan",
-      "value": "Losartan",
-      "options": [
-        "Losartan 50 mg OD"
-      ]
+      "value": "Losartan"
     },
     {
       "label": "Magnesium oxide",
-      "value": "Magnesium oxide",
-      "options": [
-        "Magnesium oxide 400 mg OD"
-      ]
+      "value": "Magnesium oxide"
     },
     {
       "label": "Melatonin",
-      "value": "Melatonin",
-      "options": [
-        "Melatonin 2 mg nocte"
-      ]
+      "value": "Melatonin"
     },
     {
       "label": "Memantine",
-      "value": "Memantine",
-      "options": [
-        "Memantine 10 mg BD"
-      ]
+      "value": "Memantine"
     },
     {
       "label": "Mesalazine",
-      "value": "Mesalazine",
-      "options": [
-        "Mesalazine 1 g BD"
-      ]
+      "value": "Mesalazine"
     },
     {
       "label": "Metformin",
-      "value": "Metformin",
-      "options": [
-        "Metformin 500 mg BD"
-      ]
+      "value": "Metformin"
     },
     {
       "label": "Methotrexate",
-      "value": "Methotrexate",
-      "options": [
-        "Methotrexate 10 mg weekly"
-      ]
+      "value": "Methotrexate"
     },
     {
       "label": "Metoclopramide",
-      "value": "Metoclopramide",
-      "options": [
-        "Metoclopramide 10 mg TDS PRN"
-      ]
+      "value": "Metoclopramide"
     },
     {
       "label": "Metoprolol",
-      "value": "Metoprolol",
-      "options": [
-        "Metoprolol 50 mg BD"
-      ]
+      "value": "Metoprolol"
     },
     {
       "label": "Metronidazole",
-      "value": "Metronidazole",
-      "options": [
-        "Metronidazole 400 mg TDS"
-      ]
+      "value": "Metronidazole"
     },
     {
       "label": "Midodrine",
-      "value": "Midodrine",
-      "options": [
-        "Midodrine 5 mg TDS"
-      ]
+      "value": "Midodrine"
     },
     {
       "label": "Mirtazapine",
-      "value": "Mirtazapine",
-      "options": [
-        "Mirtazapine 15 mg nocte"
-      ]
+      "value": "Mirtazapine"
     },
     {
       "label": "Montelukast",
-      "value": "Montelukast",
-      "options": [
-        "Montelukast 10 mg nocte"
-      ]
+      "value": "Montelukast"
     },
     {
       "label": "Morphine",
-      "value": "Morphine",
-      "options": [
-        "Morphine 5 mg PO QID PRN"
-      ]
+      "value": "Morphine"
     },
     {
       "label": "Moxifloxacin",
-      "value": "Moxifloxacin",
-      "options": [
-        "Moxifloxacin 400 mg OD"
-      ]
+      "value": "Moxifloxacin"
     },
     {
       "label": "Naproxen",
-      "value": "Naproxen",
-      "options": [
-        "Naproxen 500 mg BD"
-      ]
+      "value": "Naproxen"
     },
     {
       "label": "Nicotine patch",
-      "value": "Nicotine patch",
-      "options": [
-        "Nicotine patch 21 mg OD"
-      ]
+      "value": "Nicotine patch"
     },
     {
       "label": "Nifedipine",
-      "value": "Nifedipine",
-      "options": [
-        "Nifedipine 30 mg OD"
-      ]
+      "value": "Nifedipine"
     },
     {
       "label": "Nitrofurantoin",
-      "value": "Nitrofurantoin",
-      "options": [
-        "Nitrofurantoin 100 mg BD"
-      ]
+      "value": "Nitrofurantoin"
     },
     {
       "label": "Nitroglycerin",
-      "value": "Nitroglycerin",
-      "options": [
-        "Nitroglycerin 0.4 mg SL PRN"
-      ]
+      "value": "Nitroglycerin"
     },
     {
       "label": "Nortriptyline",
-      "value": "Nortriptyline",
-      "options": [
-        "Nortriptyline 10 mg nocte"
-      ]
+      "value": "Nortriptyline"
     },
     {
       "label": "Olanzapine",
-      "value": "Olanzapine",
-      "options": [
-        "Olanzapine 5 mg nocte"
-      ]
+      "value": "Olanzapine"
     },
     {
       "label": "Omeprazole",
-      "value": "Omeprazole",
-      "options": [
-        "Omeprazole 20 mg OD"
-      ]
+      "value": "Omeprazole"
     },
     {
       "label": "Ondansetron",
-      "value": "Ondansetron",
-      "options": [
-        "Ondansetron 4 mg TDS PRN"
-      ]
+      "value": "Ondansetron"
     },
     {
       "label": "Oseltamivir",
-      "value": "Oseltamivir",
-      "options": [
-        "Oseltamivir 75 mg BD"
-      ]
+      "value": "Oseltamivir"
     },
     {
       "label": "Oxcarbazepine",
-      "value": "Oxcarbazepine",
-      "options": [
-        "Oxcarbazepine 300 mg BD"
-      ]
+      "value": "Oxcarbazepine"
     },
     {
       "label": "Oxybutynin",
-      "value": "Oxybutynin",
-      "options": [
-        "Oxybutynin 5 mg TDS"
-      ]
+      "value": "Oxybutynin"
     },
     {
       "label": "Oxycodone",
-      "value": "Oxycodone",
-      "options": [
-        "Oxycodone 5 mg QID PRN"
-      ]
+      "value": "Oxycodone"
     },
     {
       "label": "Pantoprazole",
-      "value": "Pantoprazole",
-      "options": [
-        "Pantoprazole 40 mg OD"
-      ]
+      "value": "Pantoprazole"
     },
     {
       "label": "Paracetamol",
-      "value": "Paracetamol",
-      "options": [
-        "Paracetamol 1 g PO QID PRN"
-      ]
+      "value": "Paracetamol"
     },
     {
       "label": "Paroxetine",
-      "value": "Paroxetine",
-      "options": [
-        "Paroxetine 20 mg OD"
-      ]
+      "value": "Paroxetine"
     },
     {
       "label": "Perindopril",
-      "value": "Perindopril",
-      "options": [
-        "Perindopril 4 mg OD"
-      ]
+      "value": "Perindopril"
     },
     {
       "label": "Phenoxymethylpenicillin",
-      "value": "Phenoxymethylpenicillin",
-      "options": [
-        "Phenoxymethylpenicillin 500 mg QID"
-      ]
+      "value": "Phenoxymethylpenicillin"
     },
     {
       "label": "Phenytoin",
-      "value": "Phenytoin",
-      "options": [
-        "Phenytoin 300 mg nocte"
-      ]
+      "value": "Phenytoin"
     },
     {
       "label": "Polyethylene glycol",
-      "value": "Polyethylene glycol",
-      "options": [
-        "Polyethylene glycol 1 sachet OD"
-      ]
+      "value": "Polyethylene glycol"
     },
     {
       "label": "Pramipexole",
-      "value": "Pramipexole",
-      "options": [
-        "Pramipexole 0.125 mg TDS"
-      ]
+      "value": "Pramipexole"
     },
     {
       "label": "Prasugrel",
-      "value": "Prasugrel",
-      "options": [
-        "Prasugrel 10 mg OD"
-      ]
+      "value": "Prasugrel"
     },
     {
       "label": "Pravastatin",
-      "value": "Pravastatin",
-      "options": [
-        "Pravastatin 40 mg nocte"
-      ]
+      "value": "Pravastatin"
     },
     {
       "label": "Prednisone",
-      "value": "Prednisone",
-      "options": [
-        "Prednisone 50 mg OD"
-      ]
+      "value": "Prednisone"
     },
     {
       "label": "Pregabalin",
-      "value": "Pregabalin",
-      "options": [
-        "Pregabalin 75 mg BD"
-      ]
+      "value": "Pregabalin"
     },
     {
       "label": "Prochlorperazine",
-      "value": "Prochlorperazine",
-      "options": [
-        "Prochlorperazine 5 mg TDS PRN"
-      ]
+      "value": "Prochlorperazine"
     },
     {
       "label": "Propranolol",
-      "value": "Propranolol",
-      "options": [
-        "Propranolol 40 mg BD"
-      ]
+      "value": "Propranolol"
     },
     {
       "label": "Quetiapine",
-      "value": "Quetiapine",
-      "options": [
-        "Quetiapine 25 mg nocte"
-      ]
+      "value": "Quetiapine"
     },
     {
       "label": "Ramipril",
-      "value": "Ramipril",
-      "options": [
-        "Ramipril 2.5 mg OD"
-      ]
+      "value": "Ramipril"
     },
     {
       "label": "Risperidone",
-      "value": "Risperidone",
-      "options": [
-        "Risperidone 1 mg BD"
-      ]
+      "value": "Risperidone"
     },
     {
       "label": "Rivaroxaban",
-      "value": "Rivaroxaban",
-      "options": [
-        "Rivaroxaban 20 mg OD"
-      ]
+      "value": "Rivaroxaban"
     },
     {
       "label": "Rivastigmine patch",
-      "value": "Rivastigmine patch",
-      "options": [
-        "Rivastigmine patch 9.5 mg/24h"
-      ]
+      "value": "Rivastigmine patch"
     },
     {
       "label": "Ropinirole",
-      "value": "Ropinirole",
-      "options": [
-        "Ropinirole 0.25 mg nocte"
-      ]
+      "value": "Ropinirole"
     },
     {
       "label": "Rosuvastatin",
-      "value": "Rosuvastatin",
-      "options": [
-        "Rosuvastatin 10 mg nocte"
-      ]
+      "value": "Rosuvastatin"
     },
     {
       "label": "Salbutamol",
-      "value": "Salbutamol",
-      "options": [
-        "Salbutamol 100 mcg 2 puffs PRN"
-      ]
+      "value": "Salbutamol"
     },
     {
       "label": "Salmeterol",
-      "value": "Salmeterol",
-      "options": [
-        "Salmeterol 50 mcg BD"
-      ]
+      "value": "Salmeterol"
     },
     {
       "label": "Saxagliptin",
-      "value": "Saxagliptin",
-      "options": [
-        "Saxagliptin 5 mg OD"
-      ]
+      "value": "Saxagliptin"
     },
     {
       "label": "Semaglutide",
-      "value": "Semaglutide",
-      "options": [
-        "Semaglutide 0.25 mg weekly"
-      ]
+      "value": "Semaglutide"
     },
     {
       "label": "Senna",
-      "value": "Senna",
-      "options": [
-        "Senna 7.5 mg nocte"
-      ]
+      "value": "Senna"
     },
     {
       "label": "Sertraline",
-      "value": "Sertraline",
-      "options": [
-        "Sertraline 50 mg OD"
-      ]
+      "value": "Sertraline"
     },
     {
       "label": "Simvastatin",
-      "value": "Simvastatin",
-      "options": [
-        "Simvastatin 20 mg nocte"
-      ]
+      "value": "Simvastatin"
     },
     {
       "label": "Sitagliptin",
-      "value": "Sitagliptin",
-      "options": [
-        "Sitagliptin 100 mg OD"
-      ]
+      "value": "Sitagliptin"
     },
     {
       "label": "Sotalol",
-      "value": "Sotalol",
-      "options": [
-        "Sotalol 80 mg BD"
-      ]
+      "value": "Sotalol"
     },
     {
       "label": "Spironolactone",
-      "value": "Spironolactone",
-      "options": [
-        "Spironolactone 25 mg OD"
-      ]
+      "value": "Spironolactone"
     },
     {
       "label": "Sucralfate",
-      "value": "Sucralfate",
-      "options": [
-        "Sucralfate 1 g QID"
-      ]
+      "value": "Sucralfate"
     },
     {
       "label": "Sulfasalazine",
-      "value": "Sulfasalazine",
-      "options": [
-        "Sulfasalazine 500 mg BD"
-      ]
+      "value": "Sulfasalazine"
     },
     {
       "label": "Sumatriptan",
-      "value": "Sumatriptan",
-      "options": [
-        "Sumatriptan 50 mg PRN"
-      ]
+      "value": "Sumatriptan"
     },
     {
       "label": "Tadalafil",
-      "value": "Tadalafil",
-      "options": [
-        "Tadalafil 5 mg OD"
-      ]
+      "value": "Tadalafil"
     },
     {
       "label": "Tamoxifen",
-      "value": "Tamoxifen",
-      "options": [
-        "Tamoxifen 20 mg OD"
-      ]
+      "value": "Tamoxifen"
     },
     {
       "label": "Tamsulosin",
-      "value": "Tamsulosin",
-      "options": [
-        "Tamsulosin 0.4 mg nocte"
-      ]
+      "value": "Tamsulosin"
     },
     {
       "label": "Temazepam",
-      "value": "Temazepam",
-      "options": [
-        "Temazepam 10 mg nocte"
-      ]
+      "value": "Temazepam"
     },
     {
       "label": "Terbinafine",
-      "value": "Terbinafine",
-      "options": [
-        "Terbinafine 250 mg OD"
-      ]
+      "value": "Terbinafine"
     },
     {
       "label": "Thiamine",
-      "value": "Thiamine",
-      "options": [
-        "Thiamine 100 mg OD"
-      ]
+      "value": "Thiamine"
     },
     {
       "label": "Ticagrelor",
-      "value": "Ticagrelor",
-      "options": [
-        "Ticagrelor 90 mg BD"
-      ]
+      "value": "Ticagrelor"
     },
     {
       "label": "Tiotropium",
-      "value": "Tiotropium",
-      "options": [
-        "Tiotropium 18 mcg OD"
-      ]
+      "value": "Tiotropium"
     },
     {
       "label": "Topiramate",
-      "value": "Topiramate",
-      "options": [
-        "Topiramate 25 mg BD"
-      ]
+      "value": "Topiramate"
     },
     {
       "label": "Torsemide",
-      "value": "Torsemide",
-      "options": [
-        "Torsemide 10 mg OD"
-      ]
+      "value": "Torsemide"
     },
     {
       "label": "Tramadol",
-      "value": "Tramadol",
-      "options": [
-        "Tramadol 50 mg QID PRN"
-      ]
+      "value": "Tramadol"
     },
     {
       "label": "Trimethoprim",
-      "value": "Trimethoprim",
-      "options": [
-        "Trimethoprim 300 mg nocte"
-      ]
+      "value": "Trimethoprim"
     },
     {
       "label": "Trimethoprim-sulfamethoxazole",
-      "value": "Trimethoprim-sulfamethoxazole",
-      "options": [
-        "Trimethoprim-sulfamethoxazole 160/800 mg BD"
-      ]
+      "value": "Trimethoprim-sulfamethoxazole"
     },
     {
       "label": "Umeclidinium",
-      "value": "Umeclidinium",
-      "options": [
-        "Umeclidinium 62.5 mcg OD"
-      ]
+      "value": "Umeclidinium"
     },
     {
       "label": "Ursodeoxycholic acid",
-      "value": "Ursodeoxycholic acid",
-      "options": [
-        "Ursodeoxycholic acid 250 mg BD"
-      ]
+      "value": "Ursodeoxycholic acid"
     },
     {
       "label": "Valproate",
-      "value": "Valproate",
-      "options": [
-        "Valproate 500 mg BD"
-      ]
+      "value": "Valproate"
     },
     {
       "label": "Valsartan",
-      "value": "Valsartan",
-      "options": [
-        "Valsartan 80 mg OD"
-      ]
+      "value": "Valsartan"
     },
     {
       "label": "Vancomycin",
-      "value": "Vancomycin",
-      "options": [
-        "Vancomycin 1 g IV BD"
-      ]
+      "value": "Vancomycin"
     },
     {
       "label": "Venlafaxine",
-      "value": "Venlafaxine",
-      "options": [
-        "Venlafaxine 75 mg OD"
-      ]
+      "value": "Venlafaxine"
     },
     {
       "label": "Verapamil",
-      "value": "Verapamil",
-      "options": [
-        "Verapamil 120 mg OD"
-      ]
+      "value": "Verapamil"
     },
     {
       "label": "Vildagliptin",
-      "value": "Vildagliptin",
-      "options": [
-        "Vildagliptin 50 mg BD"
-      ]
+      "value": "Vildagliptin"
     },
     {
       "label": "Warfarin",
-      "value": "Warfarin",
-      "options": [
-        "Warfarin dose varies (target INR)"
-      ]
+      "value": "Warfarin"
     },
     {
       "label": "Zolpidem",
-      "value": "Zolpidem",
-      "options": [
-        "Zolpidem 10 mg nocte"
-      ]
+      "value": "Zolpidem"
     },
     {
       "label": "Zopiclone",
-      "value": "Zopiclone",
-      "options": [
-        "Zopiclone 7.5 mg nocte"
-      ]
+      "value": "Zopiclone"
     }
   ]
 }

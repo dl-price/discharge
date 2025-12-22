@@ -12,6 +12,7 @@ npm run dev
 ```
 
 Then open the local URL printed in the terminal.
+`npm run dev` now rebuilds templates when anything under `templates-src/` changes.
 
 ## Deploy to GitHub Pages (project site)
 
@@ -42,6 +43,8 @@ npm run build
 - Templates can include `blocks: ["obs"]` and reference blocks with `{{obs}}` or individual fields via `{{obs.hr}}`.
 - Section layout is defined by `type: "section"` fields (e.g. `{ "type": "section", "label": "Observations", "layout": "inline", "fields": [...] }`).
 - Sections can also pull in blocks via `blocks: ["obs"]` on the section.
+- Select fields can set `"multiple": true`; `{{fieldName}}` joins selections with ", " and `{{#bullets fieldName}}` renders each selection as a bullet.
+- Text and textarea fields can add `"quickOptions": ["Option A", "Option B"]` to show clickable chips that append the option (comma-separated for text, new line for textarea).
 - Conditionals support nesting, boolean expressions (`&&`, `||`, `!`, parentheses), comparisons (`==`, `!=`, `>`, `<`, `>=`, `<=`), and basic arithmetic (`+`, `-`, `*`, `/`).
 - You can also output calculations with `{{calc ...}}`, e.g. `{{calc obs.sbp - obs.dbp}}` or `{{calc obs.rr * 2}}`.
 - Abbreviation expansions are defined globally in `public/templates/expansions.json` and can be toggled in patient previews.
@@ -52,7 +55,7 @@ npm run build
 Use these helpers inside `patient.md`, `gp.md`, or `body.md` files.
 
 - `{{fieldName}}`: Inserts the value from a field `name`. Booleans render as `Yes`/`No`.
-- `{{#if fieldName}}...{{/if}}`: Conditionally render a section when the field is truthy.
+- `{{#if fieldName}}...{{/if}}`: Conditionally render a section when the field is truthy (multi-select arrays are truthy only when they have one or more selections).
 - `{{#if expression}}...{{/if}}`: Expressions support `&&`, `||`, `!`, parentheses, `==`, `!=`, `>`, `<`, `>=`, `<=`, plus arithmetic (`+`, `-`, `*`, `/`).
 - `{{calc expression}}`: Emits the rounded numeric value of an expression (e.g. `{{calc obs.sbp - obs.dbp}}`).
 - `{{#bullets fieldName}}`: Turns each non-empty line in a textarea field into a bullet.

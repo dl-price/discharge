@@ -47,6 +47,7 @@ import remarkGfm from "remark-gfm";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 
 const LAST_TEMPLATE_KEY = "lastSelectedTemplate";
+const TEMPLATE_VALUES_KEY = "templateValues";
 const DRAWER_WIDTH = 320;
 const DRAWER_COLLAPSED = 76;
 const REVIEW_BADGES = {
@@ -70,6 +71,9 @@ const fetchText = async (url) => {
   }
   return response.text();
 };
+
+const getTemplateStorageKey = (mode, templateId) =>
+  mode && templateId ? `${TEMPLATE_VALUES_KEY}:${mode}:${templateId}` : null;
 
 const applyPresetGroupsToFields = (fields, presetGroups) =>
   fields.map((field) => {
@@ -186,6 +190,14 @@ const initializeFieldValues = (template) => {
   fields.forEach((field) => {
     if (field.type === "checkbox") {
       nextValues[field.name] = Boolean(field.default);
+    } else if (field.type === "select" && field.multiple) {
+      if (Array.isArray(field.default)) {
+        nextValues[field.name] = field.default;
+      } else if (field.default !== undefined) {
+        nextValues[field.name] = [field.default];
+      } else {
+        nextValues[field.name] = [];
+      }
     } else if (field.default !== undefined) {
       nextValues[field.name] = field.default;
     } else {
@@ -204,12 +216,18 @@ const renderTemplateBody = (template, values) => {
     });
   }
   const placeholderRegex = /\{\{([^}]+)\}\}/g;
-  const formatBullets = (value, indent = 0) => {
+  const normalizeBulletLines = (value) => {
     if (value === null || value === undefined) {
-      return "";
+      return [];
     }
-    const text = String(value);
-    const lines = text.replace(/\r\n/g, "\n").split("\n");
+    if (Array.isArray(value)) {
+      return value.flatMap((entry) => String(entry).replace(/\r\n/g, "\n").split("\n"));
+    }
+    return String(value).replace(/\r\n/g, "\n").split("\n");
+  };
+
+  const formatBullets = (value, indent = 0) => {
+    const lines = normalizeBulletLines(value);
     const indentText = " ".repeat(Math.max(0, Number(indent) || 0));
     const entries = lines
       .filter((line) => line.trim())
@@ -249,6 +267,9 @@ const renderTemplateBody = (template, values) => {
       const value = values[fieldName];
       if (typeof value === "boolean") {
         return value ? "Yes" : "No";
+      }
+      if (Array.isArray(value)) {
+        return value.filter((entry) => String(entry).trim()).join(", ");
       }
       return value ? String(value) : "";
     });
@@ -349,6 +370,12 @@ const renderTemplateBody = (template, values) => {
       }
       return null;
     };
+    const toBoolean = (value) => {
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+      return Boolean(value);
+    };
     const normalizeComparison = (left, right) => {
       const leftNumber = toNumberIfPossible(left);
       const rightNumber = toNumberIfPossible(right);
@@ -382,7 +409,7 @@ const renderTemplateBody = (template, values) => {
         const operator = consume().value;
         const value = parseUnary();
         if (operator === "!") {
-          return !value;
+          return options.coerceBoolean ? !toBoolean(value) : !value;
         }
         const numberValue = toNumberIfPossible(value);
         return numberValue === null ? undefined : -numberValue;
@@ -455,7 +482,8 @@ const renderTemplateBody = (template, values) => {
       while (peek()?.type === "op" && peek().value === "&&") {
         consume();
         if (options.coerceBoolean) {
-          value = Boolean(value) && Boolean(parseComparison());
+          const right = parseComparison();
+          value = toBoolean(value) && toBoolean(right);
         } else {
           value = value && parseComparison();
         }
@@ -467,7 +495,8 @@ const renderTemplateBody = (template, values) => {
       while (peek()?.type === "op" && peek().value === "||") {
         consume();
         if (options.coerceBoolean) {
-          value = Boolean(value) || Boolean(parseAnd());
+          const right = parseAnd();
+          value = toBoolean(value) || toBoolean(right);
         } else {
           value = value || parseAnd();
         }
@@ -475,7 +504,7 @@ const renderTemplateBody = (template, values) => {
       return value;
     };
     const result = parseOr();
-    return options.coerceBoolean ? Boolean(result) : result;
+    return options.coerceBoolean ? toBoolean(result) : result;
   };
 
   const calcRegex = /\{\{\s*calc\s+([^}]+)\}\}/g;
@@ -583,6 +612,9 @@ const validateField = (field, value) => {
   if (field.type === "checkbox") {
     return value === true ? "" : "This field is required.";
   }
+  if (field.type === "select" && field.multiple) {
+    return Array.isArray(value) && value.length > 0 ? "" : "This field is required.";
+  }
   if (field.type === "number") {
     return value !== "" && Number.isFinite(Number(value)) ? "" : "This field is required.";
   }
@@ -615,6 +647,7 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
   const isDesktop = useMediaQuery("(min-width:1025px)");
   const searchRef = useRef(null);
   const previewMarkdownRef = useRef(null);
+  const selectedTemplateModeRef = useRef(null);
   const navigate = useNavigate();
   const { mode: routeMode, id: routeId } = useParams();
 
@@ -691,19 +724,48 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
     return renderTemplateBody({ ...template, body }, { ...values, disclaimer: disclaimerText });
   };
 
-  const applyImportedValues = (template, importValues) => {
-    const nextValues = initializeFieldValues(template);
-    if (!importValues || typeof importValues !== "object") {
-      return nextValues;
+const applyImportedValues = (template, importValues) => {
+  const nextValues = initializeFieldValues(template);
+  if (!importValues || typeof importValues !== "object") {
+    return nextValues;
+  }
+  const allowed = new Set(flattenFields(template.fields || []).map((field) => field.name));
+  Object.entries(importValues).forEach(([key, value]) => {
+    if (allowed.has(key)) {
+      nextValues[key] = value;
+    }
+  });
+  return nextValues;
+};
+
+const loadPersistedValues = (template, mode) => {
+  if (!template?.id || !mode) {
+    return null;
+  }
+  const key = getTemplateStorageKey(mode, template.id);
+  if (!key) {
+    return null;
+  }
+  const stored = localStorage.getItem(key);
+  if (!stored) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(stored);
+    if (!parsed || typeof parsed !== "object") {
+      return null;
     }
     const allowed = new Set(flattenFields(template.fields || []).map((field) => field.name));
-    Object.entries(importValues).forEach(([key, value]) => {
-      if (allowed.has(key)) {
-        nextValues[key] = value;
+    return Object.entries(parsed).reduce((acc, [fieldName, value]) => {
+      if (allowed.has(fieldName)) {
+        acc[fieldName] = value;
       }
-    });
-    return nextValues;
-  };
+      return acc;
+    }, {});
+  } catch (error) {
+    return null;
+  }
+};
 
   const previewText = useMemo(() => {
     if (!selectedTemplate) {
@@ -857,6 +919,7 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
   ) => {
     try {
       const mode = modeOverride || templateMode;
+      selectedTemplateModeRef.current = mode;
       const templatePath =
         mode === "procedures"
           ? `${baseUrl}templates/procedures/${templateId}.json`
@@ -867,7 +930,9 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
       const withBlocks = applyFieldBlocks(template, fieldBlocks);
       const hydrated = applyPresetGroups(withBlocks, groups);
       setSelectedTemplate(hydrated);
-      setFieldValues(applyImportedValues(hydrated, importValues));
+      const baseValues = applyImportedValues(hydrated, importValues);
+      const persistedValues = importValues ? null : loadPersistedValues(hydrated, mode);
+      setFieldValues({ ...baseValues, ...(persistedValues || {}) });
       setFieldErrors({});
       setValidationAttempted(false);
       setCopyStatus("");
@@ -902,6 +967,33 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
         return { ...prev, [field.name]: value };
       }
       return { ...prev, [field.name]: `${current.trimEnd()}\n${value}` };
+    });
+    setFieldErrors((prev) => ({ ...prev, [field.name]: "" }));
+  };
+  const appendQuickOption = (field, option) => {
+    setFieldValues((prev) => {
+      const current = String(prev[field.name] ?? "");
+      if (field.type === "textarea") {
+        const normalized = current.replace(/\r\n/g, "\n");
+        const lines = normalized
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean);
+        if (lines.includes(option)) {
+          return prev;
+        }
+        const next = normalized.trimEnd();
+        return { ...prev, [field.name]: next ? `${next}\n${option}` : option };
+      }
+      const parts = current
+        .split(",")
+        .map((part) => part.trim())
+        .filter(Boolean);
+      if (parts.includes(option)) {
+        return prev;
+      }
+      const next = parts.length > 0 ? `${parts.join(", ")}, ${option}` : option;
+      return { ...prev, [field.name]: next };
     });
     setFieldErrors((prev) => ({ ...prev, [field.name]: "" }));
   };
@@ -1076,7 +1168,28 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
     setFieldErrors({});
     setValidationAttempted(false);
     setCopyStatus("");
+    const mode = selectedTemplateModeRef.current || templateMode;
+    const key = getTemplateStorageKey(mode, selectedTemplate.id);
+    if (key) {
+      localStorage.removeItem(key);
+    }
   };
+
+  useEffect(() => {
+    if (!selectedTemplate?.id) {
+      return;
+    }
+    const mode = selectedTemplateModeRef.current || templateMode;
+    const key = getTemplateStorageKey(mode, selectedTemplate.id);
+    if (!key) {
+      return;
+    }
+    try {
+      localStorage.setItem(key, JSON.stringify(fieldValues));
+    } catch (error) {
+      // Ignore storage errors (quota, disabled, etc.).
+    }
+  }, [fieldValues, selectedTemplate?.id, templateMode]);
 
   useEffect(() => {
     if (!routeMode || !routeId) {
@@ -1319,10 +1432,31 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
       </Typography>
     </>
   );
+  const renderQuickOptions = (field) => {
+    if (!field.quickOptions?.length || (field.type !== "text" && field.type !== "textarea")) {
+      return null;
+    }
+    return (
+      <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+        {field.quickOptions.map((option) => (
+          <Chip
+            key={option}
+            label={option}
+            size="small"
+            variant="outlined"
+            onClick={() => appendQuickOption(field, option)}
+          />
+        ))}
+      </Stack>
+    );
+  };
+
   const renderField = (field, layout, columns) => {
     const value = fieldValues[field.name];
     const errorMessage = fieldErrors[field.name] || "";
-    const showError = Boolean(errorMessage) && (validationAttempted || value !== "");
+    const showError =
+      Boolean(errorMessage) &&
+      (validationAttempted || (Array.isArray(value) ? value.length > 0 : value !== ""));
     const span =
       field.width === "xs"
         ? { xs: "1 / -1", md: "span 3" }
@@ -1372,22 +1506,48 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
     }
 
     if (field.type === "select") {
+      const isMultiSelect = field.multiple === true;
+      const selectValue = isMultiSelect
+        ? Array.isArray(value)
+          ? value
+          : value
+          ? [value]
+          : []
+        : value ?? "";
       return (
         <Box key={field.name} sx={wrapperStyle}>
           <TextField
             select
             label={field.label}
-            value={value}
-            onChange={(event) => handleFieldChange(field, event.target.value)}
+            value={selectValue}
+            onChange={(event) => {
+              const nextValue = event.target.value;
+              if (isMultiSelect && typeof nextValue === "string") {
+                handleFieldChange(field, nextValue.split(","));
+              } else {
+                handleFieldChange(field, nextValue);
+              }
+            }}
             required={field.required}
             error={showError}
             helperText={showError ? errorMessage : field.helpText}
             fullWidth
+            SelectProps={{
+              multiple: isMultiSelect,
+              displayEmpty: isMultiSelect,
+              renderValue: isMultiSelect
+                ? (selected) =>
+                    Array.isArray(selected) && selected.length > 0
+                      ? selected.join(", ")
+                      : "Select options"
+                : undefined,
+            }}
           >
-            <MenuItem value="">Select an option</MenuItem>
+            {!isMultiSelect && <MenuItem value="">Select an option</MenuItem>}
             {field.options.map((option) => (
               <MenuItem key={option} value={option}>
-                {option}
+                {isMultiSelect && <Checkbox checked={selectValue.includes(option)} />}
+                <ListItemText primary={option} />
               </MenuItem>
             ))}
           </TextField>
@@ -1412,6 +1572,7 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
             minRows={isMultiline ? 4 : undefined}
             fullWidth
           />
+          {renderQuickOptions(field)}
           {field.presets?.length > 0 && (
             <Button
               variant="contained"
@@ -1630,7 +1791,10 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
                   selectedTemplate.fields.map((field) => {
                     const value = fieldValues[field.name];
                     const errorMessage = fieldErrors[field.name] || "";
-                    const showError = Boolean(errorMessage) && (validationAttempted || value !== "");
+                    const showError =
+                      Boolean(errorMessage) &&
+                      (validationAttempted ||
+                        (Array.isArray(value) ? value.length > 0 : value !== ""));
 
                     if (field.type === "checkbox") {
                       return (
@@ -1648,21 +1812,49 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
                     }
 
                     if (field.type === "select") {
+                      const isMultiSelect = field.multiple === true;
+                      const selectValue = isMultiSelect
+                        ? Array.isArray(value)
+                          ? value
+                          : value
+                          ? [value]
+                          : []
+                        : value ?? "";
                       return (
                         <TextField
                           key={field.name}
                           select
                           label={field.label}
-                          value={value}
-                          onChange={(event) => handleFieldChange(field, event.target.value)}
+                          value={selectValue}
+                          onChange={(event) => {
+                            const nextValue = event.target.value;
+                            if (isMultiSelect && typeof nextValue === "string") {
+                              handleFieldChange(field, nextValue.split(","));
+                            } else {
+                              handleFieldChange(field, nextValue);
+                            }
+                          }}
                           required={field.required}
                           error={showError}
                           helperText={showError ? errorMessage : field.helpText}
+                          SelectProps={{
+                            multiple: isMultiSelect,
+                            displayEmpty: isMultiSelect,
+                            renderValue: isMultiSelect
+                              ? (selected) =>
+                                  Array.isArray(selected) && selected.length > 0
+                                    ? selected.join(", ")
+                                    : "Select options"
+                              : undefined,
+                          }}
                         >
-                          <MenuItem value="">Select an option</MenuItem>
+                          {!isMultiSelect && <MenuItem value="">Select an option</MenuItem>}
                           {field.options.map((option) => (
                             <MenuItem key={option} value={option}>
-                              {option}
+                              {isMultiSelect && (
+                                <Checkbox checked={selectValue.includes(option)} />
+                              )}
+                              <ListItemText primary={option} />
                             </MenuItem>
                           ))}
                         </TextField>
@@ -1684,18 +1876,19 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
                           multiline={isMultiline}
                           minRows={isMultiline ? 4 : undefined}
                         />
-        {field.presets?.length > 0 && (
-          <Button
-            variant="contained"
-            color="secondary"
-            size="small"
-            onClick={() => setPresetDialogField(field)}
-            sx={{ alignSelf: "flex-start" }}
-            startIcon={<LibraryAddIcon />}
-          >
-            {`Insert ${presetLabel.toLowerCase()}`}
-          </Button>
-        )}
+                        {renderQuickOptions(field)}
+                        {field.presets?.length > 0 && (
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            size="small"
+                            onClick={() => setPresetDialogField(field)}
+                            sx={{ alignSelf: "flex-start" }}
+                            startIcon={<LibraryAddIcon />}
+                          >
+                            {`Insert ${presetLabel.toLowerCase()}`}
+                          </Button>
+                        )}
                       </Stack>
                     );
                   })

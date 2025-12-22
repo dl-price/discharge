@@ -39,13 +39,15 @@
           "name": "dh",
           "label": "DH (medications)",
           "type": "textarea",
-          "presetGroup": "meds_common",
+          "presetGroup": "meds_common_doses",
           "required": false
         },
         {
           "name": "allergies",
           "label": "Allergies",
-          "type": "text",
+          "type": "textarea",
+          "presetGroup": "meds_common",
+          "quickOptions": ["NKDA"],
           "required": false
         },
         {
