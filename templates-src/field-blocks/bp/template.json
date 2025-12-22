@@ -1,0 +1,21 @@
+{
+  "id": "bp",
+  "title": "Blood pressure",
+  "section": "BP",
+  "fields": [
+    {
+      "name": "sbp",
+      "label": "SBP",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    },
+    {
+      "name": "dbp",
+      "label": "DBP",
+      "type": "number",
+      "width": "xs",
+      "required": false
+    }
+  ]
+}

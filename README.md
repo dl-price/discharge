@@ -43,6 +43,7 @@ npm run build
 - Templates can include `blocks: ["obs"]` and reference blocks with `{{obs}}` or individual fields via `{{obs.hr}}`.
 - Section layout is defined by `type: "section"` fields (e.g. `{ "type": "section", "label": "Observations", "layout": "inline", "fields": [...] }`).
 - Sections can also pull in blocks via `blocks: ["obs"]` on the section.
+- Fields or sections can set `"repeatable": true` to capture multiple entries. Repeatable sections need a `"name"` (or a single block id), and are rendered as arrays for `{{#each name}}...{{/each}}` with `{{this.fieldName}}`. Use `"repeatableEmptyState"` to customize the empty UI message (default: "No entries yet.").
 - Select fields can set `"multiple": true`; `{{fieldName}}` joins selections with ", " and `{{#bullets fieldName}}` renders each selection as a bullet.
 - Text and textarea fields can add `"quickOptions": ["Option A", "Option B"]` to show clickable chips that append the option (comma-separated for text, new line for textarea).
 - Conditionals support nesting, boolean expressions (`&&`, `||`, `!`, parentheses), comparisons (`==`, `!=`, `>`, `<`, `>=`, `<=`), and basic arithmetic (`+`, `-`, `*`, `/`).
@@ -60,6 +61,7 @@ Use these helpers inside `patient.md`, `gp.md`, or `body.md` files.
 - `{{calc expression}}`: Emits the rounded numeric value of an expression (e.g. `{{calc obs.sbp - obs.dbp}}`).
 - `{{#bullets fieldName}}`: Turns each non-empty line in a textarea field into a bullet.
 - `{{#bullets fieldName indent=2}}`: Same, but with extra indentation (number of spaces).
+- `{{#each fieldName}}...{{/each}}`: Repeats a block for each item in an array (multi-selects), with `{{this}}` for the current item and `{{@index}}` for the 0-based index.
 
 Notes:
 - For field blocks, `{{blockId}}` injects the block body and `{{blockId.fieldName}}` references a block field.

@@ -75,11 +75,17 @@
       "multiple": true,
       "required": false,
       "options": [
-        "EDTA",
-        "EDTA (blood bank)",
-        "SST",
-        "RST",
-        "Citrate"
+        "EDTA (purple)",
+        "EDTA - blood bank (pink)",
+        "SST (yellow)",
+        "RST (orange)",
+        "Citrate (blue)",
+        "Fluoride/oxalate (grey)",
+        "Silica (red)",
+        "Sodium heparin (dark green)",
+        "Lithium heparin (light green)",
+        "Blood gas",
+        "Blood cultures"
       ],
       "section": "Blood bottles taken"
     },

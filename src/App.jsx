@@ -72,16 +72,82 @@ const fetchText = async (url) => {
   return response.text();
 };
 
+const getRepeatableSectionKey = (section) => {
+  if (!section?.repeatable) {
+    return null;
+  }
+  if (section.name) {
+    return section.name;
+  }
+  const blocks = Array.isArray(section.blocks) ? section.blocks : [];
+  if (blocks.length === 1) {
+    return blocks[0];
+  }
+  return null;
+};
+
+const getDefaultFieldValue = (field) => {
+  if (field.type === "checkbox") {
+    return Boolean(field.default);
+  }
+  if (field.type === "select" && field.multiple) {
+    if (Array.isArray(field.default)) {
+      return field.default;
+    }
+    if (field.default !== undefined) {
+      return [field.default];
+    }
+    return [];
+  }
+  if (field.default !== undefined) {
+    return field.default;
+  }
+  return "";
+};
+
+const buildRepeatableEntry = (fields) =>
+  (fields || []).reduce((entry, field) => {
+    if (!field || field.type === "section") {
+      return entry;
+    }
+    entry[field.name] = getDefaultFieldValue(field);
+    return entry;
+  }, {});
+
 const getTemplateStorageKey = (mode, templateId) =>
   mode && templateId ? `${TEMPLATE_VALUES_KEY}:${mode}:${templateId}` : null;
+
+const collectTopLevelValueKeys = (template) => {
+  const keys = new Set();
+  const visitField = (field) => {
+    if (!field) {
+      return;
+    }
+    if (field.type === "section") {
+      if (field.repeatable && field.repeatableKey) {
+        keys.add(field.repeatableKey);
+        return;
+      }
+      (field.fields || []).forEach(visitField);
+      return;
+    }
+    keys.add(field.name);
+  };
+  (template?.fields || []).forEach(visitField);
+  return keys;
+};
 
 const applyPresetGroupsToFields = (fields, presetGroups) =>
   fields.map((field) => {
     if (field.type === "section") {
-      return {
+      const next = {
         ...field,
         fields: applyPresetGroupsToFields(field.fields || [], presetGroups),
       };
+      if (field.repeatableFields) {
+        next.repeatableFields = applyPresetGroupsToFields(field.repeatableFields, presetGroups);
+      }
+      return next;
     }
     if (!field.presetGroup) {
       return field;
@@ -118,7 +184,7 @@ const applyFieldBlocks = (template, fieldBlocks) => {
   const blockBodies = {};
   const getBlock = (blockId) => fieldBlocks[blockId];
   const prefixFor = (block, blockId) => block.prefix || block.id || blockId;
-  const buildBlockFields = (blockId) => {
+  const buildBlockFields = (blockId, options = { prefixFields: true }) => {
     const block = getBlock(blockId);
     if (!block) {
       return [];
@@ -132,7 +198,7 @@ const applyFieldBlocks = (template, fieldBlocks) => {
     }
     return (block.fields || []).map((field) => ({
       ...field,
-      name: `${prefix}.${field.name}`,
+      name: options.prefixFields ? `${prefix}.${field.name}` : field.name,
     }));
   };
 
@@ -159,6 +225,18 @@ const applyFieldBlocks = (template, fieldBlocks) => {
       }
       const sectionBlocks = Array.isArray(field.blocks) ? field.blocks : [];
       addBlockBodies(sectionBlocks);
+      if (field.repeatable) {
+        const repeatableKey = getRepeatableSectionKey(field);
+        const injected = sectionBlocks.flatMap((blockId) =>
+          buildBlockFields(blockId, { prefixFields: false })
+        );
+        const repeatableFields = [...(field.fields || []), ...injected];
+        return {
+          ...field,
+          repeatableKey,
+          repeatableFields,
+        };
+      }
       const injected = sectionBlocks.flatMap((blockId) => buildBlockFields(blockId));
       const nextSectionFields = [...(field.fields || []), ...injected];
       return {
@@ -186,24 +264,25 @@ const flattenFields = (fields) =>
 
 const initializeFieldValues = (template) => {
   const nextValues = {};
-  const fields = flattenFields(template.fields || []);
-  fields.forEach((field) => {
-    if (field.type === "checkbox") {
-      nextValues[field.name] = Boolean(field.default);
-    } else if (field.type === "select" && field.multiple) {
-      if (Array.isArray(field.default)) {
-        nextValues[field.name] = field.default;
-      } else if (field.default !== undefined) {
-        nextValues[field.name] = [field.default];
-      } else {
-        nextValues[field.name] = [];
-      }
-    } else if (field.default !== undefined) {
-      nextValues[field.name] = field.default;
-    } else {
-      nextValues[field.name] = "";
+  const seedField = (field) => {
+    if (!field) {
+      return;
     }
-  });
+    if (field.type === "section") {
+      if (field.repeatable && field.repeatableKey) {
+        nextValues[field.repeatableKey] = [buildRepeatableEntry(field.repeatableFields)];
+        return;
+      }
+      (field.fields || []).forEach(seedField);
+      return;
+    }
+    if (field.repeatable) {
+      nextValues[field.name] = [getDefaultFieldValue(field)];
+      return;
+    }
+    nextValues[field.name] = getDefaultFieldValue(field);
+  };
+  (template.fields || []).forEach(seedField);
   return nextValues;
 };
 
@@ -216,6 +295,24 @@ const renderTemplateBody = (template, values) => {
     });
   }
   const placeholderRegex = /\{\{([^}]+)\}\}/g;
+  const resolveValue = (scopeValues, key) => {
+    if (key in scopeValues) {
+      return scopeValues[key];
+    }
+    if (!key.includes(".")) {
+      return undefined;
+    }
+    const parts = key.split(".");
+    let current = scopeValues;
+    for (const part of parts) {
+      if (current && typeof current === "object" && part in current) {
+        current = current[part];
+      } else {
+        return undefined;
+      }
+    }
+    return current;
+  };
   const normalizeBulletLines = (value) => {
     if (value === null || value === undefined) {
       return [];
@@ -238,8 +335,9 @@ const renderTemplateBody = (template, values) => {
       });
     return entries.join("\n");
   };
-  const replacePlaceholders = (text) =>
-    text.replace(placeholderRegex, (match, token) => {
+  const replacePlaceholders = (text, contextValues = {}) => {
+    const scopeValues = { ...values, ...contextValues };
+    return text.replace(placeholderRegex, (match, token) => {
       const trimmed = token.trim();
       if (!trimmed || trimmed.startsWith("/")) {
         return match;
@@ -248,23 +346,27 @@ const renderTemplateBody = (template, values) => {
       if (parts[0] === "#bullets") {
         const fieldName = parts[1];
         const indentArg = parts[2];
-        if (!fieldName || !(fieldName in values)) {
+        if (!fieldName) {
+          return "";
+        }
+        const value = resolveValue(scopeValues, fieldName);
+        if (value === undefined) {
           return "";
         }
         const indent =
           indentArg && indentArg.startsWith("indent=")
             ? Number(indentArg.slice("indent=".length))
             : Number(indentArg);
-        return formatBullets(values[fieldName], indent);
+        return formatBullets(value, indent);
       }
       if (trimmed.startsWith("#")) {
         return match;
       }
       const fieldName = trimmed;
-      if (!(fieldName in values)) {
+      const value = resolveValue(scopeValues, fieldName);
+      if (value === undefined) {
         return "";
       }
-      const value = values[fieldName];
       if (typeof value === "boolean") {
         return value ? "Yes" : "No";
       }
@@ -273,6 +375,7 @@ const renderTemplateBody = (template, values) => {
       }
       return value ? String(value) : "";
     });
+  };
 
   const tokenizeExpression = (expr) => {
     const tokens = [];
@@ -337,7 +440,7 @@ const renderTemplateBody = (template, values) => {
         i += numberMatch[0].length;
         continue;
       }
-      const wordMatch = expr.slice(i).match(/^[\w.]+/);
+      const wordMatch = expr.slice(i).match(/^@?[\w.]+/);
       if (wordMatch) {
         const word = wordMatch[0];
         if (word === "true" || word === "false") {
@@ -353,7 +456,7 @@ const renderTemplateBody = (template, values) => {
     return tokens;
   };
 
-  const evalExpression = (expr, options = { coerceBoolean: true }) => {
+  const evalExpression = (expr, options = { coerceBoolean: true }, scopeValues = values) => {
     const tokens = tokenizeExpression(expr);
     if (!tokens || tokens.length === 0) {
       return false;
@@ -400,7 +503,7 @@ const renderTemplateBody = (template, values) => {
         return token.value;
       }
       if (token.type === "identifier") {
-        return values[token.value];
+        return resolveValue(scopeValues, token.value);
       }
       return undefined;
     };
@@ -509,7 +612,7 @@ const renderTemplateBody = (template, values) => {
 
   const calcRegex = /\{\{\s*calc\s+([^}]+)\}\}/g;
   body = body.replace(calcRegex, (match, expression) => {
-    const value = evalExpression(expression, { coerceBoolean: false });
+    const value = evalExpression(expression, { coerceBoolean: false }, values);
     if (value === undefined || value === null || Number.isNaN(value)) {
       return "";
     }
@@ -523,7 +626,7 @@ const renderTemplateBody = (template, values) => {
   const parseTemplate = (text) => {
     const root = { type: "root", children: [] };
     const stack = [root];
-    const tokenRegex = /\{\{#if\s+[^}]+\}\}|\{\{\/if\}\}/g;
+    const tokenRegex = /\{\{#if\s+[^}]+\}\}|\{\{\/if\}\}|\{\{#each\s+[^}]+\}\}|\{\{\/each\}\}/g;
     let lastIndex = 0;
     let match;
     while ((match = tokenRegex.exec(text)) !== null) {
@@ -539,8 +642,19 @@ const renderTemplateBody = (template, values) => {
         const node = { type: "if", expr, children: [] };
         stack[stack.length - 1].children.push(node);
         stack.push(node);
+      } else if (token.startsWith("{{#each")) {
+        const expr = token.slice(7, -2).trim();
+        const node = { type: "each", expr, children: [] };
+        stack[stack.length - 1].children.push(node);
+        stack.push(node);
       } else if (token === "{{/if}}") {
-        if (stack.length > 1) {
+        if (stack.length > 1 && stack[stack.length - 1].type === "if") {
+          stack.pop();
+        } else {
+          stack[0].children.push({ type: "text", value: token });
+        }
+      } else if (token === "{{/each}}") {
+        if (stack.length > 1 && stack[stack.length - 1].type === "each") {
           stack.pop();
         } else {
           stack[0].children.push({ type: "text", value: token });
@@ -557,14 +671,27 @@ const renderTemplateBody = (template, values) => {
     return root.children;
   };
 
-  const renderNodes = (nodes) =>
+  const renderNodes = (nodes, contextValues = {}) =>
     nodes
       .map((node) => {
         if (node.type === "text") {
-          return replacePlaceholders(node.value);
+          return replacePlaceholders(node.value, contextValues);
         }
         if (node.type === "if") {
-          return evalExpression(node.expr) ? renderNodes(node.children) : "\u0000";
+          return evalExpression(node.expr, { coerceBoolean: true }, { ...values, ...contextValues })
+            ? renderNodes(node.children, contextValues)
+            : "\u0000";
+        }
+        if (node.type === "each") {
+          const collection = resolveValue({ ...values, ...contextValues }, node.expr);
+          if (!Array.isArray(collection) || collection.length === 0) {
+            return "\u0000";
+          }
+          return collection
+            .map((entry, index) =>
+              renderNodes(node.children, { ...contextValues, this: entry, "@index": index })
+            )
+            .join("");
         }
         return "";
       })
@@ -667,6 +794,7 @@ const AppContent = ({ onToggleColorMode, themePreference }) => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastSeverity, setToastSeverity] = useState("success");
   const [presetDialogField, setPresetDialogField] = useState(null);
+  const [presetDialogTarget, setPresetDialogTarget] = useState(null);
   const [presetDialogValue, setPresetDialogValue] = useState("");
   const [presetQuery, setPresetQuery] = useState("");
   const [presetDialogSelected, setPresetDialogSelected] = useState(null);
@@ -729,7 +857,7 @@ const applyImportedValues = (template, importValues) => {
   if (!importValues || typeof importValues !== "object") {
     return nextValues;
   }
-  const allowed = new Set(flattenFields(template.fields || []).map((field) => field.name));
+  const allowed = collectTopLevelValueKeys(template);
   Object.entries(importValues).forEach(([key, value]) => {
     if (allowed.has(key)) {
       nextValues[key] = value;
@@ -755,7 +883,7 @@ const loadPersistedValues = (template, mode) => {
     if (!parsed || typeof parsed !== "object") {
       return null;
     }
-    const allowed = new Set(flattenFields(template.fields || []).map((field) => field.name));
+    const allowed = collectTopLevelValueKeys(template);
     return Object.entries(parsed).reduce((acc, [fieldName, value]) => {
       if (allowed.has(fieldName)) {
         acc[fieldName] = value;
@@ -877,6 +1005,7 @@ const loadPersistedValues = (template, mode) => {
     const handleKeydown = (event) => {
       if (event.key === "Escape" && presetDialogField) {
         setPresetDialogField(null);
+        setPresetDialogTarget(null);
         return;
       }
       if (event.key === "Escape" && !isDesktop) {
@@ -960,42 +1089,232 @@ const loadPersistedValues = (template, mode) => {
     setFieldErrors((prev) => ({ ...prev, [field.name]: error }));
   };
 
-  const appendPresetValue = (field, value) => {
+  const appendTextValue = (currentValue, nextValue) => {
+    const current = String(currentValue ?? "");
+    if (!current.trim()) {
+      return nextValue;
+    }
+    return `${current.trimEnd()}\n${nextValue}`;
+  };
+
+  const appendLineValue = (currentValue, nextValue) => {
+    const current = String(currentValue ?? "");
+    const normalized = current.replace(/\r\n/g, "\n");
+    const lines = normalized
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+    if (lines.includes(nextValue)) {
+      return current;
+    }
+    if (!normalized.trim()) {
+      return nextValue;
+    }
+    return `${normalized.trimEnd()}\n${nextValue}`;
+  };
+
+  const appendCommaValue = (currentValue, nextValue) => {
+    const current = String(currentValue ?? "");
+    const parts = current
+      .split(",")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    if (parts.includes(nextValue)) {
+      return current;
+    }
+    return parts.length > 0 ? `${parts.join(", ")}, ${nextValue}` : nextValue;
+  };
+
+  const appendPresetValue = (field, value, target = null) => {
     setFieldValues((prev) => {
-      const current = String(prev[field.name] ?? "");
-      if (!current.trim()) {
-        return { ...prev, [field.name]: value };
+      if (target?.kind === "field") {
+        const currentEntries = Array.isArray(prev[target.fieldName])
+          ? [...prev[target.fieldName]]
+          : [];
+        const entryValue = appendTextValue(currentEntries[target.index], value);
+        currentEntries[target.index] = entryValue;
+        return { ...prev, [target.fieldName]: currentEntries };
       }
-      return { ...prev, [field.name]: `${current.trimEnd()}\n${value}` };
+      if (target?.kind === "section") {
+        const currentEntries = Array.isArray(prev[target.repeatableKey])
+          ? [...prev[target.repeatableKey]]
+          : [];
+        const entry = { ...(currentEntries[target.index] || {}) };
+        entry[target.fieldName] = appendTextValue(entry[target.fieldName], value);
+        currentEntries[target.index] = entry;
+        return { ...prev, [target.repeatableKey]: currentEntries };
+      }
+      const current = prev[field.name];
+      return { ...prev, [field.name]: appendTextValue(current, value) };
     });
-    setFieldErrors((prev) => ({ ...prev, [field.name]: "" }));
+    setFieldErrors((prev) => {
+      if (target?.kind === "field") {
+        const nextErrors = Array.isArray(prev[target.fieldName])
+          ? [...prev[target.fieldName]]
+          : [];
+        nextErrors[target.index] = "";
+        return { ...prev, [target.fieldName]: nextErrors };
+      }
+      if (target?.kind === "section") {
+        const nextErrors = Array.isArray(prev[target.repeatableKey])
+          ? [...prev[target.repeatableKey]]
+          : [];
+        const entryErrors = { ...(nextErrors[target.index] || {}) };
+        entryErrors[target.fieldName] = "";
+        nextErrors[target.index] = entryErrors;
+        return { ...prev, [target.repeatableKey]: nextErrors };
+      }
+      return { ...prev, [field.name]: "" };
+    });
   };
   const appendQuickOption = (field, option) => {
     setFieldValues((prev) => {
       const current = String(prev[field.name] ?? "");
       if (field.type === "textarea") {
-        const normalized = current.replace(/\r\n/g, "\n");
-        const lines = normalized
-          .split("\n")
-          .map((line) => line.trim())
-          .filter(Boolean);
-        if (lines.includes(option)) {
-          return prev;
-        }
-        const next = normalized.trimEnd();
-        return { ...prev, [field.name]: next ? `${next}\n${option}` : option };
+        const next = appendLineValue(current, option);
+        return { ...prev, [field.name]: next };
       }
-      const parts = current
-        .split(",")
-        .map((part) => part.trim())
-        .filter(Boolean);
-      if (parts.includes(option)) {
-        return prev;
-      }
-      const next = parts.length > 0 ? `${parts.join(", ")}, ${option}` : option;
+      const next = appendCommaValue(current, option);
       return { ...prev, [field.name]: next };
     });
     setFieldErrors((prev) => ({ ...prev, [field.name]: "" }));
+  };
+
+  const appendQuickOptionToRepeatableField = (field, index, option) => {
+    setFieldValues((prev) => {
+      const currentEntries = Array.isArray(prev[field.name]) ? [...prev[field.name]] : [];
+      const currentValue = currentEntries[index] ?? "";
+      const nextValue =
+        field.type === "textarea"
+          ? appendLineValue(currentValue, option)
+          : appendCommaValue(currentValue, option);
+      currentEntries[index] = nextValue;
+      return { ...prev, [field.name]: currentEntries };
+    });
+    setFieldErrors((prev) => {
+      const nextErrors = Array.isArray(prev[field.name]) ? [...prev[field.name]] : [];
+      nextErrors[index] = "";
+      return { ...prev, [field.name]: nextErrors };
+    });
+  };
+
+  const appendQuickOptionToRepeatableSection = (repeatableKey, field, index, option) => {
+    setFieldValues((prev) => {
+      const currentEntries = Array.isArray(prev[repeatableKey]) ? [...prev[repeatableKey]] : [];
+      const entry = { ...(currentEntries[index] || {}) };
+      const nextValue =
+        field.type === "textarea"
+          ? appendLineValue(entry[field.name], option)
+          : appendCommaValue(entry[field.name], option);
+      entry[field.name] = nextValue;
+      currentEntries[index] = entry;
+      return { ...prev, [repeatableKey]: currentEntries };
+    });
+    setFieldErrors((prev) => {
+      const nextErrors = Array.isArray(prev[repeatableKey]) ? [...prev[repeatableKey]] : [];
+      const entryErrors = { ...(nextErrors[index] || {}) };
+      entryErrors[field.name] = "";
+      nextErrors[index] = entryErrors;
+      return { ...prev, [repeatableKey]: nextErrors };
+    });
+  };
+
+  const handleRepeatableFieldChange = (field, index, value) => {
+    setFieldValues((prev) => {
+      const currentEntries = Array.isArray(prev[field.name]) ? [...prev[field.name]] : [];
+      currentEntries[index] = value;
+      return { ...prev, [field.name]: currentEntries };
+    });
+    const error = validateField(field, value);
+    setFieldErrors((prev) => {
+      const nextErrors = Array.isArray(prev[field.name]) ? [...prev[field.name]] : [];
+      nextErrors[index] = error;
+      return { ...prev, [field.name]: nextErrors };
+    });
+  };
+
+  const addRepeatableFieldEntry = (field) => {
+    setFieldValues((prev) => {
+      const currentEntries = Array.isArray(prev[field.name]) ? [...prev[field.name]] : [];
+      currentEntries.push(getDefaultFieldValue(field));
+      return { ...prev, [field.name]: currentEntries };
+    });
+    setFieldErrors((prev) => {
+      const nextErrors = Array.isArray(prev[field.name]) ? [...prev[field.name]] : [];
+      nextErrors.push("");
+      return { ...prev, [field.name]: nextErrors };
+    });
+  };
+
+  const removeRepeatableFieldEntry = (field, index) => {
+    setFieldValues((prev) => {
+      const currentEntries = Array.isArray(prev[field.name]) ? [...prev[field.name]] : [];
+      currentEntries.splice(index, 1);
+      return { ...prev, [field.name]: currentEntries };
+    });
+    setFieldErrors((prev) => {
+      const nextErrors = Array.isArray(prev[field.name]) ? [...prev[field.name]] : [];
+      nextErrors.splice(index, 1);
+      return { ...prev, [field.name]: nextErrors };
+    });
+  };
+
+  const handleRepeatableSectionFieldChange = (repeatableKey, field, index, value) => {
+    setFieldValues((prev) => {
+      const currentEntries = Array.isArray(prev[repeatableKey]) ? [...prev[repeatableKey]] : [];
+      const entry = { ...(currentEntries[index] || {}) };
+      entry[field.name] = value;
+      currentEntries[index] = entry;
+      return { ...prev, [repeatableKey]: currentEntries };
+    });
+    const error = validateField(field, value);
+    setFieldErrors((prev) => {
+      const nextErrors = Array.isArray(prev[repeatableKey]) ? [...prev[repeatableKey]] : [];
+      const entryErrors = { ...(nextErrors[index] || {}) };
+      entryErrors[field.name] = error;
+      nextErrors[index] = entryErrors;
+      return { ...prev, [repeatableKey]: nextErrors };
+    });
+  };
+
+  const addRepeatableSectionEntry = (section) => {
+    if (!section?.repeatableKey) {
+      return;
+    }
+    setFieldValues((prev) => {
+      const currentEntries = Array.isArray(prev[section.repeatableKey])
+        ? [...prev[section.repeatableKey]]
+        : [];
+      currentEntries.push(buildRepeatableEntry(section.repeatableFields));
+      return { ...prev, [section.repeatableKey]: currentEntries };
+    });
+    setFieldErrors((prev) => {
+      const nextErrors = Array.isArray(prev[section.repeatableKey])
+        ? [...prev[section.repeatableKey]]
+        : [];
+      nextErrors.push({});
+      return { ...prev, [section.repeatableKey]: nextErrors };
+    });
+  };
+
+  const removeRepeatableSectionEntry = (section, index) => {
+    if (!section?.repeatableKey) {
+      return;
+    }
+    setFieldValues((prev) => {
+      const currentEntries = Array.isArray(prev[section.repeatableKey])
+        ? [...prev[section.repeatableKey]]
+        : [];
+      currentEntries.splice(index, 1);
+      return { ...prev, [section.repeatableKey]: currentEntries };
+    });
+    setFieldErrors((prev) => {
+      const nextErrors = Array.isArray(prev[section.repeatableKey])
+        ? [...prev[section.repeatableKey]]
+        : [];
+      nextErrors.splice(index, 1);
+      return { ...prev, [section.repeatableKey]: nextErrors };
+    });
   };
   const formatNestedPresetValue = (medLabel, option) => {
     if (!medLabel) {
@@ -1040,13 +1359,56 @@ const loadPersistedValues = (template, mode) => {
     setValidationAttempted(true);
     const nextErrors = {};
     let isValid = true;
-    flattenFields(selectedTemplate.fields || []).forEach((field) => {
-      const error = validateField(field, fieldValues[field.name]);
-      if (error) {
-        isValid = false;
-      }
-      nextErrors[field.name] = error;
-    });
+    const validateFields = (fields, values) => {
+      fields.forEach((field) => {
+        if (!field) {
+          return;
+        }
+        if (field.type === "section") {
+          if (field.repeatable && field.repeatableKey) {
+            const entries = Array.isArray(values[field.repeatableKey])
+              ? values[field.repeatableKey]
+              : [];
+            const entryErrors = entries.map((entry) => {
+              const errors = {};
+              (field.repeatableFields || []).forEach((entryField) => {
+                const error = validateField(entryField, entry?.[entryField.name]);
+                if (error) {
+                  isValid = false;
+                }
+                errors[entryField.name] = error;
+              });
+              return errors;
+            });
+            nextErrors[field.repeatableKey] = entryErrors;
+            return;
+          }
+          validateFields(field.fields || [], values);
+          return;
+        }
+        if (field.repeatable) {
+          const entries = Array.isArray(values[field.name]) ? values[field.name] : [];
+          const entryErrors = entries.map((entryValue) => {
+            const error = validateField(field, entryValue);
+            if (error) {
+              isValid = false;
+            }
+            return error;
+          });
+          if (field.required && entries.length === 0) {
+            isValid = false;
+          }
+          nextErrors[field.name] = entryErrors;
+          return;
+        }
+        const error = validateField(field, values[field.name]);
+        if (error) {
+          isValid = false;
+        }
+        nextErrors[field.name] = error;
+      });
+    };
+    validateFields(selectedTemplate.fields || [], fieldValues);
     setFieldErrors(nextErrors);
     return isValid;
   };
@@ -1432,7 +1794,7 @@ const loadPersistedValues = (template, mode) => {
       </Typography>
     </>
   );
-  const renderQuickOptions = (field) => {
+  const renderQuickOptions = (field, onSelect) => {
     if (!field.quickOptions?.length || (field.type !== "text" && field.type !== "textarea")) {
       return null;
     }
@@ -1444,19 +1806,62 @@ const loadPersistedValues = (template, mode) => {
             label={option}
             size="small"
             variant="outlined"
-            onClick={() => appendQuickOption(field, option)}
+            onClick={() => onSelect(option)}
           />
         ))}
       </Stack>
     );
   };
 
-  const renderField = (field, layout, columns) => {
-    const value = fieldValues[field.name];
-    const errorMessage = fieldErrors[field.name] || "";
-    const showError =
-      Boolean(errorMessage) &&
-      (validationAttempted || (Array.isArray(value) ? value.length > 0 : value !== ""));
+  const renderSelectInput = ({ field, value, onChange, showError, errorMessage, fullWidth }) => {
+    const isMultiSelect = field.multiple === true;
+    const selectValue = isMultiSelect
+      ? Array.isArray(value)
+        ? value
+        : value
+        ? [value]
+        : []
+      : value ?? "";
+    return (
+      <TextField
+        select
+        label={field.label}
+        value={selectValue}
+        onChange={(event) => {
+          const nextValue = event.target.value;
+          if (isMultiSelect && typeof nextValue === "string") {
+            onChange(nextValue.split(","));
+          } else {
+            onChange(nextValue);
+          }
+        }}
+        required={field.required}
+        error={showError}
+        helperText={showError ? errorMessage : field.helpText}
+        fullWidth={fullWidth}
+        SelectProps={{
+          multiple: isMultiSelect,
+          displayEmpty: isMultiSelect,
+          renderValue: isMultiSelect
+            ? (selected) =>
+                Array.isArray(selected) && selected.length > 0
+                  ? selected.join(", ")
+                  : "Select options"
+            : undefined,
+        }}
+      >
+        {!isMultiSelect && <MenuItem value="">Select an option</MenuItem>}
+        {field.options.map((option) => (
+          <MenuItem key={option} value={option}>
+            {isMultiSelect && <Checkbox checked={selectValue.includes(option)} />}
+            <ListItemText primary={option} />
+          </MenuItem>
+        ))}
+      </TextField>
+    );
+  };
+
+  const getFieldWrapperStyle = (field, layout, columns) => {
     const span =
       field.width === "xs"
         ? { xs: "1 / -1", md: "span 3" }
@@ -1483,11 +1888,121 @@ const loadPersistedValues = (template, mode) => {
                 : 320,
           }
       : undefined;
-    const wrapperStyle = isInline
-      ? inlineStyle
-      : useColumns
-      ? { gridColumn: "auto" }
-      : { gridColumn: span };
+    return isInline ? inlineStyle : useColumns ? { gridColumn: "auto" } : { gridColumn: span };
+  };
+
+  const renderRepeatableField = (field, wrapperStyle) => {
+    const entries = Array.isArray(fieldValues[field.name]) ? fieldValues[field.name] : [];
+    const entryErrors = Array.isArray(fieldErrors[field.name]) ? fieldErrors[field.name] : [];
+    const isMultiline = field.type === "textarea";
+    const presetLabel = field.presetLabel || "Presets";
+    const emptyState = field.repeatableEmptyState || "No entries yet.";
+    return (
+      <Box key={field.name} sx={wrapperStyle}>
+        <Stack spacing={2}>
+          {entries.length === 0 && (
+            <Typography variant="body2" color="text.secondary">
+              {emptyState}
+            </Typography>
+          )}
+          {entries.map((entryValue, index) => {
+            const errorMessage = entryErrors[index] || "";
+            const showError =
+              Boolean(errorMessage) &&
+              (validationAttempted ||
+                (Array.isArray(entryValue) ? entryValue.length > 0 : entryValue !== ""));
+            return (
+              <Stack key={`${field.name}-${index}`} spacing={1}>
+                {field.type === "checkbox" ? (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={Boolean(entryValue)}
+                        onChange={(event) =>
+                          handleRepeatableFieldChange(field, index, event.target.checked)
+                        }
+                      />
+                    }
+                    label={`${field.label} ${index + 1}`}
+                  />
+                ) : field.type === "select" ? (
+                  renderSelectInput({
+                    field: { ...field, label: `${field.label} ${index + 1}` },
+                    value: entryValue,
+                    onChange: (nextValue) => handleRepeatableFieldChange(field, index, nextValue),
+                    showError,
+                    errorMessage,
+                    fullWidth: true,
+                  })
+                ) : (
+                  <TextField
+                    label={`${field.label} ${index + 1}`}
+                    value={entryValue}
+                    onChange={(event) =>
+                      handleRepeatableFieldChange(field, index, event.target.value)
+                    }
+                    required={field.required}
+                    error={showError}
+                    helperText={showError ? errorMessage : field.helpText}
+                    type={field.type === "textarea" ? "text" : field.type}
+                    multiline={isMultiline}
+                    minRows={isMultiline ? 4 : undefined}
+                    fullWidth
+                  />
+                )}
+                {renderQuickOptions(field, (option) =>
+                  appendQuickOptionToRepeatableField(field, index, option)
+                )}
+                {field.presets?.length > 0 && (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    size="small"
+                    onClick={() => {
+                      setPresetDialogField(field);
+                      setPresetDialogTarget({ kind: "field", fieldName: field.name, index });
+                    }}
+                    sx={{ alignSelf: "flex-start" }}
+                    startIcon={<LibraryAddIcon />}
+                  >
+                    {`Insert ${presetLabel.toLowerCase()}`}
+                  </Button>
+                )}
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => removeRepeatableFieldEntry(field, index)}
+                  sx={{ alignSelf: "flex-start" }}
+                >
+                  Remove
+                </Button>
+              </Stack>
+            );
+          })}
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => addRepeatableFieldEntry(field)}
+            sx={{ alignSelf: "flex-start" }}
+          >
+            Add another
+          </Button>
+        </Stack>
+      </Box>
+    );
+  };
+
+  const renderField = (field, layout, columns) => {
+    const value = fieldValues[field.name];
+    const errorMessage = fieldErrors[field.name] || "";
+    const showError =
+      Boolean(errorMessage) &&
+      (validationAttempted || (Array.isArray(value) ? value.length > 0 : value !== ""));
+    const wrapperStyle = getFieldWrapperStyle(field, layout, columns);
+
+    if (field.repeatable) {
+      return renderRepeatableField(field, wrapperStyle);
+    }
 
     if (field.type === "checkbox") {
       return (
@@ -1506,51 +2021,16 @@ const loadPersistedValues = (template, mode) => {
     }
 
     if (field.type === "select") {
-      const isMultiSelect = field.multiple === true;
-      const selectValue = isMultiSelect
-        ? Array.isArray(value)
-          ? value
-          : value
-          ? [value]
-          : []
-        : value ?? "";
       return (
         <Box key={field.name} sx={wrapperStyle}>
-          <TextField
-            select
-            label={field.label}
-            value={selectValue}
-            onChange={(event) => {
-              const nextValue = event.target.value;
-              if (isMultiSelect && typeof nextValue === "string") {
-                handleFieldChange(field, nextValue.split(","));
-              } else {
-                handleFieldChange(field, nextValue);
-              }
-            }}
-            required={field.required}
-            error={showError}
-            helperText={showError ? errorMessage : field.helpText}
-            fullWidth
-            SelectProps={{
-              multiple: isMultiSelect,
-              displayEmpty: isMultiSelect,
-              renderValue: isMultiSelect
-                ? (selected) =>
-                    Array.isArray(selected) && selected.length > 0
-                      ? selected.join(", ")
-                      : "Select options"
-                : undefined,
-            }}
-          >
-            {!isMultiSelect && <MenuItem value="">Select an option</MenuItem>}
-            {field.options.map((option) => (
-              <MenuItem key={option} value={option}>
-                {isMultiSelect && <Checkbox checked={selectValue.includes(option)} />}
-                <ListItemText primary={option} />
-              </MenuItem>
-            ))}
-          </TextField>
+          {renderSelectInput({
+            field,
+            value,
+            onChange: (nextValue) => handleFieldChange(field, nextValue),
+            showError,
+            errorMessage,
+            fullWidth: true,
+          })}
         </Box>
       );
     }
@@ -1572,13 +2052,16 @@ const loadPersistedValues = (template, mode) => {
             minRows={isMultiline ? 4 : undefined}
             fullWidth
           />
-          {renderQuickOptions(field)}
+          {renderQuickOptions(field, (option) => appendQuickOption(field, option))}
           {field.presets?.length > 0 && (
             <Button
               variant="contained"
               color="secondary"
               size="small"
-              onClick={() => setPresetDialogField(field)}
+              onClick={() => {
+                setPresetDialogField(field);
+                setPresetDialogTarget(null);
+              }}
               sx={{ alignSelf: "flex-start" }}
               startIcon={<LibraryAddIcon />}
             >
@@ -1595,11 +2078,181 @@ const loadPersistedValues = (template, mode) => {
     const columns = Number.isFinite(section.columns) ? section.columns : null;
     const isInline = layout === "inline";
     const useColumns = !isInline && columns && columns >= 2;
+    if (section.repeatable && section.repeatableKey) {
+      const sectionFields = section.repeatableFields || fields;
+      const entries = Array.isArray(fieldValues[section.repeatableKey])
+        ? fieldValues[section.repeatableKey]
+        : [];
+      const entryErrors = Array.isArray(fieldErrors[section.repeatableKey])
+        ? fieldErrors[section.repeatableKey]
+        : [];
+      const emptyState = section.repeatableEmptyState || "No entries yet.";
+      return (
+        <>
+          {section.label && (
+            <Typography variant="subtitle1" sx={{ mb: 1.5, fontWeight: 600 }}>
+              {section.label}
+            </Typography>
+          )}
+          <Stack spacing={2}>
+            {entries.length === 0 && (
+              <Typography variant="body2" color="text.secondary">
+                {emptyState}
+              </Typography>
+            )}
+            {entries.map((entry, index) => (
+              <Paper key={`${section.repeatableKey}-${index}`} variant="outlined" sx={{ p: 2 }}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
+                  <Typography variant="subtitle2">{`${section.label} ${index + 1}`}</Typography>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => removeRepeatableSectionEntry(section, index)}
+                  >
+                    Remove
+                  </Button>
+                </Stack>
+                <Box
+                  sx={{
+                    display: isInline ? "flex" : "grid",
+                    flexWrap: isInline ? "wrap" : "initial",
+                    gap: 2,
+                    gridTemplateColumns: useColumns
+                      ? { xs: "1fr", md: `repeat(${columns}, minmax(0, 1fr))` }
+                      : {
+                          xs: "1fr",
+                          md: "repeat(12, minmax(0, 1fr))",
+                        },
+                  }}
+                >
+                  {sectionFields.map((field) => {
+                    const wrapperStyle = getFieldWrapperStyle(field, layout, columns);
+                    const entryValue = entry?.[field.name];
+                    const fieldError = entryErrors[index]?.[field.name] || "";
+                    const showError =
+                      Boolean(fieldError) &&
+                      (validationAttempted ||
+                        (Array.isArray(entryValue) ? entryValue.length > 0 : entryValue !== ""));
+                    if (field.type === "checkbox") {
+                      return (
+                        <Box key={`${field.name}-${index}`} sx={wrapperStyle}>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={Boolean(entryValue)}
+                                onChange={(event) =>
+                                  handleRepeatableSectionFieldChange(
+                                    section.repeatableKey,
+                                    field,
+                                    index,
+                                    event.target.checked
+                                  )
+                                }
+                              />
+                            }
+                            label={field.label}
+                          />
+                        </Box>
+                      );
+                    }
+                    if (field.type === "select") {
+                      return (
+                        <Box key={`${field.name}-${index}`} sx={wrapperStyle}>
+                          {renderSelectInput({
+                            field,
+                            value: entryValue,
+                            onChange: (nextValue) =>
+                              handleRepeatableSectionFieldChange(
+                                section.repeatableKey,
+                                field,
+                                index,
+                                nextValue
+                              ),
+                            showError,
+                            errorMessage: fieldError,
+                            fullWidth: true,
+                          })}
+                        </Box>
+                      );
+                    }
+                    const isMultiline = field.type === "textarea";
+                    const presetLabel = field.presetLabel || "Presets";
+                    return (
+                      <Box key={`${field.name}-${index}`} sx={wrapperStyle}>
+                        <Stack spacing={1}>
+                          <TextField
+                            label={field.label}
+                            value={entryValue ?? ""}
+                            onChange={(event) =>
+                              handleRepeatableSectionFieldChange(
+                                section.repeatableKey,
+                                field,
+                                index,
+                                event.target.value
+                              )
+                            }
+                            required={field.required}
+                            error={showError}
+                            helperText={showError ? fieldError : field.helpText}
+                            type={field.type === "textarea" ? "text" : field.type}
+                            multiline={isMultiline}
+                            minRows={isMultiline ? 4 : undefined}
+                            fullWidth
+                          />
+                          {renderQuickOptions(field, (option) =>
+                            appendQuickOptionToRepeatableSection(
+                              section.repeatableKey,
+                              field,
+                              index,
+                              option
+                            )
+                          )}
+                          {field.presets?.length > 0 && (
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              size="small"
+                              onClick={() => {
+                                setPresetDialogField(field);
+                                setPresetDialogTarget({
+                                  kind: "section",
+                                  repeatableKey: section.repeatableKey,
+                                  fieldName: field.name,
+                                  index,
+                                });
+                              }}
+                              sx={{ alignSelf: "flex-start" }}
+                              startIcon={<LibraryAddIcon />}
+                            >
+                              {`Insert ${presetLabel.toLowerCase()}`}
+                            </Button>
+                          )}
+                        </Stack>
+                      </Box>
+                    );
+                  })}
+                </Box>
+              </Paper>
+            ))}
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => addRepeatableSectionEntry(section)}
+              sx={{ alignSelf: "flex-start" }}
+            >
+              Add another
+            </Button>
+          </Stack>
+        </>
+      );
+    }
     return (
       <>
-        <Typography variant="subtitle1" sx={{ mb: 1.5, fontWeight: 600 }}>
-          {section.label}
-        </Typography>
+        {section.label && (
+          <Typography variant="subtitle1" sx={{ mb: 1.5, fontWeight: 600 }}>
+            {section.label}
+          </Typography>
+        )}
         <Box
           sx={{
             display: isInline ? "flex" : "grid",
@@ -1753,21 +2406,47 @@ const loadPersistedValues = (template, mode) => {
             ) : (
               <Stack gap={2}>
                 {selectedTemplate.fields.some((field) => field.type === "section") ? (
-                  selectedTemplate.fields.map((field) => {
-                    if (field.type !== "section") {
-                      return null;
-                    }
-                    const sectionFields = flattenFields(field.fields || []);
-                    return (
-                      <Paper
-                        key={field.label}
-                        variant="outlined"
-                        sx={{ p: 2, borderRadius: 2, borderColor: "divider" }}
-                      >
-                        {renderSectionFields(sectionFields, field)}
-                      </Paper>
-                    );
-                  })
+                  <>
+                    {(() => {
+                      const blocks = [];
+                      let currentFields = [];
+                      selectedTemplate.fields.forEach((field) => {
+                        if (field.type === "section") {
+                          if (currentFields.length > 0) {
+                            blocks.push({
+                              key: `group-${blocks.length}`,
+                              section: { label: "" },
+                              fields: currentFields,
+                            });
+                            currentFields = [];
+                          }
+                          blocks.push({
+                            key: field.label || `section-${blocks.length}`,
+                            section: field,
+                            fields: field.repeatableFields || flattenFields(field.fields || []),
+                          });
+                          return;
+                        }
+                        currentFields.push(field);
+                      });
+                      if (currentFields.length > 0) {
+                        blocks.push({
+                          key: `group-${blocks.length}`,
+                          section: { label: "" },
+                          fields: currentFields,
+                        });
+                      }
+                      return blocks.map((block) => (
+                        <Paper
+                          key={block.key}
+                          variant="outlined"
+                          sx={{ p: 2, borderRadius: 2, borderColor: "divider" }}
+                        >
+                          {renderSectionFields(block.fields, block.section)}
+                        </Paper>
+                      ));
+                    })()}
+                  </>
                 ) : selectedTemplate.fields.some((field) => field.section) ? (
                   Object.entries(
                     selectedTemplate.fields.reduce((groups, field) => {
@@ -1796,6 +2475,10 @@ const loadPersistedValues = (template, mode) => {
                       (validationAttempted ||
                         (Array.isArray(value) ? value.length > 0 : value !== ""));
 
+                    if (field.repeatable) {
+                      return renderRepeatableField(field, {});
+                    }
+
                     if (field.type === "checkbox") {
                       return (
                         <FormControlLabel
@@ -1812,52 +2495,17 @@ const loadPersistedValues = (template, mode) => {
                     }
 
                     if (field.type === "select") {
-                      const isMultiSelect = field.multiple === true;
-                      const selectValue = isMultiSelect
-                        ? Array.isArray(value)
-                          ? value
-                          : value
-                          ? [value]
-                          : []
-                        : value ?? "";
                       return (
-                        <TextField
-                          key={field.name}
-                          select
-                          label={field.label}
-                          value={selectValue}
-                          onChange={(event) => {
-                            const nextValue = event.target.value;
-                            if (isMultiSelect && typeof nextValue === "string") {
-                              handleFieldChange(field, nextValue.split(","));
-                            } else {
-                              handleFieldChange(field, nextValue);
-                            }
-                          }}
-                          required={field.required}
-                          error={showError}
-                          helperText={showError ? errorMessage : field.helpText}
-                          SelectProps={{
-                            multiple: isMultiSelect,
-                            displayEmpty: isMultiSelect,
-                            renderValue: isMultiSelect
-                              ? (selected) =>
-                                  Array.isArray(selected) && selected.length > 0
-                                    ? selected.join(", ")
-                                    : "Select options"
-                              : undefined,
-                          }}
-                        >
-                          {!isMultiSelect && <MenuItem value="">Select an option</MenuItem>}
-                          {field.options.map((option) => (
-                            <MenuItem key={option} value={option}>
-                              {isMultiSelect && (
-                                <Checkbox checked={selectValue.includes(option)} />
-                              )}
-                              <ListItemText primary={option} />
-                            </MenuItem>
-                          ))}
-                        </TextField>
+                        <Box key={field.name}>
+                          {renderSelectInput({
+                            field,
+                            value,
+                            onChange: (nextValue) => handleFieldChange(field, nextValue),
+                            showError,
+                            errorMessage,
+                            fullWidth: false,
+                          })}
+                        </Box>
                       );
                     }
 
@@ -1876,13 +2524,16 @@ const loadPersistedValues = (template, mode) => {
                           multiline={isMultiline}
                           minRows={isMultiline ? 4 : undefined}
                         />
-                        {renderQuickOptions(field)}
+                        {renderQuickOptions(field, (option) => appendQuickOption(field, option))}
                         {field.presets?.length > 0 && (
                           <Button
                             variant="contained"
                             color="secondary"
                             size="small"
-                            onClick={() => setPresetDialogField(field)}
+                            onClick={() => {
+                              setPresetDialogField(field);
+                              setPresetDialogTarget(null);
+                            }}
                             sx={{ alignSelf: "flex-start" }}
                             startIcon={<LibraryAddIcon />}
                           >
@@ -1926,6 +2577,7 @@ const loadPersistedValues = (template, mode) => {
         open={Boolean(presetDialogField)}
         onClose={() => {
           setPresetDialogField(null);
+          setPresetDialogTarget(null);
           setPresetDialogValue("");
           setPresetQuery("");
           setPresetDialogSelected(null);
@@ -1946,7 +2598,11 @@ const loadPersistedValues = (template, mode) => {
                 const topOption = selectedPresetOptions[0];
                 if (topOption) {
                 const medLabel = presetDialogSelected?.label || presetDialogSelected?.value || "";
-                appendPresetValue(presetDialogField, formatNestedPresetValue(medLabel, topOption));
+                appendPresetValue(
+                  presetDialogField,
+                  formatNestedPresetValue(medLabel, topOption),
+                  presetDialogTarget
+                );
                 setPresetDialogValue(topOption);
                 presetSearchRef.current?.focus();
               }
@@ -1954,7 +2610,7 @@ const loadPersistedValues = (template, mode) => {
             }
             if (topPreset) {
               const value = topPreset.value || topPreset.label;
-              appendPresetValue(presetDialogField, value);
+              appendPresetValue(presetDialogField, value, presetDialogTarget);
               setPresetDialogValue(value);
               presetSearchRef.current?.focus();
             }
@@ -2071,7 +2727,7 @@ const loadPersistedValues = (template, mode) => {
                   }
                   onClick={() => {
                     const value = preset.value || preset.label;
-                    appendPresetValue(presetDialogField, value);
+                    appendPresetValue(presetDialogField, value, presetDialogTarget);
                     setPresetDialogValue(value);
                     presetSearchRef.current?.focus();
                   }}
@@ -2097,7 +2753,22 @@ const loadPersistedValues = (template, mode) => {
           <Button
             onClick={() => {
               if (presetDialogField) {
-                handleFieldChange(presetDialogField, "");
+                if (presetDialogTarget?.kind === "field") {
+                  handleRepeatableFieldChange(
+                    presetDialogField,
+                    presetDialogTarget.index,
+                    ""
+                  );
+                } else if (presetDialogTarget?.kind === "section") {
+                  handleRepeatableSectionFieldChange(
+                    presetDialogTarget.repeatableKey,
+                    presetDialogField,
+                    presetDialogTarget.index,
+                    ""
+                  );
+                } else {
+                  handleFieldChange(presetDialogField, "");
+                }
               }
             }}
           >
@@ -2106,6 +2777,7 @@ const loadPersistedValues = (template, mode) => {
           <Button
             onClick={() => {
               setPresetDialogField(null);
+              setPresetDialogTarget(null);
               setPresetDialogValue("");
               setPresetQuery("");
               setPresetDialogSelected(null);

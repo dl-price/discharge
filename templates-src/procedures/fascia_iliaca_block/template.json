@@ -7,12 +7,6 @@
   "keywords": ["regional", "block", "hip", "analgesia"],
   "fields": [
     {
-      "name": "date",
-      "label": "Date",
-      "type": "date",
-      "required": false
-    },
-    {
       "name": "time",
       "label": "Time",
       "type": "text",
@@ -30,6 +24,14 @@
       "type": "select",
       "required": false,
       "options": ["Left", "Right"]
+    },
+    {
+      "name": "side_confirmed",
+      "label": "Side Confirmation",
+      "type": "select",
+      "multiple": true,
+      "required": true,
+      "options": ["Imaging reviewed", "Verbal agreement by patient"]
     },
     {
       "name": "consent",
@@ -103,6 +105,24 @@
       "type": "checkbox",
       "required": false,
       "default": false
+    },
+    {
+      "type": "section",
+      "label": "BP readings",
+      "name": "bp_readings",
+      "repeatable": true,
+      "repeatableEmptyState": "No BPs recorded",
+      "layout": "inline",
+      "blocks": ["bp"],
+      "fields": [
+        {
+          "name": "bp_time",
+          "label": "Time",
+          "type": "text",
+          "width": "xs",
+          "required": false
+        }
+      ]
     }
   ]
 }
