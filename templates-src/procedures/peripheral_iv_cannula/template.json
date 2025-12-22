@@ -4,7 +4,7 @@
   "category": "Procedures",
   "version": "1.0",
   "lastReviewed": "2025-12-20",
-  "reviewStatus": "alpha",
+  "reviewStatus": "beta",
   "keywords": ["cannula", "iv", "peripheral", "vascular", "line"],
   "fields": [
     {

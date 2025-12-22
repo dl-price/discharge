@@ -2503,7 +2503,7 @@ const loadPersistedValues = (template, mode) => {
                             onChange: (nextValue) => handleFieldChange(field, nextValue),
                             showError,
                             errorMessage,
-                            fullWidth: false,
+                            fullWidth: true,
                           })}
                         </Box>
                       );
