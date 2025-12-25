@@ -1,0 +1,115 @@
+{
+  "id": "eye_assessment_note",
+  "title": "ED clinician note: Eye assessment",
+  "category": "ED notes",
+  "version": "1.0",
+  "lastReviewed": "2025-12-26",
+  "reviewStatus": "beta",
+  "keywords": ["eye", "eye injury", "ocular", "vision", "ophthalmology"],
+  "fields": [
+    {
+      "type": "section",
+      "label": "Presentation",
+      "fields": [
+        {
+          "name": "presenting_complaint",
+          "label": "Presenting complaint",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "hpc",
+          "label": "HPC",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "label": "Background",
+      "fields": [
+        {
+          "name": "pmh",
+          "label": "PMH",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "name": "dh",
+          "label": "DH (medications)",
+          "type": "textarea",
+          "presetGroup": "meds_common_doses",
+          "required": false
+        },
+        {
+          "name": "allergies",
+          "label": "Allergies",
+          "type": "textarea",
+          "presetGroup": "meds_common",
+          "quickOptions": ["NKDA"],
+          "required": false
+        },
+        {
+          "name": "sh",
+          "label": "SH",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "name": "fhx",
+          "label": "Family history",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "label": "Eye examination",
+      "blocks": ["eye_exam"]
+    },
+    {
+      "type": "section",
+      "label": "Investigations",
+      "fields": [
+        {
+          "name": "investigations",
+          "label": "Investigations",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "label": "Assessment",
+      "fields": [
+        {
+          "name": "impression",
+          "label": "Impression",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "differentials",
+          "label": "Differentials",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "label": "Plan",
+      "fields": [
+        {
+          "name": "plan",
+          "label": "Plan",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

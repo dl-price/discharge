@@ -1,5 +1,3 @@
-ED Clinician Note - Chest Pain
-
 Presentation:
 {{presentation}}
 

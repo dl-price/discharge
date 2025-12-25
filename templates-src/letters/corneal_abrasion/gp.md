@@ -5,7 +5,7 @@ Corneal abrasion
 
 ## ED Assessment and Management
 The patient presented with eye pain and was found to have a corneal abrasion on examination. No features of penetrating injury or globe rupture were identified.
-
+cor
 {{#if cause}}
 **Likely cause:** {{cause}}
 {{/if}}

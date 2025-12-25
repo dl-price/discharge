@@ -1,0 +1,94 @@
+{
+  "id": "eye_exam",
+  "title": "Eye examination",
+  "fields": [
+    {
+      "name": "visual_acuity_right",
+      "label": "Visual acuity (right)",
+      "type": "text",
+      "default": "",
+      "required": false,
+      "quickOptions": ["6/6"]
+    },
+    {
+      "name": "visual_acuity_left",
+      "label": "Visual acuity (left)",
+      "type": "text",
+      "default": "",
+      "required": false,
+      "quickOptions": ["6/6"]
+    },
+    {
+      "name": "lids",
+      "label": "Lids",
+      "type": "textarea",
+      "default": "",
+      "required": false
+    },
+    {
+      "name": "pupil",
+      "label": "Pupil",
+      "type": "textarea",
+      "default": "",
+      "required": false
+    },
+    {
+      "name": "pupillary_light_reflex",
+      "label": "Pupillary light reflex",
+      "type": "textarea",
+      "default": "",
+      "required": false,
+      "quickOptions": ["PEARL, no RAPD"]
+    },
+    {
+      "name": "conjunctiva",
+      "label": "Conjunctiva",
+      "type": "textarea",
+      "default": "",
+      "required": false
+    },
+    {
+      "name": "cornea",
+      "label": "Cornea",
+      "type": "textarea",
+      "default": "",
+      "required": false
+    },
+    {
+      "name": "anterior_chamber",
+      "label": "Anterior chamber",
+      "type": "textarea",
+      "default": "",
+      "required": false
+    },
+    {
+      "name": "eyelid_eversion",
+      "label": "Eyelid eversion",
+      "type": "textarea",
+      "default": "",
+      "required": false,
+      "quickOptions": ["Foreign body excluded"]
+    },
+    {
+      "name": "fluorescein",
+      "label": "Fluorescein examination",
+      "type": "textarea",
+      "default": "",
+      "required": false
+    },
+    {
+      "name": "additional_examination",
+      "label": "Additional examination",
+      "type": "textarea",
+      "default": "",
+      "required": false
+    },
+    {
+      "name": "xray",
+      "label": "X-ray (if indicated)",
+      "type": "textarea",
+      "default": "",
+      "required": false
+    }
+  ]
+}

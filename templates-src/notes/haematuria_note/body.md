@@ -1,5 +1,3 @@
-ED Clinician Note - Haematuria
-
 Presentation:
 {{presentation}}
 

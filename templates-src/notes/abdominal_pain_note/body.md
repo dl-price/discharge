@@ -1,5 +1,3 @@
-ED Clinician Note - Abdominal Pain
-
 Presentation:
 {{presentation}}
 
