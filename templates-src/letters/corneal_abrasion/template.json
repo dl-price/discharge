@@ -1,0 +1,76 @@
+{
+  "id": "corneal_abrasion",
+  "title": "Corneal Abrasion",
+  "category": "Ophthalmology",
+  "version": "1.0",
+  "lastReviewed": "2025-12-26",
+  "reviewStatus": "beta",
+  "keywords": [
+    "corneal abrasion",
+    "eye injury",
+    "foreign body",
+    "eye pain",
+    "red eye"
+  ],
+  "fields": [
+    {
+      "name": "cause",
+      "label": "Likely cause of corneal abrasion",
+      "type": "text",
+      "required": false,
+      "quickOptions": [
+        "Foreign body",
+        "Fingernail injury",
+        "Contact lens related",
+        "Trauma",
+        "Unknown"
+      ]
+    },
+    {
+      "name": "eye_drops",
+      "label": "Eye drops or ointment prescribed",
+      "type": "textarea",
+      "required": false,
+      "quickOptions": [
+        "topical Chlorsig 0.5% drops one drop into affected eye as often as every 6 hours",
+        "topical Chlorsig 0.5% ointment 1cm strip into affected eye at night; this may also be used during the day for added lubrication as often as every four hours",
+        "Please do not continue chlorsig drops or ointment beyond 5 days as they may cause ongoing eye irritation"
+      ]
+    },
+    {
+      "name": "pain_relief",
+      "label": "Pain relief advice",
+      "type": "textarea",
+      "required": false,
+      "quickOptions": [
+        "Paracetamol as required",
+        "Ibuprofen as required (if safe)",
+        "Cold compress over closed eye"
+      ]
+    },
+    {
+      "name": "contact_lens_advice_given",
+      "label": "Advised to avoid contact lenses",
+      "type": "checkbox",
+      "required": false
+    },
+    {
+      "name": "follow_up",
+      "label": "Recommended follow-up timeframe",
+      "type": "select",
+      "required": false,
+      "options": [
+        "24 hours",
+        "48 hours",
+        "2–3 days",
+        "No routine follow-up required if improving"
+      ]
+    },
+    {
+      "name": "other_follow_up",
+      "label": "Other follow-up instructions",
+      "type": "textarea",
+      "required": false
+    }
+  ]
+}
