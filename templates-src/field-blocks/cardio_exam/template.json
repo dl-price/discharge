@@ -1,0 +1,24 @@
+{
+  "id": "cardio_exam",
+  "title": "Cardiovascular exam",
+  "fields": [
+    {
+      "name": "heart_sounds",
+      "label": "Heart sounds",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "murmur",
+      "label": "Murmur",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "peripheral",
+      "label": "Peripheral circulation",
+      "type": "textarea",
+      "required": false
+    }
+  ]
+}

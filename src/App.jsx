@@ -114,6 +114,21 @@ const buildRepeatableEntry = (fields) =>
     return entry;
   }, {});
 
+const buildRepeatableEntryForSection = (section) => {
+  if (!section) {
+    return {};
+  }
+  const baseFields = section.repeatableFields || section.fields || [];
+  const entry = buildRepeatableEntry(baseFields);
+  if (Array.isArray(section.blockOptionDefs) && section.blockOptionDefs.length > 0) {
+    const selectorName = section.blockSelectorName || "blockId";
+    if (!(selectorName in entry)) {
+      entry[selectorName] = "";
+    }
+  }
+  return entry;
+};
+
 const getTemplateStorageKey = (mode, templateId) =>
   mode && templateId ? `${TEMPLATE_VALUES_KEY}:${mode}:${templateId}` : null;
 
@@ -146,6 +161,12 @@ const applyPresetGroupsToFields = (fields, presetGroups) =>
       };
       if (field.repeatableFields) {
         next.repeatableFields = applyPresetGroupsToFields(field.repeatableFields, presetGroups);
+      }
+      if (Array.isArray(field.blockOptionDefs)) {
+        next.blockOptionDefs = field.blockOptionDefs.map((option) => ({
+          ...option,
+          fields: applyPresetGroupsToFields(option.fields || [], presetGroups),
+        }));
       }
       return next;
     }
@@ -184,13 +205,13 @@ const applyFieldBlocks = (template, fieldBlocks) => {
   const blockBodies = {};
   const getBlock = (blockId) => fieldBlocks[blockId];
   const prefixFor = (block, blockId) => block.prefix || block.id || blockId;
-  const buildBlockFields = (blockId, options = { prefixFields: true }) => {
+  const buildBlockFields = (blockId, options = { prefixFields: true, addBody: true }) => {
     const block = getBlock(blockId);
     if (!block) {
       return [];
     }
     const prefix = prefixFor(block, blockId);
-    if (block.body) {
+    if (block.body && options.addBody !== false) {
       const withPrefix = block.body
         .replace(/\{\{#if\s+(\w+)\}\}/g, `{{#if ${prefix}.$1}}`)
         .replace(/\{\{(\w+)\}\}/g, `{{${prefix}.$1}}`);
@@ -218,13 +239,46 @@ const applyFieldBlocks = (template, fieldBlocks) => {
     });
   };
 
+  const normalizeBlockOption = (option) => {
+    if (typeof option === "string") {
+      return { id: option, label: option };
+    }
+    if (option && typeof option === "object") {
+      const id = option.id || option.value;
+      return id ? { id, label: option.label || id } : null;
+    }
+    return null;
+  };
+
   const applyBlocksToFields = (fields) =>
     fields.map((field) => {
       if (field.type !== "section") {
         return field;
       }
       const sectionBlocks = Array.isArray(field.blocks) ? field.blocks : [];
+      const sectionBlockOptions = Array.isArray(field.blockOptions) ? field.blockOptions : [];
       addBlockBodies(sectionBlocks);
+      const blockOptionDefs =
+        sectionBlockOptions.length > 0
+          ? sectionBlockOptions
+              .map(normalizeBlockOption)
+              .filter(Boolean)
+              .map((option) => {
+                const block = getBlock(option.id);
+                if (!block) {
+                  return null;
+                }
+                const prefix = prefixFor(block, option.id);
+                return {
+                  id: option.id,
+                  label: option.label || block.title || option.id,
+                  prefix,
+                  body: block.body,
+                  fields: buildBlockFields(option.id, { prefixFields: true, addBody: false }),
+                };
+              })
+              .filter(Boolean)
+          : [];
       if (field.repeatable) {
         const repeatableKey = getRepeatableSectionKey(field);
         const injected = sectionBlocks.flatMap((blockId) =>
@@ -235,6 +289,9 @@ const applyFieldBlocks = (template, fieldBlocks) => {
           ...field,
           repeatableKey,
           repeatableFields,
+          blockOptionDefs,
+          blockSelectorName: field.blockSelectorName || "blockId",
+          blockSelectorLabel: field.blockSelectorLabel || "Exam type",
         };
       }
       const injected = sectionBlocks.flatMap((blockId) => buildBlockFields(blockId));
@@ -242,6 +299,9 @@ const applyFieldBlocks = (template, fieldBlocks) => {
       return {
         ...field,
         fields: applyBlocksToFields(nextSectionFields),
+        blockOptionDefs,
+        blockSelectorName: field.blockSelectorName || "blockId",
+        blockSelectorLabel: field.blockSelectorLabel || "Exam type",
       };
     });
 
@@ -270,7 +330,7 @@ const initializeFieldValues = (template) => {
     }
     if (field.type === "section") {
       if (field.repeatable && field.repeatableKey) {
-        nextValues[field.repeatableKey] = [buildRepeatableEntry(field.repeatableFields)];
+        nextValues[field.repeatableKey] = [buildRepeatableEntryForSection(field)];
         return;
       }
       (field.fields || []).forEach(seedField);
@@ -610,18 +670,22 @@ const renderTemplateBody = (template, values) => {
     return options.coerceBoolean ? toBoolean(result) : result;
   };
 
-  const calcRegex = /\{\{\s*calc\s+([^}]+)\}\}/g;
-  body = body.replace(calcRegex, (match, expression) => {
-    const value = evalExpression(expression, { coerceBoolean: false }, values);
-    if (value === undefined || value === null || Number.isNaN(value)) {
-      return "";
-    }
-    const numericValue = typeof value === "number" ? value : Number(value);
-    if (Number.isNaN(numericValue)) {
-      return "";
-    }
-    return String(Math.round(numericValue));
-  });
+  const applyCalcExpressions = (text, scopeValues) => {
+    const calcRegex = /\{\{\s*calc\s+([^}]+)\}\}/g;
+    return text.replace(calcRegex, (match, expression) => {
+      const value = evalExpression(expression, { coerceBoolean: false }, scopeValues);
+      if (value === undefined || value === null || Number.isNaN(value)) {
+        return "";
+      }
+      const numericValue = typeof value === "number" ? value : Number(value);
+      if (Number.isNaN(numericValue)) {
+        return "";
+      }
+      return String(Math.round(numericValue));
+    });
+  };
+
+  body = applyCalcExpressions(body, values);
 
   const parseTemplate = (text) => {
     const root = { type: "root", children: [] };
@@ -696,6 +760,66 @@ const renderTemplateBody = (template, values) => {
         return "";
       })
       .join("");
+
+  const renderTemplateFragment = (text, contextValues = {}) => {
+    const withCalc = applyCalcExpressions(text, { ...values, ...contextValues });
+    return renderNodes(parseTemplate(withCalc), contextValues);
+  };
+
+  const collectRepeatableBlockSections = (fields, collected = []) => {
+    fields.forEach((field) => {
+      if (!field || field.type !== "section") {
+        return;
+      }
+      if (field.repeatable && Array.isArray(field.blockOptionDefs) && field.blockOptionDefs.length) {
+        collected.push(field);
+      }
+      collectRepeatableBlockSections(field.fields || [], collected);
+    });
+    return collected;
+  };
+
+  const renderRepeatableBlockSections = (text) => {
+    if (!template?.fields) {
+      return text;
+    }
+    const sections = collectRepeatableBlockSections(template.fields);
+    return sections.reduce((current, section) => {
+      const repeatableKey = section.repeatableKey;
+      if (!repeatableKey) {
+        return current;
+      }
+      const placeholder = section.repeatablePlaceholder || repeatableKey;
+      const placeholderRegex = new RegExp(`\\{\\{${escapeRegExp(placeholder)}\\}\\}`, "g");
+      const entries = Array.isArray(values[repeatableKey]) ? values[repeatableKey] : [];
+      const selectorName = section.blockSelectorName || "blockId";
+      const rendered = entries
+        .map((entry) => {
+          const blockId = entry?.[selectorName];
+          if (!blockId) {
+            return "";
+          }
+          const blockOption = section.blockOptionDefs.find((option) => option.id === blockId);
+          if (!blockOption || !blockOption.body) {
+            return "";
+          }
+          const prefix = blockOption.prefix || blockOption.id;
+          const prefixKey = `${prefix}.`;
+          const entryValues = Object.entries(entry || {}).reduce((acc, [key, value]) => {
+            if (key.startsWith(prefixKey)) {
+              acc[key.slice(prefixKey.length)] = value;
+            }
+            return acc;
+          }, {});
+          return renderTemplateFragment(blockOption.body, entryValues).trim();
+        })
+        .filter(Boolean)
+        .join("\n\n");
+      return current.replace(placeholderRegex, rendered);
+    }, text);
+  };
+
+  body = renderRepeatableBlockSections(body);
 
   let output = renderNodes(parseTemplate(body));
   output = output.replace(/\r?\n[ \t]*\u0000[ \t]*\r?\n/g, "\n");
@@ -1277,6 +1401,49 @@ const loadPersistedValues = (template, mode) => {
     });
   };
 
+  const handleRepeatableSectionBlockChange = (section, index, nextBlockId) => {
+    if (!section?.repeatableKey) {
+      return;
+    }
+    const selectorName = section.blockSelectorName || "blockId";
+    const blockOptions = Array.isArray(section.blockOptionDefs) ? section.blockOptionDefs : [];
+    const selectedBlock = blockOptions.find((option) => option.id === nextBlockId);
+    const optionPrefixes = blockOptions.map((option) => `${option.prefix || option.id}.`);
+    setFieldValues((prev) => {
+      const currentEntries = Array.isArray(prev[section.repeatableKey])
+        ? [...prev[section.repeatableKey]]
+        : [];
+      const entry = { ...(currentEntries[index] || {}) };
+      Object.keys(entry).forEach((key) => {
+        if (optionPrefixes.some((prefix) => key.startsWith(prefix))) {
+          delete entry[key];
+        }
+      });
+      entry[selectorName] = nextBlockId;
+      (selectedBlock?.fields || []).forEach((field) => {
+        if (!(field.name in entry)) {
+          entry[field.name] = getDefaultFieldValue(field);
+        }
+      });
+      currentEntries[index] = entry;
+      return { ...prev, [section.repeatableKey]: currentEntries };
+    });
+    setFieldErrors((prev) => {
+      const nextErrors = Array.isArray(prev[section.repeatableKey])
+        ? [...prev[section.repeatableKey]]
+        : [];
+      const entryErrors = { ...(nextErrors[index] || {}) };
+      Object.keys(entryErrors).forEach((key) => {
+        if (optionPrefixes.some((prefix) => key.startsWith(prefix))) {
+          delete entryErrors[key];
+        }
+      });
+      entryErrors[selectorName] = "";
+      nextErrors[index] = entryErrors;
+      return { ...prev, [section.repeatableKey]: nextErrors };
+    });
+  };
+
   const addRepeatableSectionEntry = (section) => {
     if (!section?.repeatableKey) {
       return;
@@ -1285,7 +1452,7 @@ const loadPersistedValues = (template, mode) => {
       const currentEntries = Array.isArray(prev[section.repeatableKey])
         ? [...prev[section.repeatableKey]]
         : [];
-      currentEntries.push(buildRepeatableEntry(section.repeatableFields));
+      currentEntries.push(buildRepeatableEntryForSection(section));
       return { ...prev, [section.repeatableKey]: currentEntries };
     });
     setFieldErrors((prev) => {
@@ -1371,7 +1538,21 @@ const loadPersistedValues = (template, mode) => {
               : [];
             const entryErrors = entries.map((entry) => {
               const errors = {};
-              (field.repeatableFields || []).forEach((entryField) => {
+              const baseFields = field.repeatableFields || [];
+              let blockFields = [];
+              if (Array.isArray(field.blockOptionDefs) && field.blockOptionDefs.length > 0) {
+                const selectorName = field.blockSelectorName || "blockId";
+                const selectedBlock = field.blockOptionDefs.find(
+                  (option) => option.id === entry?.[selectorName]
+                );
+                if (!selectedBlock) {
+                  errors[selectorName] = "Select an exam type.";
+                  isValid = false;
+                } else {
+                  blockFields = selectedBlock.fields || [];
+                }
+              }
+              [...baseFields, ...blockFields].forEach((entryField) => {
                 const error = validateField(entryField, entry?.[entryField.name]);
                 if (error) {
                   isValid = false;
@@ -1815,6 +1996,18 @@ const loadPersistedValues = (template, mode) => {
 
   const renderSelectInput = ({ field, value, onChange, showError, errorMessage, fullWidth }) => {
     const isMultiSelect = field.multiple === true;
+    const options = Array.isArray(field.options) ? field.options : [];
+    const optionValue = (option) =>
+      option && typeof option === "object" ? option.value ?? option.id ?? option.label : option;
+    const optionLabel = (option) =>
+      option && typeof option === "object" ? option.label ?? option.value ?? option.id : option;
+    const valueToLabel = options.reduce((acc, option) => {
+      const key = optionValue(option);
+      if (key !== undefined) {
+        acc[key] = optionLabel(option);
+      }
+      return acc;
+    }, {});
     const selectValue = isMultiSelect
       ? Array.isArray(value)
         ? value
@@ -1845,18 +2038,25 @@ const loadPersistedValues = (template, mode) => {
           renderValue: isMultiSelect
             ? (selected) =>
                 Array.isArray(selected) && selected.length > 0
-                  ? selected.join(", ")
+                  ? selected.map((item) => valueToLabel[item] || item).join(", ")
                   : "Select options"
             : undefined,
         }}
       >
         {!isMultiSelect && <MenuItem value="">Select an option</MenuItem>}
-        {field.options.map((option) => (
-          <MenuItem key={option} value={option}>
-            {isMultiSelect && <Checkbox checked={selectValue.includes(option)} />}
-            <ListItemText primary={option} />
-          </MenuItem>
-        ))}
+        {options.map((option) => {
+          const key = optionValue(option);
+          const label = optionLabel(option);
+          if (key === undefined) {
+            return null;
+          }
+          return (
+            <MenuItem key={key} value={key}>
+              {isMultiSelect && <Checkbox checked={selectValue.includes(key)} />}
+              <ListItemText primary={label} />
+            </MenuItem>
+          );
+        })}
       </TextField>
     );
   };
@@ -2087,6 +2287,19 @@ const loadPersistedValues = (template, mode) => {
         ? fieldErrors[section.repeatableKey]
         : [];
       const emptyState = section.repeatableEmptyState || "No entries yet.";
+      const blockOptions = Array.isArray(section.blockOptionDefs) ? section.blockOptionDefs : [];
+      const selectorName = section.blockSelectorName || "blockId";
+      const selectorLabel = section.blockSelectorLabel || "Exam type";
+      const selectorField = {
+        name: selectorName,
+        label: selectorLabel,
+        type: "select",
+        options: blockOptions.map((option) => ({
+          value: option.id,
+          label: option.label || option.id,
+        })),
+        required: blockOptions.length > 0,
+      };
       return (
         <>
           {section.label && (
@@ -2112,6 +2325,19 @@ const loadPersistedValues = (template, mode) => {
                     Remove
                   </Button>
                 </Stack>
+                {blockOptions.length > 0 && (
+                  <Box sx={{ mb: 2 }}>
+                    {renderSelectInput({
+                      field: selectorField,
+                      value: entry?.[selectorName] ?? "",
+                      onChange: (nextValue) =>
+                        handleRepeatableSectionBlockChange(section, index, nextValue),
+                      showError: Boolean(entryErrors[index]?.[selectorName]) && validationAttempted,
+                      errorMessage: entryErrors[index]?.[selectorName],
+                      fullWidth: true,
+                    })}
+                  </Box>
+                )}
                 <Box
                   sx={{
                     display: isInline ? "flex" : "grid",
@@ -2125,7 +2351,16 @@ const loadPersistedValues = (template, mode) => {
                         },
                   }}
                 >
-                  {sectionFields.map((field) => {
+                  {(blockOptions.length > 0
+                    ? [
+                        ...sectionFields,
+                        ...(
+                          blockOptions.find((option) => option.id === entry?.[selectorName])
+                            ?.fields || []
+                        ),
+                      ]
+                    : sectionFields
+                  ).map((field) => {
                     const wrapperStyle = getFieldWrapperStyle(field, layout, columns);
                     const entryValue = entry?.[field.name];
                     const fieldError = entryErrors[index]?.[field.name] || "";

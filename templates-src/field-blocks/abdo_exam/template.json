@@ -1,0 +1,24 @@
+{
+  "id": "abdo_exam",
+  "title": "Abdominal exam",
+  "fields": [
+    {
+      "name": "inspection",
+      "label": "Inspection",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "palpation",
+      "label": "Palpation",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "bowel_sounds",
+      "label": "Bowel sounds",
+      "type": "textarea",
+      "required": false
+    }
+  ]
+}

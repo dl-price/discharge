@@ -23,6 +23,10 @@ HPC:
 
 {{primary_survey}}
 
+{{#if exam_sections}}Examination:
+{{exam_sections}}
+
+{{/if}}
 {{#if investigations}}Investigations:
 {{investigations}}
 

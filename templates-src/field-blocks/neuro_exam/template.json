@@ -1,0 +1,34 @@
+{
+  "id": "neuro_exam",
+  "title": "Neurological exam",
+  "fields": [
+    {
+      "name": "mental_state",
+      "label": "Mental status",
+      "type": "textarea",
+      "default": "AAOx3",
+      "required": false
+    },
+    {
+      "name": "language_speech",
+      "label": "Language/speech",
+      "type": "textarea",
+      "default": "Fluent, intact naming, repetition and comprehension",
+      "required": false
+    },
+    {
+      "name": "cranial_nerves",
+      "label": "Cranial nerves",
+      "type": "textarea",
+      "default": "II: Pupils equal and reactive, no RAPD\nIII, IV, VI: EOM intact, no gaze preference or deviation\nV: Normal\nVII: No facial asymmetry\nVIII: Normal hearing to speech",
+      "required": false
+    },
+    {
+      "name": "motor_sensory",
+      "label": "Motor/sensory",
+      "type": "textarea",
+      "default": "Motor: 5/5 in both upper and lower extremities\nReflexes: 2/4 throughout, bilateral flexor plantars\nSensory: Normal to touch and pin prick in all extremities\nCoordination: Normal finger to nose and heel to shin, no tremor, no dysmetria",
+      "required": false
+    }
+  ]
+}

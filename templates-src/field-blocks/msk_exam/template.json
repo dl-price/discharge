@@ -1,0 +1,24 @@
+{
+  "id": "msk_exam",
+  "title": "MSK exam",
+  "fields": [
+    {
+      "name": "joint_exam",
+      "label": "Joint exam",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "range_of_motion",
+      "label": "Range of motion",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "neurovascular",
+      "label": "Neurovascular",
+      "type": "textarea",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "resp_exam",
+  "title": "Respiratory exam",
+  "fields": [
+    {
+      "name": "work_of_breathing",
+      "label": "Work of breathing",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "air_entry",
+      "label": "Air entry",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "added_sounds",
+      "label": "Added sounds",
+      "type": "textarea",
+      "required": false
+    }
+  ]
+}

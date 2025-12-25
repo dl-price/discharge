@@ -77,6 +77,22 @@
     },
     {
       "type": "section",
+      "label": "Examination",
+      "name": "exam_sections",
+      "repeatable": true,
+      "repeatableEmptyState": "No examinations added yet.",
+      "blockSelectorLabel": "Exam type",
+      "blockOptions": [
+        { "id": "cardio_exam", "label": "Cardiovascular exam" },
+        { "id": "resp_exam", "label": "Respiratory exam" },
+        { "id": "abdo_exam", "label": "Abdominal exam" },
+        { "id": "neuro_exam", "label": "Neurological exam" },
+        { "id": "msk_exam", "label": "MSK exam" }
+      ],
+      "fields": []
+    },
+    {
+      "type": "section",
       "label": "Investigations",
       "fields": [
         {
