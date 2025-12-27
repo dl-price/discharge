@@ -330,7 +330,11 @@ const initializeFieldValues = (template) => {
     }
     if (field.type === "section") {
       if (field.repeatable && field.repeatableKey) {
-        nextValues[field.repeatableKey] = [buildRepeatableEntryForSection(field)];
+        const hasBlockOptions =
+          Array.isArray(field.blockOptionDefs) && field.blockOptionDefs.length > 0;
+        nextValues[field.repeatableKey] = hasBlockOptions
+          ? []
+          : [buildRepeatableEntryForSection(field)];
         return;
       }
       (field.fields || []).forEach(seedField);
